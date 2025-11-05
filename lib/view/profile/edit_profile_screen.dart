@@ -1,0 +1,236 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../../utils/app_colors.dart';
+import '../components/custom_text_field.dart';
+
+class EditProfileScreen extends StatelessWidget {
+  const EditProfileScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: AppColors.mainAppColor,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          onPressed: () => Get.back(),
+        ),
+        title: Text(
+          'Edit Profile',
+          style: GoogleFonts.montserrat(
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
+        ),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(24.w),
+        child: Column(
+          children: [
+            SizedBox(height: 20.h),
+            // Profile Picture
+            Center(
+              child: Stack(
+                children: [
+                  Container(
+                    width: 100.w,
+                    height: 100.w,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: AppColors.white, width: 3),
+                    ),
+                    child: ClipOval(
+                      child: Image.asset(
+                        'assets/images/profile.png',
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: AppColors.foundationColor,
+                            child: Icon(
+                              Icons.person,
+                              size: 50.sp,
+                              color: AppColors.subHeadingColor,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: Container(
+                      width: 32.w,
+                      height: 32.w,
+                      decoration: BoxDecoration(
+                        color: AppColors.mainAppColor,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 2),
+                      ),
+                      child: Icon(
+                        Icons.camera_alt,
+                        size: 16.sp,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 32.h),
+            _buildInputField('Full Name', 'Name'),
+            SizedBox(height: 20.h),
+            _buildInputField('E-mail address', 'E-mail address or phone number'),
+            SizedBox(height: 20.h),
+            _buildInputField('Phone number', 'E-mail address or phone number'),
+            SizedBox(height: 20.h),
+            _buildTextArea('About', 'Introduce yourself to potential clients...', maxLength: 500),
+            SizedBox(height: 20.h),
+            _buildInputField('Pet number', '03', keyboardType: TextInputType.number),
+            SizedBox(height: 20.h),
+            _buildInputField('Street', 'Street Number and Name'),
+            SizedBox(height: 20.h),
+            Row(
+              children: [
+                Expanded(child: _buildInputField('State', 'State')),
+                SizedBox(width: 12.w),
+                Expanded(child: _buildInputField('Zip Code', 'Zip Code')),
+              ],
+            ),
+            SizedBox(height: 20.h),
+            _buildDropdown('Home Type', 'Apartment'),
+            SizedBox(height: 20.h),
+            _buildInputField('Home Size (sq ft)', 'e.g. 800', keyboardType: TextInputType.number),
+            SizedBox(height: 20.h),
+            _buildDropdown('Outdoor Space', 'No outdoor space'),
+            SizedBox(height: 40.h),
+            // Save Changes Button
+            SizedBox(
+              width: double.infinity,
+              height: 56.h,
+              child: ElevatedButton(
+                onPressed: () {
+                  Get.back();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.mainAppColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 0,
+                ),
+                child: Text(
+                  'Save Changes',
+                  style: GoogleFonts.montserrat(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 40.h),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInputField(String label, String hint, {TextInputType? keyboardType}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: GoogleFonts.montserrat(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textDark,
+          ),
+        ),
+        SizedBox(height: 8.h),
+        CustomTextField(
+          hintText: hint,
+          keyboardType: keyboardType ?? TextInputType.text,
+          fieldBorderRadius: 12,
+          fieldBorderColor: AppColors.foundationColor,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTextArea(String label, String hint, {int? maxLength}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: GoogleFonts.montserrat(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textDark,
+          ),
+        ),
+        SizedBox(height: 8.h),
+        CustomTextField(
+          hintText: hint,
+          maxLines: 4,
+          maxLength: maxLength,
+          fieldBorderRadius: 12,
+          fieldBorderColor: AppColors.foundationColor,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDropdown(String label, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: GoogleFonts.montserrat(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textDark,
+          ),
+        ),
+        SizedBox(height: 8.h),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 12.w),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppColors.foundationColor),
+          ),
+          child: DropdownButton<String>(
+            value: value,
+            isExpanded: true,
+            underline: const SizedBox(),
+            items: [value].map((String val) {
+              return DropdownMenuItem<String>(
+                value: val,
+                child: Text(
+                  val,
+                  style: GoogleFonts.montserrat(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.textDark,
+                  ),
+                ),
+              );
+            }).toList(),
+            onChanged: (String? newValue) {},
+          ),
+        ),
+      ],
+    );
+  }
+}
+
