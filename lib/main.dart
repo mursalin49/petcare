@@ -2,11 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'helpers/route.dart';
+import 'package:get_storage/get_storage.dart';
 
+import 'helpers/route.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // ...
+  // ✅ MUST ADD THIS
+  await GetStorage.init();
+
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.light,
@@ -44,4 +50,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

@@ -12,11 +12,11 @@ class ChangePasswordScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
+      appBar:AppBar(
         backgroundColor: AppColors.mainAppColor,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () => Get.back(),
         ),
         title: Text(
@@ -28,6 +28,17 @@ class ChangePasswordScreen extends StatelessWidget {
           ),
         ),
         centerTitle: true,
+
+
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+
+            bottomLeft: Radius.circular(30.r),
+
+            bottomRight: Radius.circular(30.r),
+          ),
+        ),
+
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(24.w),
@@ -86,13 +97,13 @@ class ChangePasswordScreen extends StatelessWidget {
         CustomTextField(
           hintText: hint,
           isPassword: true,
-          prefixIcon: Icon(
-            Icons.lock_outline,
-            color: AppColors.subHeadingColor,
-            size: 20.sp,
-          ),
+          // prefixIcon: Icon(
+          //   Icons.lock_outline,
+          //   color: AppColors.subHeadingColor,
+          //   size: 20.sp,
+          // ),
           fieldBorderRadius: 12,
-          fieldBorderColor: AppColors.foundationColor,
+          fieldBorderColor: Color(0xFFE3E6F0),
         ),
       ],
     );

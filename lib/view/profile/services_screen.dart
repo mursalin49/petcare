@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../utils/app_colors.dart';
 
 class ServicesScreen extends StatelessWidget {
@@ -15,11 +16,11 @@ class ServicesScreen extends StatelessWidget {
         backgroundColor: AppColors.mainAppColor,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'Services',
+          'Service',
           style: GoogleFonts.montserrat(
             fontSize: 18.sp,
             fontWeight: FontWeight.w600,
@@ -27,25 +28,32 @@ class ServicesScreen extends StatelessWidget {
           ),
         ),
         centerTitle: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(30.r),
+            bottomRight: Radius.circular(30.r),
+          ),
+        ),
       ),
       body: ListView(
         padding: EdgeInsets.all(24.w),
         children: [
           SizedBox(height: 20.h),
+
           _buildServiceItem(
-            icon: Icons.home,
+            iconPath:'assets/icons/fbIcon',
             title: 'Boarding',
             subtitle: 'In the sitter\'s home',
           ),
           SizedBox(height: 16.h),
           _buildServiceItem(
-            icon: Icons.home,
+            iconPath: 'assets/icons/house_sitting.svg',
             title: 'House Sitting',
             subtitle: 'In your home',
           ),
           SizedBox(height: 16.h),
           _buildServiceItem(
-            icon: Icons.location_on,
+            iconPath: 'assets/icons/drop_in_visits.svg', // Change this to your actual SVG path
             title: 'Drop-In Visits',
             subtitle: 'Visits in your home',
           ),
@@ -54,21 +62,30 @@ class ServicesScreen extends StatelessWidget {
     );
   }
 
+
   Widget _buildServiceItem({
-    required IconData icon,
+    required String iconPath,
     required String title,
     required String subtitle,
   }) {
+    const Color cardBorderColor = Color(0xFFE3E6F0);
+
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.foundationColor),
+        border: Border.all(color: cardBorderColor),
       ),
       child: Row(
         children: [
-          Icon(icon, size: 32.sp, color: AppColors.mainAppColor),
+          SvgPicture.asset(
+            iconPath,
+            height: 32.sp,
+            width: 32.sp,
+            // SVG-e color dewar jonno ColorFilter.mode use korte hoy
+            colorFilter: ColorFilter.mode(AppColors.mainAppColor, BlendMode.srcIn),
+          ),
           SizedBox(width: 16.w),
           Expanded(
             child: Column(
@@ -94,10 +111,9 @@ class ServicesScreen extends StatelessWidget {
               ],
             ),
           ),
-          Icon(Icons.arrow_forward_ios, size: 16.sp, color: AppColors.foundationColor),
+          Icon(Icons.arrow_forward_ios, size: 16.sp, color: cardBorderColor),
         ],
       ),
     );
   }
 }
-

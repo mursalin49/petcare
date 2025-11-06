@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../utils/app_colors.dart';
+import 'contract_screen.dart' hide AppColors;
+import 'faq_screen.dart';
 
 class HelpSupportScreen extends StatelessWidget {
   const HelpSupportScreen({super.key});
@@ -15,11 +17,11 @@ class HelpSupportScreen extends StatelessWidget {
         backgroundColor: AppColors.mainAppColor,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'Help & Support',
+          'Edit Profile',
           style: GoogleFonts.montserrat(
             fontSize: 18.sp,
             fontWeight: FontWeight.w600,
@@ -27,21 +29,32 @@ class HelpSupportScreen extends StatelessWidget {
           ),
         ),
         centerTitle: true,
+
+
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+
+            bottomLeft: Radius.circular(30.r),
+
+            bottomRight: Radius.circular(30.r),
+          ),
+        ),
+
       ),
       body: ListView(
         padding: EdgeInsets.all(24.w),
         children: [
           SizedBox(height: 20.h),
           _buildMenuItem(
-            icon: Icons.help_outline,
             title: 'Faq',
-            onTap: () {},
+            onTap: () {
+              Get.to(() => const FaqScreen());
+            },
           ),
           SizedBox(height: 16.h),
           _buildMenuItem(
-            icon: Icons.contact_support,
-            title: 'Contract Us',
-            onTap: () {},
+            title: 'Contact Us',
+            onTap: () => Get.to(() => const ContactUsScreen()),
           ),
         ],
       ),
@@ -49,7 +62,7 @@ class HelpSupportScreen extends StatelessWidget {
   }
 
   Widget _buildMenuItem({
-    required IconData icon,
+    // required IconData icon,
     required String title,
     required VoidCallback onTap,
   }) {
@@ -64,8 +77,8 @@ class HelpSupportScreen extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(icon, size: 24.sp, color: AppColors.mainAppColor),
-            SizedBox(width: 16.w),
+            // Icon(icon, size: 24.sp, color: AppColors.mainAppColor),
+            // SizedBox(width: 16.w),
             Expanded(
               child: Text(
                 title,

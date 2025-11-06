@@ -28,6 +28,17 @@ class EditProfileScreen extends StatelessWidget {
           ),
         ),
         centerTitle: true,
+
+
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+
+            bottomLeft: Radius.circular(30.r),
+
+            bottomRight: Radius.circular(30.r),
+          ),
+        ),
+
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(24.w),
@@ -46,21 +57,21 @@ class EditProfileScreen extends StatelessWidget {
                       border: Border.all(color: AppColors.white, width: 3),
                     ),
                     child: ClipOval(
-                      child: Image.asset(
-                        'assets/images/profile.png',
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: AppColors.foundationColor,
-                            child: Icon(
-                              Icons.person,
-                              size: 50.sp,
-                              color: AppColors.subHeadingColor,
-                            ),
-                          );
-                        },
-                      ),
+              child:   Image.asset(
+              'assets/images/profileImg.png',
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    color: AppColors.foundationColor,
+                    child: Icon(
+                      Icons.person,
+                      size: 60.sp,
+                      color: AppColors.grey,
                     ),
+                  );
+                },
+              ),
+            ),
                   ),
                   Positioned(
                     bottom: 0,
@@ -159,7 +170,7 @@ class EditProfileScreen extends StatelessWidget {
           hintText: hint,
           keyboardType: keyboardType ?? TextInputType.text,
           fieldBorderRadius: 12,
-          fieldBorderColor: AppColors.foundationColor,
+          fieldBorderColor: AppColors.inputBorderColor,
         ),
       ],
     );
@@ -183,7 +194,7 @@ class EditProfileScreen extends StatelessWidget {
           maxLines: 4,
           maxLength: maxLength,
           fieldBorderRadius: 12,
-          fieldBorderColor: AppColors.foundationColor,
+          fieldBorderColor: AppColors.inputBorderColor,
         ),
       ],
     );
@@ -205,9 +216,9 @@ class EditProfileScreen extends StatelessWidget {
         Container(
           padding: EdgeInsets.symmetric(horizontal: 12.w),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Color(0xFFFFFFFF),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.foundationColor),
+            border: Border.all(color:Color(0xFFE3E6F0)),
           ),
           child: DropdownButton<String>(
             value: value,

@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:petcare/view/profile/payments_screen.dart';
 import 'package:petcare/view/profile/portfolio_screen.dart';
+import 'package:petcare/view/profile/privacy_policy_screen.dart';
 import 'package:petcare/view/profile/services_screen.dart';
+import 'package:petcare/view/profile/terms_condition_screen.dart';
 
 
+import '../../utils/app_colors.dart';
 import 'change_password_screen.dart';
+import 'delate_account.dart';
 import 'edit_profile_screen.dart';
 import 'help_support_screen.dart';
-class AppColors {
-  static const Color teal = Color(0xFF00ADB5);
-  static const Color textDark = Color(0xFF222831);
-  static const Color greyLight = Color(0xFFAAAAAA);
-  static const Color borderGrey = Color(0xFFEEEEEE);
-  static const Color red = Color(0xFFFF4500);
-}
+
 
 
 class ProfileScreen extends StatelessWidget {
@@ -30,10 +29,10 @@ class ProfileScreen extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 12.h),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.teal : Colors.white,
+          color: isSelected ? AppColors.mainAppColor : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? AppColors.teal : AppColors.borderGrey,
+            color: isSelected ? AppColors.mainAppColor : AppColors.foundationColor,
             width: 1,
           ),
         ),
@@ -43,7 +42,7 @@ class ProfileScreen extends StatelessWidget {
             Icon(
               icon,
               size: 20.sp,
-              color: isSelected ? Colors.white : AppColors.teal,
+              color: isSelected ? Colors.white : AppColors.mainAppColor,
             ),
             SizedBox(width: 8.w),
             Text(
@@ -51,7 +50,7 @@ class ProfileScreen extends StatelessWidget {
               style: GoogleFonts.montserrat(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
-                color: isSelected ? Colors.white : AppColors.teal,
+                color: isSelected ? Colors.white : AppColors.mainAppColor,
               ),
             ),
           ],
@@ -107,7 +106,7 @@ class ProfileScreen extends StatelessWidget {
           style: GoogleFonts.montserrat(
             fontSize: 14.sp,
             fontWeight: FontWeight.w500,
-            color: AppColors.greyLight,
+            color: AppColors.subHeadingColor,
           ),
         ),
         SizedBox(height: 4.h),
@@ -125,37 +124,57 @@ class ProfileScreen extends StatelessWidget {
 
   // Helper for all menu items
   Widget _buildMenuItem({
-    required IconData icon,
+    String? svgIcon,
+    IconData? icon,
     required String title,
     required VoidCallback onTap,
     Color? titleColor,
   }) {
     return InkWell(
       onTap: onTap,
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 12.h),
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 16.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12.r),
+        ),
         child: Row(
           children: [
-            Icon(
-              icon,
-              size: 24.sp,
-              color: AppColors.teal,
-            ),
-            SizedBox(width: 16.w),
+
+            if (svgIcon != null)
+              SvgPicture.asset(
+                svgIcon,
+                width: 22.w,
+                height: 22.h,
+                color: titleColor ?? Colors.black87,
+              )
+
+            else if (icon != null)
+              Icon(
+                icon,
+                size: 22.sp,
+                color: titleColor ?? Colors.black87,
+              ),
+
+            SizedBox(width: 12.w),
+
+            // Text
             Expanded(
               child: Text(
                 title,
                 style: GoogleFonts.montserrat(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
-                  color: titleColor ?? AppColors.textDark,
+                  color: titleColor ?? Colors.black87,
                 ),
               ),
             ),
+
             Icon(
-              Icons.arrow_forward_ios,
+              Icons.arrow_forward_ios_rounded,
               size: 16.sp,
-              color: AppColors.greyLight,
+              color: Colors.grey.shade400,
             ),
           ],
         ),
@@ -163,10 +182,11 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
+
   // Helper for menu item dividers
   Widget _buildDivider() {
     return Divider(
-      color: AppColors.borderGrey,
+      color: AppColors.foundationColor,
       height: 1,
     );
   }
@@ -178,10 +198,10 @@ class ProfileScreen extends StatelessWidget {
 
       backgroundColor: const Color(0xFFF7F7F7),
       appBar: AppBar(
-        backgroundColor: AppColors.teal,
+        backgroundColor: AppColors.mainAppColor,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () => Get.back(),
         ),
         title: Text(
@@ -224,21 +244,21 @@ class ProfileScreen extends StatelessWidget {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: AppColors.teal,
+                            color: AppColors.white,
                             width: 3,
                           ),
                         ),
                         child: ClipOval(
-                          child: Image.asset(
-                            'assets/images/profile.png',
+                          child:   Image.asset(
+                            'assets/images/profileImg.png',
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
                               return Container(
-                                color: AppColors.borderGrey,
+                                color: AppColors.foundationColor,
                                 child: Icon(
                                   Icons.person,
                                   size: 60.sp,
-                                  color: AppColors.greyLight,
+                                  color: AppColors.grey,
                                 ),
                               );
                             },
@@ -252,7 +272,7 @@ class ProfileScreen extends StatelessWidget {
                           width: 36.w,
                           height: 36.w,
                           decoration: BoxDecoration(
-                            color: AppColors.teal,
+                            color: AppColors.mainAppColor,
                             shape: BoxShape.circle,
                             border: Border.all(color: Colors.white, width: 2),
                           ),
@@ -280,10 +300,12 @@ class ProfileScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        Icons.location_on,
-                        size: 16.sp,
-                        color: AppColors.greyLight,
+
+                      SvgPicture.asset(
+                        'assets/icons/location.svg',
+                        width: 16.w,
+                        height: 16.h,
+                        // color: AppColors.foundationColor,
                       ),
                       SizedBox(width: 4.w),
                       Text(
@@ -291,7 +313,7 @@ class ProfileScreen extends StatelessWidget {
                         style: GoogleFonts.montserrat(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
-                          color: AppColors.greyLight,
+                          color: AppColors.foundationColor,
                         ),
                       ),
                     ],
@@ -301,10 +323,11 @@ class ProfileScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        Icons.star,
-                        size: 16.sp,
-                        color: Colors.amber,
+                      SvgPicture.asset(
+                        'assets/icons/star.svg',
+                        width: 16.w,
+                        height: 16.h,
+                        // color: AppColors.foundationColor,
                       ),
                       SizedBox(width: 4.w),
                       Text(
@@ -318,18 +341,78 @@ class ProfileScreen extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 24.h),
-                  // Pet Owner / Pet Sitter Buttons
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildRoleButton(Icons.pets, 'Pet Owner', false, () {}),
-                      ),
-                      SizedBox(width: 12.w),
-                      Expanded(
-                        child: _buildRoleButton(Icons.pets, 'Pet Sitter', true, () {}),
-                      ),
-                    ],
+                  // Pet Owner / Pet Sitter Buttons (Card Style)
+                  Container(
+                    margin: EdgeInsets.only(top: 12.h),
+                    padding: EdgeInsets.all(6.w),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(14.r),
+                      border: Border.all(color: Colors.grey.shade300),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: StatefulBuilder(
+                      builder: (context, setState) {
+                        String selectedRole = 'Pet Sitter'; // default selected
+
+                        Widget buildRoleCard(String title, bool isSelected) {
+                          return Expanded(
+                            child: GestureDetector(
+                              onTap: () => setState(() => selectedRole = title),
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 250),
+                                padding: EdgeInsets.symmetric(vertical: 12.h),
+                                decoration: BoxDecoration(
+                                  color: isSelected
+                                      ? AppColors.mainAppColor
+                                      : Colors.white,
+                                  borderRadius: BorderRadius.circular(10.r),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SvgPicture.asset(
+                                      'assets/icons/foot.svg',
+                                      width: 18.w,
+                                      height: 18.h,
+                                      color: isSelected ? Colors.white : AppColors.mainAppColor,
+                                    ),
+                                    SizedBox(width: 6.w),
+                                    Text(
+                                      title,
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.w600,
+                                        color: isSelected
+                                            ? Colors.white
+                                            : AppColors.mainAppColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+
+                        return Row(
+                          children: [
+                            buildRoleCard('Pet Owner', selectedRole == 'Pet Owner'),
+                            SizedBox(width: 8.w),
+                            buildRoleCard('Pet Sitter', selectedRole == 'Pet Sitter'),
+                          ],
+                        );
+                      },
+                    ),
                   ),
+
+
                 ],
               ),
             ),
@@ -351,60 +434,77 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 16.h),
+
                   // Total Income and Promo Code Row
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Total Income',
-                        style: GoogleFonts.montserrat(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.textDark,
-                        ),
-                      ),
                       Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '\$900.50',
+                            'Total Income',
                             style: GoogleFonts.montserrat(
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.textDark,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.textDark.withOpacity(0.8),
                             ),
                           ),
                           SizedBox(height: 4.h),
-                          GestureDetector(
-                            onTap: () {},
-                            child: Text(
-                              'Apply Promo Code',
-                              style: GoogleFonts.montserrat(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.teal,
-                              ),
+                          Text(
+                            '\$900.50',
+                            style: TextStyle(
+                              fontFamily: 'BaksoSapi',
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.textDark,
                             ),
                           ),
                         ],
                       ),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: AppColors.mainAppColor,
+                                width: 1.5,
+                              ),
+                            ),
+                          ),
+                          padding: EdgeInsets.only(bottom: 3.h),
+                          child: Text(
+                            'Apply Promo Code',
+                            style: GoogleFonts.montserrat(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.mainAppColor,
+                            ),
+                          ),
+                        ),
+                      ),
+
+
                     ],
                   ),
+
                   SizedBox(height: 20.h),
-                  // Monthly/Pending Earnings in a Row
+
+                  // Monthly/Pending Earnings Row
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Flexible(child: _buildEarningColumn('This Month', '\$842.00')),
-                      SizedBox(width: 16.w),
-                      Flexible(child: _buildEarningColumn('Last Month', '\$753.50')),
-                      SizedBox(width: 16.w),
-                      Flexible(child: _buildEarningColumn('Pending', '\$135.00')),
+                      _buildEarningColumn('This Month', '\$842.00'),
+                      _buildEarningColumn('Last Month', '\$753.50'),
+                      _buildEarningColumn('Pending', '\$135.00'),
                     ],
                   ),
                 ],
               ),
             ),
+
             SizedBox(height: 16.h),
 
             // **Account Information Section (Card Style)**
@@ -417,31 +517,31 @@ class ProfileScreen extends StatelessWidget {
                     title: 'Edit Profile',
                     onTap: () => Get.to(() => const EditProfileScreen()),
                   ),
-                  _buildDivider(),
+
                   _buildMenuItem(
                     icon: Icons.check_circle_outline,
                     title: 'Change password',
                     onTap: () => Get.to(() => const ChangePasswordScreen()),
                   ),
-                  _buildDivider(),
+
                   _buildMenuItem(
                     icon: Icons.payment,
                     title: 'Payments',
                     onTap: () => Get.to(() => const PaymentsScreen()),
                   ),
-                  _buildDivider(),
+
                   _buildMenuItem(
                     icon: Icons.business,
                     title: 'Services',
                     onTap: () => Get.to(() => const ServicesScreen()),
                   ),
-                  _buildDivider(),
+
                   _buildMenuItem(
                     icon: Icons.folder,
                     title: 'Portfolio',
-                    onTap: () => Get.to(() => const PortfolioScreen()),
+                    onTap: () => Get.to(() => PortfolioScreen()),
                   ),
-                  _buildDivider(),
+
                   // Switch Profile Item
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 12.h),
@@ -451,7 +551,7 @@ class ProfileScreen extends StatelessWidget {
                         Icon(
                           Icons.swap_horiz,
                           size: 24.sp,
-                          color: AppColors.teal,
+                          color: AppColors.mainAppColor,
                         ),
                         SizedBox(width: 16.w),
                         Expanded(
@@ -467,7 +567,7 @@ class ProfileScreen extends StatelessWidget {
                         Switch(
                           value: false,
                           onChanged: (value) {},
-                          activeColor: AppColors.teal,
+                          activeColor: AppColors.mainAppColor,
                         ),
                       ],
                     ),
@@ -485,13 +585,18 @@ class ProfileScreen extends StatelessWidget {
                   _buildMenuItem(
                     icon: Icons.shield_outlined,
                     title: 'Privacy Policy',
-                    onTap: () {},
+                    onTap: () {
+                      Get.to(() => const PrivacyPolicyScreen());
+                    },
                   ),
-                  _buildDivider(),
+
                   _buildMenuItem(
                     icon: Icons.description_outlined,
                     title: 'Terms & Condition',
-                    onTap: () {},
+                    onTap: () {
+
+Get.to(() => const TermsConditionScreen());
+                    },
                   ),
                 ],
               ),
@@ -508,7 +613,7 @@ class ProfileScreen extends StatelessWidget {
                     title: 'Help & Support',
                     onTap: () => Get.to(() => const HelpSupportScreen()),
                   ),
-                  _buildDivider(),
+
                   _buildMenuItem(
                     icon: Icons.logout,
                     title: 'Log Out',
@@ -516,16 +621,15 @@ class ProfileScreen extends StatelessWidget {
                       // Handle logout
                     },
                   ),
-                  _buildDivider(),
                   _buildMenuItem(
                     icon: Icons.delete_outline,
                     title: 'Delete Account',
-                    titleColor: AppColors.red,
+                    titleColor: AppColors.primary,
                     onTap: () {
-                      // showDialog(
-                      //   context: context,
-                      //   builder: (context) => const DeleteAccountDialog(),
-                      // );
+                      showDialog(
+                        context: context,
+                        builder: (context) => const DeleteAccountDialog(),
+                      );
                     },
                   ),
                 ],

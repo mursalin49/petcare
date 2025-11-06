@@ -20,6 +20,7 @@ class AppColors {
   static const Color blue = Color(0xFF254BAE);
   static const Color backgroundGradientEnd = Color(0xFFFFFFFF);
   static const Color textDark = Color(0xFF333333);
+  static const Color inputBorderColor = Color(0xFFE3E6F0);
   static const Color grey = Colors.grey;
 
 
