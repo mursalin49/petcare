@@ -13,6 +13,7 @@ class AppColors {
   static const Color subHeadingColor = Color(0xFF9CA3AF);
   static const Color buttonColor = Color(0xFFED3C8C);
   static const Color textColor = Color(0xFF413B3F);
+  static const Color yello = Color(0xFFF1C400);
 
   static const Color primary = Color(0xFFFF4F79);
   static const Color secondary = Color(0xFFB360FF);

@@ -20,7 +20,7 @@ class ServicesScreen extends StatelessWidget {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'Service',
+          'Services',
           style: GoogleFonts.montserrat(
             fontSize: 18.sp,
             fontWeight: FontWeight.w600,
@@ -41,19 +41,21 @@ class ServicesScreen extends StatelessWidget {
           SizedBox(height: 20.h),
 
           _buildServiceItem(
-            iconPath:'assets/icons/fbIcon',
+            iconPath:'assets/icons/calendar-add-01 (1).svg',
             title: 'Boarding',
             subtitle: 'In the sitter\'s home',
           ),
           SizedBox(height: 16.h),
+
           _buildServiceItem(
-            iconPath: 'assets/icons/house_sitting.svg',
+            iconPath: 'assets/icons/home-hashtag.svg',
             title: 'House Sitting',
             subtitle: 'In your home',
           ),
           SizedBox(height: 16.h),
+
           _buildServiceItem(
-            iconPath: 'assets/icons/drop_in_visits.svg', // Change this to your actual SVG path
+            iconPath: 'assets/icons/lochome.svg',
             title: 'Drop-In Visits',
             subtitle: 'Visits in your home',
           ),
@@ -61,7 +63,6 @@ class ServicesScreen extends StatelessWidget {
       ),
     );
   }
-
 
   Widget _buildServiceItem({
     required String iconPath,
@@ -83,10 +84,11 @@ class ServicesScreen extends StatelessWidget {
             iconPath,
             height: 32.sp,
             width: 32.sp,
-            // SVG-e color dewar jonno ColorFilter.mode use korte hoy
             colorFilter: ColorFilter.mode(AppColors.mainAppColor, BlendMode.srcIn),
+            placeholderBuilder: (_) => const CircularProgressIndicator(),
           ),
           SizedBox(width: 16.w),
+
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,6 +113,7 @@ class ServicesScreen extends StatelessWidget {
               ],
             ),
           ),
+
           Icon(Icons.arrow_forward_ios, size: 16.sp, color: cardBorderColor),
         ],
       ),

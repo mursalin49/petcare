@@ -8,6 +8,7 @@ import '../../utils/app_colors.dart';
 import 'portfolio_controller.dart';
 import 'edit_portfolio_screen.dart';
 
+
 final PortfolioController portfolioController = Get.put(PortfolioController());
 
 class PortfolioScreen extends StatelessWidget {

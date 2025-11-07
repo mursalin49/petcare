@@ -10,12 +10,14 @@ import 'package:petcare/view/profile/services_screen.dart';
 import 'package:petcare/view/profile/terms_condition_screen.dart';
 
 
+import '../../Controller/profile_controller.dart';
 import '../../utils/app_colors.dart';
 import 'change_password_screen.dart';
 import 'delate_account.dart';
 import 'edit_profile_screen.dart';
 import 'help_support_screen.dart';
 
+final controller = Get.put(ProfileController());
 
 
 class ProfileScreen extends StatelessWidget {
@@ -357,59 +359,53 @@ class ProfileScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: StatefulBuilder(
-                      builder: (context, setState) {
-                        String selectedRole = 'Pet Sitter'; // default selected
+                    child: Obx(() {
+                      String selectedRole = controller.selectedRole.value;
 
-                        Widget buildRoleCard(String title, bool isSelected) {
-                          return Expanded(
-                            child: GestureDetector(
-                              onTap: () => setState(() => selectedRole = title),
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 250),
-                                padding: EdgeInsets.symmetric(vertical: 12.h),
-                                decoration: BoxDecoration(
-                                  color: isSelected
-                                      ? AppColors.mainAppColor
-                                      : Colors.white,
-                                  borderRadius: BorderRadius.circular(10.r),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SvgPicture.asset(
-                                      'assets/icons/foot.svg',
-                                      width: 18.w,
-                                      height: 18.h,
+                      Widget buildRoleCard(String title, bool isSelected) {
+                        return Expanded(
+                          child: GestureDetector(
+                            onTap: () => controller.setRole(title),
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 250),
+                              padding: EdgeInsets.symmetric(vertical: 12.h),
+                              decoration: BoxDecoration(
+                                color: isSelected ? AppColors.mainAppColor : Colors.white,
+                                borderRadius: BorderRadius.circular(10.r),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(
+                                    'assets/icons/foot.svg',
+                                    width: 18.w,
+                                    height: 18.h,
+                                    color: isSelected ? Colors.white : AppColors.mainAppColor,
+                                  ),
+                                  SizedBox(width: 6.w),
+                                  Text(
+                                    title,
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w600,
                                       color: isSelected ? Colors.white : AppColors.mainAppColor,
                                     ),
-                                    SizedBox(width: 6.w),
-                                    Text(
-                                      title,
-                                      style: GoogleFonts.montserrat(
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.w600,
-                                        color: isSelected
-                                            ? Colors.white
-                                            : AppColors.mainAppColor,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
-                          );
-                        }
-
-                        return Row(
-                          children: [
-                            buildRoleCard('Pet Owner', selectedRole == 'Pet Owner'),
-                            SizedBox(width: 8.w),
-                            buildRoleCard('Pet Sitter', selectedRole == 'Pet Sitter'),
-                          ],
+                          ),
                         );
-                      },
-                    ),
+                      }
+
+                      return Row(
+                        children: [
+                          buildRoleCard('Pet Owner', selectedRole == 'Pet Owner'),
+                          SizedBox(width: 8.w),
+                          buildRoleCard('Pet Sitter', selectedRole == 'Pet Sitter'),
+                        ],
+                      );
+                    }),
                   ),
 
 
@@ -513,31 +509,31 @@ class ProfileScreen extends StatelessWidget {
               child: Column(
                 children: [
                   _buildMenuItem(
-                    icon: Icons.edit,
+                    svgIcon: "assets/icons/edit.svg",
                     title: 'Edit Profile',
                     onTap: () => Get.to(() => const EditProfileScreen()),
                   ),
 
                   _buildMenuItem(
-                    icon: Icons.check_circle_outline,
+                    svgIcon: "assets/icons/change.svg",
                     title: 'Change password',
                     onTap: () => Get.to(() => const ChangePasswordScreen()),
                   ),
 
                   _buildMenuItem(
-                    icon: Icons.payment,
+                    svgIcon: "assets/icons/payment-method.svg",
                     title: 'Payments',
                     onTap: () => Get.to(() => const PaymentsScreen()),
                   ),
 
                   _buildMenuItem(
-                    icon: Icons.business,
+                    svgIcon: "assets/icons/serviceIcon.svg",
                     title: 'Services',
                     onTap: () => Get.to(() => const ServicesScreen()),
                   ),
 
                   _buildMenuItem(
-                    icon: Icons.folder,
+                    svgIcon: "assets/icons/portfolio.svg",
                     title: 'Portfolio',
                     onTap: () => Get.to(() => PortfolioScreen()),
                   ),
@@ -548,11 +544,12 @@ class ProfileScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Icon(
-                          Icons.swap_horiz,
-                          size: 24.sp,
-                          color: AppColors.mainAppColor,
-                        ),
+                        // SvgPicture.asset(
+                        //   "assets/icons/switch.svg",
+                        //   width: 22.w,
+                        //   height: 22.h,
+                        //   color: AppColors.mainAppColor,
+                        // ),
                         SizedBox(width: 16.w),
                         Expanded(
                           child: Text(
@@ -564,44 +561,39 @@ class ProfileScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Switch(
-                          value: false,
-                          onChanged: (value) {},
+                        Obx(() => Switch(
+                          value: controller.switchProfile.value,
+                          onChanged: controller.toggleSwitch,
                           activeColor: AppColors.mainAppColor,
-                        ),
+                        ))
                       ],
                     ),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 16.h),
-
-            // **Policy Center Section (Card Style)**
+            // privacy and policy
+            SizedBox(height: 8),
             _buildCardSection(
               title: 'Policy Center',
               child: Column(
                 children: [
                   _buildMenuItem(
-                    icon: Icons.shield_outlined,
+                    svgIcon: "assets/icons/shield-check.svg",
                     title: 'Privacy Policy',
-                    onTap: () {
-                      Get.to(() => const PrivacyPolicyScreen());
-                    },
+                    onTap: () => Get.to(() => const PrivacyPolicyScreen()),
                   ),
 
                   _buildMenuItem(
-                    icon: Icons.description_outlined,
+                    svgIcon: "assets/icons/command-line.svg",
                     title: 'Terms & Condition',
-                    onTap: () {
-
-Get.to(() => const TermsConditionScreen());
-                    },
+                    onTap: () => Get.to(() => const TermsConditionScreen()),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 16.h),
+
+            SizedBox(height: 8),
 
             // **Settings Section (Card Style)**
             _buildCardSection(
@@ -609,22 +601,21 @@ Get.to(() => const TermsConditionScreen());
               child: Column(
                 children: [
                   _buildMenuItem(
-                    icon: Icons.help_outline,
+                    svgIcon: "assets/icons/help-circle.svg",
                     title: 'Help & Support',
                     onTap: () => Get.to(() => const HelpSupportScreen()),
                   ),
 
                   _buildMenuItem(
-                    icon: Icons.logout,
+                    svgIcon: "assets/icons/logout (1).svg",
                     title: 'Log Out',
-                    onTap: () {
-                      // Handle logout
-                    },
+                    onTap: () {},
                   ),
+
                   _buildMenuItem(
-                    icon: Icons.delete_outline,
+                    svgIcon: "assets/icons/elements.svg",
                     title: 'Delete Account',
-                    titleColor: AppColors.primary,
+                    titleColor: Colors.red,
                     onTap: () {
                       showDialog(
                         context: context,
@@ -635,6 +626,7 @@ Get.to(() => const TermsConditionScreen());
                 ],
               ),
             ),
+
             SizedBox(height: 40.h),
           ],
         ),

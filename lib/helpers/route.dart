@@ -10,6 +10,7 @@ import '../view/inbox/inbox_screen.dart';
 import '../view/profile/profile_screen.dart';
 import '../view/services/services_screen.dart';
 import '../view/splash/onboarding_screen.dart';
+import '../view/splash/sitter_onboarding_screen.dart';
 import '../view/splash/splash_screen.dart';
 
 
@@ -30,6 +31,7 @@ class AppRoutes {
   static const String inboxScreen = "/inbox_screen";
   static const String bookingsScreen = "/booking_screen";
   static const String profileScreen = "/profile_screen";
+  static const String sitter = "/sitter_onboarding_screen";
 
 
 
@@ -47,7 +49,7 @@ class AppRoutes {
     GetPage(name: inboxScreen, page: () => InboxScreen()),
     GetPage(name: bookingsScreen, page: () => BookingsScreen()),
     GetPage(name: profileScreen, page: () => ProfileScreen()),
-
+GetPage(name: sitter, page: () => SitterOnboardingScreen())
 
   ];
 }

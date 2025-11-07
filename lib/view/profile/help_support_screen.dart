@@ -21,7 +21,7 @@ class HelpSupportScreen extends StatelessWidget {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'Edit Profile',
+          'Help & Support',
           style: GoogleFonts.montserrat(
             fontSize: 18.sp,
             fontWeight: FontWeight.w600,

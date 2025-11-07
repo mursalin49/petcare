@@ -21,7 +21,7 @@ class PortfolioController extends GetxController {
   // --- ADD IMAGE ---
   Future<void> pickAndSaveImage() async {
     final picker = ImagePicker();
-    // ✅ ফিক্সড: pickedFile ভেরিয়েবলটি সংজ্ঞায়িত করা হলো
+
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {

@@ -176,7 +176,6 @@ class PaymentHistoryContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Show empty state only for the Earnings tab example
     if (tabName == 'Earnings' && dummyHistory.isEmpty) {
       return Center(
         child: Text(
@@ -228,9 +227,6 @@ class PaymentHistoryContent extends StatelessWidget {
   }
 }
 
-// ===================================================================
-// --- 3. SAVED CARDS SCREEN (saved_cards_screen.dart) ---
-// ===================================================================
 
 class SavedCardsScreen extends StatelessWidget {
   const SavedCardsScreen({super.key});
@@ -246,7 +242,7 @@ class SavedCardsScreen extends StatelessWidget {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'Add Card', // Title from the image
+          'Add Card',
           style: GoogleFonts.montserrat(fontSize: 18.sp, fontWeight: FontWeight.w600, color: Colors.white),
         ),
         centerTitle: true,
@@ -265,7 +261,7 @@ class SavedCardsScreen extends StatelessWidget {
         padding: EdgeInsets.all(16.w),
         child: ElevatedButton(
           onPressed: () {
-            // Navigate to the card details form
+
             Get.to(() => const AddCardDetailsScreen());
           },
           style: ElevatedButton.styleFrom(
@@ -338,10 +334,7 @@ class CardItem extends StatelessWidget {
   }
 }
 
-// ===================================================================
-// --- 4. ADD CARD DETAILS SCREEN (add_card_details_screen.dart) ---
-// ===================================================================
-
+// --- AddCardDetailsScreen ---
 class AddCardDetailsScreen extends StatelessWidget {
   const AddCardDetailsScreen({super.key});
 
@@ -356,12 +349,15 @@ class AddCardDetailsScreen extends StatelessWidget {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'Card Details', // Title from image_0858c0.png
-          style: GoogleFonts.montserrat(fontSize: 18.sp, fontWeight: FontWeight.w600, color: Colors.white),
+          'Card Details',
+          style: GoogleFonts.montserrat(fontSize: 18.sp,
+              fontWeight: FontWeight.w600,
+              color: Colors.white),
         ),
         centerTitle: true,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30.r), bottomRight: Radius.circular(30.r)),
+          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30.r),
+              bottomRight: Radius.circular(30.r)),
         ),
       ),
       body: SingleChildScrollView(
@@ -369,28 +365,42 @@ class AddCardDetailsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Please enter payment information', style: GoogleFonts.montserrat(fontSize: 16.sp, fontWeight: FontWeight.w600, color: Colors.black87)),
+            Text('Please enter payment information',
+                style: GoogleFonts.montserrat(fontSize: 16.sp,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black87)),
             SizedBox(height: 20.h),
 
             // --- Card Details Form Fields ---
             _buildTextField(label: 'Name on Card', hintText: 'Name on card'),
-            _buildTextField(label: 'Card Number', hintText: '1234 5678 9101 1121', keyboardType: TextInputType.number),
+            _buildTextField(label: 'Card Number',
+                hintText: '1234 5678 9101 1121',
+                keyboardType: TextInputType.number),
 
             Row(
               children: [
-                Expanded(child: _buildTextField(label: 'Expiration Date', hintText: 'MM/YY', keyboardType: TextInputType.datetime)),
+                Expanded(child: _buildTextField(label: 'Expiration Date',
+                    hintText: 'MM/YY',
+                    keyboardType: TextInputType.datetime)),
                 SizedBox(width: 15.w),
-                Expanded(child: _buildTextField(label: 'CVV', hintText: '123', keyboardType: TextInputType.number)),
+                Expanded(child: _buildTextField(label: 'CVV',
+                    hintText: '123',
+                    keyboardType: TextInputType.number)),
               ],
             ),
 
-            _buildCountryDropdown(label: 'Country', selectedValue: 'Bangladesh'),
+            _buildCountryDropdown(
+                label: 'Country', selectedValue: 'Bangladesh'),
 
-            _buildTextField(label: 'Street Name And Number', hintText: 'Street Name And Number'),
-            _buildTextField(label: 'Additional Address Details (optional)', hintText: 'Additional Address Details (optional)'),
+            _buildTextField(label: 'Street Name And Number',
+                hintText: 'Street Name And Number'),
+            _buildTextField(label: 'Additional Address Details (optional)',
+                hintText: 'Additional Address Details (optional)'),
             _buildTextField(label: 'City/Town', hintText: 'City'),
 
-            _buildTextField(label: 'Postcode', hintText: '10000', keyboardType: TextInputType.number),
+            _buildTextField(label: 'Postcode',
+                hintText: '10000',
+                keyboardType: TextInputType.number),
 
             SizedBox(height: 20.h),
 
@@ -404,37 +414,58 @@ class AddCardDetailsScreen extends StatelessWidget {
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
           color: Colors.white,
-          boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.2), blurRadius: 10, spreadRadius: 2, offset: const Offset(0, -2))],
+          boxShadow: [
+            BoxShadow(color: Colors.grey.withOpacity(0.2),
+                blurRadius: 10,
+                spreadRadius: 2,
+                offset: const Offset(0, -2))
+          ],
         ),
         child: ElevatedButton(
-          onPressed: () { Get.back(); },
+          onPressed: () {
+            Get.back();
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.mainAppColor,
             padding: EdgeInsets.symmetric(vertical: 14.h),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.r)),
           ),
-          child: Text('Save', style: GoogleFonts.montserrat(fontSize: 16.sp, fontWeight: FontWeight.w600, color: Colors.white)),
+          child: Text('Save', style: GoogleFonts.montserrat(fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
+              color: Colors.white)),
         ),
       ),
     );
   }
 
-  Widget _buildTextField({required String label, String? hintText, TextInputType keyboardType = TextInputType.text}) {
+  Widget _buildTextField(
+      {required String label, String? hintText, TextInputType keyboardType = TextInputType
+          .text}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: GoogleFonts.montserrat(fontSize: 14.sp, fontWeight: FontWeight.w500, color: Colors.black87)),
+        Text(label, style: GoogleFonts.montserrat(fontSize: 14.sp,
+            fontWeight: FontWeight.w700,
+            color: Colors.black87)),
         SizedBox(height: 8.h),
         TextFormField(
           keyboardType: keyboardType,
           decoration: InputDecoration(
             isDense: true,
             hintText: hintText,
-            hintStyle: GoogleFonts.montserrat(fontSize: 14.sp, color: Colors.grey),
-            contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r), borderSide: BorderSide(color: Colors.grey.shade300)),
-            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r), borderSide: BorderSide(color: Colors.grey.shade300)),
-            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r), borderSide: BorderSide(color: AppColors.mainAppColor)),
+            hintStyle: GoogleFonts.montserrat(
+                fontSize: 14.sp, color: Colors.grey),
+            contentPadding: EdgeInsets.symmetric(
+                horizontal: 12.w, vertical: 12.h),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r),
+                borderSide: BorderSide(color: Colors.grey.shade300)),
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.r),
+                borderSide: BorderSide(color: Colors.grey.shade300)),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.r),
+                borderSide: BorderSide(color: AppColors.mainAppColor)),
           ),
           style: GoogleFonts.montserrat(fontSize: 14.sp),
         ),
@@ -443,11 +474,14 @@ class AddCardDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCountryDropdown({required String label, required String selectedValue}) {
+  Widget _buildCountryDropdown(
+      {required String label, required String selectedValue}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: GoogleFonts.montserrat(fontSize: 14.sp, fontWeight: FontWeight.w500, color: Colors.black87)),
+        Text(label, style: GoogleFonts.montserrat(fontSize: 14.sp,
+            fontWeight: FontWeight.w700,
+            color: Colors.black87)),
         SizedBox(height: 8.h),
         Container(
           height: 48.h,
@@ -460,12 +494,18 @@ class AddCardDetailsScreen extends StatelessWidget {
             child: DropdownButton<String>(
               isExpanded: true,
               value: selectedValue,
-              icon: const Icon(Icons.keyboard_arrow_down, color: Colors.black54),
-              style: GoogleFonts.montserrat(fontSize: 14.sp, color: Colors.black),
-              items: <String>['Bangladesh', 'USA', 'UK'].map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(value: value, child: Text(value));
+              icon: const Icon(
+                  Icons.keyboard_arrow_down, color: Colors.black54),
+              style: GoogleFonts.montserrat(
+                  fontSize: 14.sp, color: Colors.black),
+              items: <String>['Bangladesh', 'USA', 'UK'].map<
+                  DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                    value: value, child: Text(value));
               }).toList(),
-              onChanged: (String? newValue) { /* Handle country change */ },
+              onChanged: (String? newValue) {
+                /* Handle country change */
+              },
             ),
           ),
         ),
@@ -488,7 +528,7 @@ class AddCardDetailsScreen extends StatelessWidget {
             'Your information is secure',
             style: GoogleFonts.montserrat(
               fontSize: 14.sp,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w700,
               color: Colors.black87,
             ),
           ),
@@ -496,8 +536,7 @@ class AddCardDetailsScreen extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // *** FIX 2: Using a clear security icon ***
-              Icon(Icons.shield_outlined, size: 18.r, color: AppColors.mainAppColor),
+             Icon(Icons.person, color: Color(0xFF035F75)),
               SizedBox(width: 8.w),
               Expanded(
                 child: Text(
@@ -515,4 +554,4 @@ class AddCardDetailsScreen extends StatelessWidget {
       ),
     );
   }
-  }
+}
