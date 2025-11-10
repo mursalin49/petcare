@@ -70,7 +70,7 @@ class DeleteAccountDialog extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    // এখানে delete logic বসাতে পারো
+
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.redAccent,

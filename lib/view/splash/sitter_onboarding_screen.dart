@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_svg/flutter_svg.dart'; // <<< 1. Import flutter_svg
 
-
+import '../../helpers/route.dart';
 import '../../utils/app_colors.dart';
 
 class SitterOnboardingScreen extends StatelessWidget {
   const SitterOnboardingScreen({super.key});
   static const String dog1Asset = 'assets/images/dog1.png';
-  static const String dog2Asset = 'assets/images/dog2.png';
+  static const String dog2Asset = 'assets/images/dog2 (2).png';
 
   @override
   Widget build(BuildContext context) {
@@ -36,14 +38,16 @@ class SitterOnboardingScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // --- Section: Get paid to play with pets ---
-            Text('Get paid to play with pets', style: GoogleFonts.montserrat(fontSize: 24.sp, fontWeight: FontWeight.bold, color: Colors.black87)),
+            Text('Get paid to play with pets', style: GoogleFonts.montserrat(fontSize: 20.sp, fontWeight: FontWeight.bold, color: Colors.black87)),
             SizedBox(height: 10.h),
-            Text(
+            const Text(
               'Wuffoos makes it easy and promotes you to the nation\'s largest network of pet owners, delivering dog-walking, connecting you love.',
-              style: GoogleFonts.montserrat(fontSize: 14.sp, height: 1.5, color: Colors.black54),
+              style: TextStyle(fontSize: 14, height: 1.5, color: Colors.black54),
             ),
             SizedBox(height: 20.h),
-            _buildPrimaryButton(text: 'Get started', onPressed: () {}),
+            _buildPrimaryButton(text: 'Get started', onPressed: () {
+              Get.toNamed(AppRoutes.loginScreen);
+            }),
 
             SizedBox(height: 30.h),
 
@@ -52,12 +56,14 @@ class SitterOnboardingScreen extends StatelessWidget {
             SizedBox(height: 10.h),
 
             _buildCheckListItem('Set your own schedule and prices'),
-            _buildCheckListItem('Offer any combination of pet care services'),
+            _buildCheckListItem('Offer any combination of pet care home'),
             _buildCheckListItem('Set the, age and other pet preferences that work for you.'),
 
             SizedBox(height: 20.h),
 
-            //
+            // Image and text box sections... (omitted for brevity)
+            // ...
+
             // --- Image 1 (dog1.png) ---
             Center(
               child: ClipRRect(
@@ -78,8 +84,6 @@ class SitterOnboardingScreen extends StatelessWidget {
                 ),
               ),
             ),
-
-            // --- Floating Text Box (Upper) ---
             Transform.translate(
               offset: Offset(0, -30.h),
               child: Container(
@@ -92,36 +96,28 @@ class SitterOnboardingScreen extends StatelessWidget {
                 ),
                 child: Text(
                   "It's easy. I go to the calendar and mark myself as available when I want to be.",
-                  style: GoogleFonts.montserrat(fontSize: 13.sp, color: Colors.black87, fontStyle: FontStyle.italic),
+                  style: GoogleFonts.montserrat(fontSize: 13.sp, color: Colors.black87),
                   textAlign: TextAlign.center,
                 ),
               ),
             ),
-
             SizedBox(height: 10.h),
-
-            // --- Section: The tools to succeed ---
             Text('The tools to succeed', style: GoogleFonts.montserrat(fontSize: 18.sp, fontWeight: FontWeight.w600, color: Colors.black87)),
             SizedBox(height: 10.h),
-
             _buildCheckListItem('The Wuffoos Guarantee which includes up to \$25,000 in vet cost reimbursement'),
             _buildCheckListItem('Manage your pet sitting schedule and more with the Wuffoos app'),
             _buildCheckListItem('24/7 support, including vet assistance'),
-
             SizedBox(height: 30.h),
-
-            // --- Section: How it works (Part 1 - Text) ---
             Text('How it works', style: GoogleFonts.montserrat(fontSize: 24.sp, fontWeight: FontWeight.bold, color: Colors.black87)),
             SizedBox(height: 20.h),
-
-            _buildHowItWorksItem(title: 'Create your profile', description: 'Tell us a little about yourself and what pet services you want to offer.'),
+            _buildHowItWorksItem(title: 'Create your profile', description: 'Tell us a little about yourself and what pet home you want to offer.'),
             _buildHowItWorksItem(title: 'Accept requests', description: 'Tell us the types of pets you want to care for and the dates that work for you. You make your own schedule.'),
             _buildHowItWorksItem(title: 'Get paid', description: 'Payments are sent directly to your bank once you have completed a service.'),
-
+            SizedBox(height: 10.h),
+            _buildPrimaryButton(text: 'Get started', onPressed: () {
+              Get.toNamed(AppRoutes.loginScreen);
+            }),
             SizedBox(height: 20.h),
-
-            //
-            // --- Image 2 (dog2.png) ---
             Center(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10.r),
@@ -141,8 +137,6 @@ class SitterOnboardingScreen extends StatelessWidget {
                 ),
               ),
             ),
-
-            // --- Floating Text Box (Lower) ---
             Transform.translate(
               offset: Offset(0, -30.h),
               child: Container(
@@ -160,53 +154,50 @@ class SitterOnboardingScreen extends StatelessWidget {
                 ),
               ),
             ),
-
             SizedBox(height: 10.h),
-
+            // ...
 
             // --- Section: Services ---
-            Text('Services', style: GoogleFonts.montserrat(fontSize: 24.sp, fontWeight: FontWeight.bold, color: Colors.black87)),
+            Text('Services', style: GoogleFonts.montserrat(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black87)),
             SizedBox(height: 15.h),
 
             _buildServiceCard(
-                icon: Icons.home_work_outlined,
+
+                svgIconPath: 'assets/icons/bording.svg',
                 title: 'Boarding',
                 subtitle: 'Care for a dog or cat overnight in your home. Sitters who offer boarding can make up to 3x more than sitters don\'t.',
                 highlight: 'HIGHEST EARNING'
             ),
+
+            // Example 2: Using the standard IconData (if svgIconPath is null)
             _buildServiceCard(
-              icon: Icons.pets_outlined,
+              svgIconPath: 'assets/icons/doggy.svg',
               title: 'Doggy Day Care',
               subtitle: 'Watch dogs during the day. Drop off and pick up in their own homes.',
             ),
+
+            // Example 3: Using the NEW svgIconPath
             _buildServiceCard(
-              icon: Icons.directions_walk_outlined,
+              svgIconPath: 'assets/icons/doggyfoot.svg', // <<< Using another SVG icon
               title: 'Dog Walking',
               subtitle: 'Take dogs out for a walk in your schedule.',
             ),
 
             SizedBox(height: 30.h),
 
-            // --- Section: Safety first. Always. ---
-            Text('Safety first. Always.', style: GoogleFonts.montserrat(fontSize: 24.sp, fontWeight: FontWeight.bold, color: Colors.black87)),
+            // --- Safety section... (omitted for brevity) ---
+            Text('Safety first. Always.', style: GoogleFonts.montserrat(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black87)),
             SizedBox(height: 10.h),
-            Text('We work tirelessly to ensure tails keep wagging and purrs keep coming.', style: GoogleFonts.montserrat(fontSize: 14.sp, height: 1.5, color: Colors.black54)),
+            const Text('We work tirelessly to ensure tails keep wagging and purrs keep coming.', style: TextStyle(fontSize: 14, height: 1.5, color: Colors.black54)),
             SizedBox(height: 15.h),
-
             _buildSafetyCheckListItem('Every service you offer on Wuffoos is backed by The Wuffoos Guarantee'),
             _buildSafetyCheckListItem('Safe, secured, and convenient online payments'),
             _buildSafetyCheckListItem('A top tier support team available 24/7'),
             _buildSafetyCheckListItem('Ongoing pet parent and sitter education'),
-
             SizedBox(height: 30.h),
-
-            // --- Section: Connect with pet owners ones your profile is approve ---
             Text('Connect with pet owners ones your profile is approve', style: GoogleFonts.montserrat(fontSize: 16.sp, fontWeight: FontWeight.w600, color: Colors.black87)),
             SizedBox(height: 10.h),
-
-            // --- Bottom CTA Button ---
             _buildPrimaryButton(text: 'Start creating your profile', onPressed: () {}),
-
             SizedBox(height: 40.h),
           ],
         ),
@@ -233,6 +224,7 @@ class SitterOnboardingScreen extends StatelessWidget {
     );
   }
 
+  // ... (Other utility widgets like _buildCheckListItem, _buildSafetyCheckListItem, _buildHowItWorksItem are unchanged)
   Widget _buildCheckListItem(String text) {
     return Padding(
       padding: EdgeInsets.only(bottom: 8.h),
@@ -279,7 +271,33 @@ class SitterOnboardingScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildServiceCard({required IconData icon, required String title, required String subtitle, String? highlight}) {
+  // <<< 2. Modified _buildServiceCard to accept IconData or String? svgIconPath
+  Widget _buildServiceCard({
+    IconData? icon, // Made optional (IconData?)
+    String? svgIconPath, // New optional parameter for SVG path
+    required String title,
+    required String subtitle,
+    String? highlight,
+  }) {
+    // Determine which icon to display
+    Widget iconWidget;
+    if (svgIconPath != null) {
+      // If SVG path is provided, use SvgPicture.asset
+      iconWidget = SvgPicture.asset(
+        svgIconPath,
+        height: 28.r,
+        width: 28.r,
+        // Use colorFilter to apply the primary color to the SVG
+        colorFilter: ColorFilter.mode(AppColors.mainAppColor, BlendMode.srcIn),
+      );
+    } else if (icon != null) {
+      // If IconData is provided, use standard Icon
+      iconWidget = Icon(icon, size: 28.r, color: AppColors.mainAppColor);
+    } else {
+      // Fallback: If neither is provided, use a placeholder
+      iconWidget = SizedBox(width: 28.r);
+    }
+
     return Container(
       margin: EdgeInsets.only(bottom: 15.h),
       padding: EdgeInsets.all(15.w),
@@ -292,7 +310,7 @@ class SitterOnboardingScreen extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 28.r, color: AppColors.mainAppColor),
+          iconWidget, // <<< Display the chosen icon widget
           SizedBox(width: 15.w),
           Expanded(
             child: Column(

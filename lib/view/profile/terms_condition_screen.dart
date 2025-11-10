@@ -62,9 +62,9 @@ class TermsConditionScreen extends StatelessWidget {
 
             Text(
               "Welcome to Services App !\n\n"
-                  "Accessing or using our services, you agree to be bound "
+                  "Accessing or using our home, you agree to be bound "
                   "by these Terms of Service. If you do not agree with any "
-                  "part of the terms, you must not use our services.",
+                  "part of the terms, you must not use our home.",
               style: GoogleFonts.montserrat(
                 fontSize: 13.sp,
                 fontWeight: FontWeight.w400,

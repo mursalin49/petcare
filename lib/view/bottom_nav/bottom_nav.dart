@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:petcare/view/bookings/booking_screen.dart';
-import 'package:petcare/view/inbox/inbox_screen.dart';
 import 'package:petcare/view/profile/profile_screen.dart' hide AppColors;
-import 'package:petcare/view/services/services_screen.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_icons.dart';
+import '../create_service/create_service.dart';
+import '../home/home_screen.dart';
 
 
 
@@ -29,16 +29,16 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
   }
 
   final List<Widget> _pages = [
-     ServicesScreen(),
-     InboxScreen(),
+    HomeScreen(),
+    CreateService(),
      BookingsScreen(),
     ProfileScreen()
   ];
 
   // Create nav items in a getter
   List<BottomNavigationBarItem> get _navItems => [
-    _navItem(AppIcons.serviceNavIcon, AppIcons.serviceNavIconS, "Services", 0),
-    _navItem(AppIcons.inboxIcon, AppIcons.inboxIconS, "inbox",  1),
+    _navItem(AppIcons.home, AppIcons.homes, "Home", 0),
+    _navItem(AppIcons.create, AppIcons.creates, " Create Service",  1),
     _navItem(AppIcons.bookingsICon, AppIcons.bookingsIConS, "Bookings",  2),
     _navItem(AppIcons.profileIcon, AppIcons.profileIconS, "Profile",  3),
   ];
@@ -57,14 +57,14 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
             topLeft: Radius.circular(20.r),
             topRight: Radius.circular(20.r),
           ),
-          // boxShadow: [
-          //   BoxShadow(
-          //     color: const Color(0xFF000000).withOpacity(0.08),
-          //     offset: const Offset(4, 0),
-          //     blurRadius: 4,
-          //     spreadRadius: 0,
-          //   ),
-          // ],
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF000000).withOpacity(0.08),
+              offset: const Offset(4, 0),
+              blurRadius: 4,
+              spreadRadius: 0,
+            ),
+          ],
           border: const Border(
             top: BorderSide(
               color: Color(0xFFE3E6F0),

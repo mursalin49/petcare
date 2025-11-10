@@ -14,6 +14,7 @@ class AppColors {
   static const Color buttonColor = Color(0xFFED3C8C);
   static const Color textColor = Color(0xFF413B3F);
   static const Color yello = Color(0xFFF1C400);
+  static const Color inputBorder = Color(0xFFD2D2D2);
 
   static const Color primary = Color(0xFFFF4F79);
   static const Color secondary = Color(0xFFB360FF);
@@ -22,7 +23,17 @@ class AppColors {
   static const Color backgroundGradientEnd = Color(0xFFFFFFFF);
   static const Color textDark = Color(0xFF333333);
   static const Color inputBorderColor = Color(0xFFE3E6F0);
-  static const Color grey = Colors.grey;
+  // static const Color grey = Colors.grey;
+  static const Color primaryText = Color(0xFF000000);
+  static const Color secondaryText = Color(0xFF585858);
+  static const Color border = Color(0xFFE3E6F0);
+  static const Color Secondaryborder = Color(0xFF9ABFC8);
+  static const Color grey = Color(0xFF585858);
+
+
+
+
+
 
 
 

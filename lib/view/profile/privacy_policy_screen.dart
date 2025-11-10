@@ -56,7 +56,7 @@ SizedBox(height: 15.h),
             Text(
               "We collect personal information that you voluntarily provide to us when you register on "
                   "the [app/service], express an interest in obtaining information about us or our products "
-                  "and services,\n\n"
+                  "and home,\n\n"
                   "The personal information that we collect depends on the context of your interactions "
                   "with us and the [app/service], the choices you make, and the products and features you use.",
               style: GoogleFonts.montserrat(
