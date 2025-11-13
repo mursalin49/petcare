@@ -46,7 +46,7 @@ class PaymentsScreen extends StatelessWidget {
           title: Text(
             'Payments',
             style: GoogleFonts.montserrat(
-              fontSize: 18.sp,
+              fontSize: 18,
               fontWeight: FontWeight.w600,
               color: Colors.white,
             ),
@@ -70,7 +70,7 @@ class PaymentsScreen extends StatelessWidget {
               Text(
                 'Payment History',
                 style: GoogleFonts.montserrat(
-                  fontSize: 16.sp,
+                  fontSize: 18,
                   fontWeight: FontWeight.w600,
                   color: Colors.black87,
                 ),
@@ -243,7 +243,7 @@ class SavedCardsScreen extends StatelessWidget {
         ),
         title: Text(
           'Add Card',
-          style: GoogleFonts.montserrat(fontSize: 18.sp, fontWeight: FontWeight.w600, color: Colors.white),
+          style: GoogleFonts.montserrat(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
         ),
         centerTitle: true,
         shape: RoundedRectangleBorder(
@@ -269,7 +269,7 @@ class SavedCardsScreen extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 14.h),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
           ),
-          child: Text('Add Default Payment Method', style: GoogleFonts.montserrat(fontSize: 16.sp, fontWeight: FontWeight.w600, color: Colors.white)),
+          child: Text('Add Default Payment Method', style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white)),
         ),
       ),
     );
@@ -288,10 +288,15 @@ class CardItem extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 15.h),
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Color(0xFFFFFFFF),
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
-          BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 5),
+          BoxShadow(
+            color: Color(0xFFE3E6F0),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: const Offset(0, 3),
+          ),
         ],
       ),
       child: Row(
@@ -324,6 +329,7 @@ class CardItem extends StatelessWidget {
             ),
           ),
           IconButton(
+            // SvgPicture.asset("assets/images/appLogo.svg"),
             icon: const Icon(Icons.delete_outline, color: Colors.red),
             iconSize: 20.r,
             onPressed: () {},
@@ -366,9 +372,9 @@ class AddCardDetailsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Please enter payment information',
-                style: GoogleFonts.montserrat(fontSize: 16.sp,
+                style: GoogleFonts.montserrat(fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: Colors.black87)),
+                    color: Color(0xFF585858))),
             SizedBox(height: 20.h),
 
             // --- Card Details Form Fields ---
@@ -383,7 +389,7 @@ class AddCardDetailsScreen extends StatelessWidget {
                     hintText: 'MM/YY',
                     keyboardType: TextInputType.datetime)),
                 SizedBox(width: 15.w),
-                Expanded(child: _buildTextField(label: 'CVV',
+                Expanded(child: _buildTextField(label: 'CVC',
                     hintText: '123',
                     keyboardType: TextInputType.number)),
               ],
@@ -431,8 +437,8 @@ class AddCardDetailsScreen extends StatelessWidget {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.r)),
           ),
-          child: Text('Save', style: GoogleFonts.montserrat(fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
+          child: Text('Save', style: GoogleFonts.inter(fontSize: 16,
+              fontWeight: FontWeight.w500,
               color: Colors.white)),
         ),
       ),
@@ -445,9 +451,9 @@ class AddCardDetailsScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: GoogleFonts.montserrat(fontSize: 14.sp,
+        Text(label, style: GoogleFonts.inter(fontSize: 14,
             fontWeight: FontWeight.w700,
-            color: Colors.black87)),
+            color: Color(0xFF333333))),
         SizedBox(height: 8.h),
         TextFormField(
           keyboardType: keyboardType,
@@ -455,7 +461,7 @@ class AddCardDetailsScreen extends StatelessWidget {
             isDense: true,
             hintText: hintText,
             hintStyle: GoogleFonts.montserrat(
-                fontSize: 14.sp, color: Colors.grey),
+                fontSize: 16, color: Color(0xFF7F7F7F)),
             contentPadding: EdgeInsets.symmetric(
                 horizontal: 12.w, vertical: 12.h),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r),
@@ -479,9 +485,9 @@ class AddCardDetailsScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: GoogleFonts.montserrat(fontSize: 14.sp,
+        Text(label, style: GoogleFonts.inter(fontSize: 14,
             fontWeight: FontWeight.w700,
-            color: Colors.black87)),
+            color: Color(0xFF333333))),
         SizedBox(height: 8.h),
         Container(
           height: 48.h,
@@ -497,7 +503,7 @@ class AddCardDetailsScreen extends StatelessWidget {
               icon: const Icon(
                   Icons.keyboard_arrow_down, color: Colors.black54),
               style: GoogleFonts.montserrat(
-                  fontSize: 14.sp, color: Colors.black),
+                  fontSize: 16, color: Color(0xFF7F7F7F)),
               items: <String>['Bangladesh', 'USA', 'UK'].map<
                   DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
@@ -526,8 +532,8 @@ class AddCardDetailsScreen extends StatelessWidget {
         children: [
           Text(
             'Your information is secure',
-            style: GoogleFonts.montserrat(
-              fontSize: 14.sp,
+            style: GoogleFonts.inter(
+              fontSize: 16,
               fontWeight: FontWeight.w700,
               color: Colors.black87,
             ),
@@ -541,9 +547,9 @@ class AddCardDetailsScreen extends StatelessWidget {
               Expanded(
                 child: Text(
                   'We use bank-level encryption and Stripe to protect your payment information',
-                  style: GoogleFonts.montserrat(
-                    fontSize: 12.sp,
-                    color: Colors.black54,
+                  style: GoogleFonts.inter(
+                    fontSize: 12,
+                    color: Color(0xFF000000),
                     height: 1.4,
                   ),
                 ),

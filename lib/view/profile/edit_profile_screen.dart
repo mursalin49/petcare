@@ -11,7 +11,7 @@ class EditProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.bgColor,
       appBar: AppBar(
         backgroundColor: AppColors.mainAppColor,
         elevation: 0,
@@ -167,10 +167,11 @@ class EditProfileScreen extends StatelessWidget {
         ),
         SizedBox(height: 8.h),
         CustomTextField(
+
           hintText: hint,
           keyboardType: keyboardType ?? TextInputType.text,
-          fieldBorderRadius: 12,
-          fieldBorderColor: AppColors.inputBorderColor,
+          fieldBorderRadius: 14,
+          fillColor: AppColors.white,
         ),
       ],
     );

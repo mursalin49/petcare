@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:petcare/view/auth/widget/custom_dropdown.dart';
+import '../../helpers/route.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_icons.dart';
 import '../components/custom_text_field.dart';
@@ -286,7 +287,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(height: MediaQuery.of(context).size.height * 0.030),
                       GestureDetector(
                         onTap: (){
-                          // Get.offNamed(AppRoutes.bottomNavScreen);
+                          Get.offNamed(AppRoutes.loginScreen);
                         },
                         child: Container(
                           width: double.infinity,

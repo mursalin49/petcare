@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:petcare/view/profile/payments_screen.dart';
 import 'package:petcare/view/profile/portfolio_screen.dart';
 import 'package:petcare/view/profile/privacy_policy_screen.dart';
+import 'package:petcare/view/profile/promo_code.dart';
 import 'package:petcare/view/profile/services_screen.dart';
 import 'package:petcare/view/profile/terms_condition_screen.dart';
 
@@ -66,11 +67,11 @@ class ProfileScreen extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Color(0xFFFFFFFF),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Color(0xFFE3E6F0),
             spreadRadius: 1,
             blurRadius: 5,
             offset: const Offset(0, 3),
@@ -87,7 +88,7 @@ class ProfileScreen extends StatelessWidget {
               style: GoogleFonts.montserrat(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
-                color: AppColors.textDark,
+                color: Color(0xFF1F2937),
               ),
             ),
             SizedBox(height: 16.h),
@@ -168,7 +169,7 @@ class ProfileScreen extends StatelessWidget {
                 style: GoogleFonts.montserrat(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
-                  color: titleColor ?? Colors.black87,
+                  color: titleColor ?? Color(0xFF585858),
                 ),
               ),
             ),
@@ -198,7 +199,7 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
 
-      backgroundColor: const Color(0xFFF7F7F7),
+      backgroundColor: AppColors.bgColor,
       appBar: AppBar(
         backgroundColor: AppColors.mainAppColor,
         elevation: 0,
@@ -451,16 +452,16 @@ class ProfileScreen extends StatelessWidget {
                           Text(
                             '\$900.50',
                             style: TextStyle(
-                              fontFamily: 'BaksoSapi',
+                              fontFamily: 'Montserrat',
                               fontSize: 18.sp,
-                              fontWeight: FontWeight.w400,
+                              fontWeight: FontWeight.w600,
                               color: AppColors.textDark,
                             ),
                           ),
                         ],
                       ),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () => Get.to(() => const PromoCodeScreen()),
                         child: Container(
                           decoration: BoxDecoration(
                             border: Border(

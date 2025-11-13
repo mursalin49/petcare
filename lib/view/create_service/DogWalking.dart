@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:petcare/view/create_service/Boarding.dart';
-import 'package:petcare/view/create_service/dog_day_care.dart';
+
+// =============================================================================
+// I. DUMMY COLORS & ROUTING (For self-contained example)
+// =============================================================================
 
 class AppColors {
   static const Color mainAppColor = Color(0xFF035F75);
@@ -17,15 +19,9 @@ class AppColors {
   static const Color inputBorder = Color(0xFFD1D1D6);
 }
 
-class DogWalkingSetupScreen extends StatelessWidget {
-  const DogWalkingSetupScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    // Redirects to the DogWalkingRateScreen which is the main setup page
-    return const DogWalkingRateScreen();
-  }
-}
-
+// =============================================================================
+// II. GETX CONTROLLER (Data Model - Unchanged, already correct)
+// =============================================================================
 class DogWalkingController extends GetxController {
   // --- Rates ---
   var selectedService = 'Dog Walking'.obs;
@@ -36,24 +32,16 @@ class DogWalkingController extends GetxController {
   var maxWalksPerDay = 4.obs;
   var availableTimes = '6am - 11am'.obs;
 
-  // --- Location/Area (Screen 2) ---
+  // --- Location/Area ---
   var useHomeAddress = true.obs;
   var selectedDistanceType = 'Miles'.obs;
   var serviceAreaDistance = 5.obs; // Example initial distance
-  var selectedTravelModes = {'Walking': true.obs, 'Cycling': false.obs, 'Driving': true.obs}.obs;
+  var selectedTravelModes = {'Walking': true.obs, 'Cycling': false.obs, 'Driving': false.obs}.obs;
 
-  // --- Pet Preferences (Screen 2) ---
-  var petSizes = {'Small dog (0-15 lbs)': true.obs, 'Medium dog (16-40 lbs)': true.obs, 'Large dog (41-100 lbs)': false.obs, 'Giant dog (100+ lbs)': false.obs,}.obs;
+  // --- Pet Preferences ---
+  var petSizes = {'Small dog (0-15 lbs)': true.obs, 'Medium dog (16-40 lbs)': true.obs, 'Large dog (41-100 lbs)': true.obs, 'Giant dog (100+ lbs)': true.obs,}.obs;
   var acceptsPuppies = true.obs;
-  var cancellationPolicy = {'Same day': true.obs, 'One day': false.obs, 'Two day': false.obs, 'Three day': false.obs,}.obs;
-
-
-  void incrementMaxWalks() => maxWalksPerDay.value++;
-  void decrementMaxWalks() {
-    if (maxWalksPerDay.value > 1) {
-      maxWalksPerDay.value--;
-    }
-  }
+  var cancellationPolicy = {'Same day': true.obs, 'One day': true.obs, 'Two day': true.obs, 'Three day': true.obs,}.obs;
 
   void toggleAdditionalRates() {
     showAdditionalRates.value = !showAdditionalRates.value;
@@ -66,154 +54,28 @@ class DogWalkingController extends GetxController {
   }
 }
 
+// =============================================================================
+// III. MAIN SCREEN (Merged from all screenshots)
+// =============================================================================
 
-class DogWalkingDetailScreen extends StatelessWidget {
-  const DogWalkingDetailScreen({super.key});
-
+/// Wrapper screen to initialize the controller
+class DogWalkingSetupScreen extends StatelessWidget {
+  const DogWalkingSetupScreen({super.key});
   @override
   Widget build(BuildContext context) {
-    // Find the existing controller initialized in DogWalkingRateScreen
-    final controller = Get.find<DogWalkingController>();
-
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: _buildCustomAppBar(context, 'Dog Walking'),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 10.h),
-
-                // --- Day Selector (Small) ---
-                _buildSmallDaySelectors(),
-                SizedBox(height: 10.h),
-                Text('You can edit any date individually by going to your calendar.', style: GoogleFonts.montserrat(fontSize: 12.sp, color: AppColors.secondaryText)),
-
-                SizedBox(height: 20.h),
-                Divider(color: AppColors.border, height: 1.h),
-                SizedBox(height: 20.h),
-
-                // --- Time Slots ---
-                _buildSectionTitle('What times are you available for Dog walking on weekdays?'),
-                Wrap(
-                  spacing: 10.w, runSpacing: 10.h,
-                  children: [
-                    _buildTimeSlotChip('6am - 11am', controller),
-                    _buildTimeSlotChip('11am - 3pm', controller),
-                    _buildTimeSlotChip('3pm - 10pm', controller),
-                    _buildTimeSlotChip('None', controller),
-                  ],
-                ),
-                SizedBox(height: 20.h),
-
-                // --- Location Toggle & Input ---
-                Obx(() => _buildSwitchToggle(
-                    text: 'Use my home address',
-                    value: controller.useHomeAddress.value,
-                    onChanged: (val) => controller.useHomeAddress.value = val!
-                )),
-                SizedBox(height: 10.h),
-                _buildInputWithLabel(label: 'Location', initialValue: '1000, BD'),
-
-                SizedBox(height: 20.h),
-                Divider(color: AppColors.border, height: 1.h),
-                SizedBox(height: 20.h),
-
-                // --- Service Area ---
-                _buildSectionTitle('Service Area'),
-                Text('The service area you define here will be for house sitting.', style: GoogleFonts.montserrat(fontSize: 12.sp, color: AppColors.secondaryText)),
-                SizedBox(height: 15.h),
-
-                _buildMapPlaceholder(),
-                SizedBox(height: 15.h),
-
-                // Distance Type Radio
-                Obx(() => Row(
-                  children: [
-                    _buildRadioOption<String>(text: 'Miles', value: 'Miles', groupValue: controller.selectedDistanceType.value, onChanged: (val) => controller.selectedDistanceType.value = val!),
-                    SizedBox(width: 20.w),
-                    _buildRadioOption<String>(text: 'Minutes', value: 'Minutes', groupValue: controller.selectedDistanceType.value, onChanged: (val) => controller.selectedDistanceType.value = val!),
-                  ],
-                )),
-                SizedBox(height: 15.h),
-
-                // Service Area Input
-                _buildServiceAreaInput(controller),
-                SizedBox(height: 20.h),
-
-                // Travel Mode Checkboxes
-                _buildSectionTitle('Travel mode'),
-                ...controller.selectedTravelModes.keys.map((key) => Obx(() => _buildSquareCheckbox(
-                    text: key,
-                    value: controller.selectedTravelModes[key]!.value,
-                    onChanged: (val) => controller.toggleCheckbox(controller.selectedTravelModes, key, val!)
-                ))).toList(),
-
-                SizedBox(height: 20.h),
-                Divider(color: AppColors.border, height: 1.h),
-                SizedBox(height: 20.h),
-
-                // --- Pet Hosting ---
-                _buildSectionTitle('What type of pets can you host in your home?'),
-                ...controller.petSizes.keys.map((key) => Obx(() => _buildSquareCheckbox(
-                    text: key,
-                    value: controller.petSizes[key]!.value,
-                    onChanged: (val) => controller.toggleCheckbox(controller.petSizes, key, val!)
-                ))).toList(),
-                SizedBox(height: 20.h),
-
-                // --- Puppies ---
-                _buildSectionTitle('Do you accept puppies under 1 year old?'),
-                Obx(() => Row(
-                  children: [
-                    _buildRadioOption<bool>(text: 'Yes', value: true, groupValue: controller.acceptsPuppies.value, onChanged: (val) => controller.acceptsPuppies.value = val!),
-                    SizedBox(width: 20.w),
-                    _buildRadioOption<bool>(text: 'No', value: false, groupValue: controller.acceptsPuppies.value, onChanged: (val) => controller.acceptsPuppies.value = val!),
-                  ],
-                )),
-
-                SizedBox(height: 20.h),
-                Divider(color: AppColors.border, height: 1.h),
-                SizedBox(height: 20.h),
-
-                // --- Cancellation Policy ---
-                _buildSectionTitle('What is your cancellation policy for Doggy Day Care?'),
-                ...controller.cancellationPolicy.keys.map((key) => Obx(() => _buildSquareCheckbox(
-                    text: key,
-                    value: controller.cancellationPolicy[key]!.value,
-                    onChanged: (val) => controller.toggleCheckbox(controller.cancellationPolicy, key, val!)
-                ))).toList(),
-
-                SizedBox(height: 100.h), // Extra space for sticky footer
-              ],
-            ),
-          ),
-
-          // --- Bottom CTA Button ---
-          Positioned(
-            bottom: 0, left: 0, right: 0,
-            child: _buildStickyFooter(context, 'Create Service'),
-          ),
-        ],
-      ),
-    );
+    // Initialize controller here so it can be found
+    final controller = Get.put(DogWalkingController());
+    return const DogWalkingServiceSetupScreen();
   }
-
-// Utility Widgets (Definitions moved to the bottom section for consolidation)
-// ...
 }
 
-class DogWalkingRateScreen extends StatelessWidget {
-  const DogWalkingRateScreen({super.key});
+/// This is the main screen, combining all elements from the screenshots.
+class DogWalkingServiceSetupScreen extends StatelessWidget {
+  const DogWalkingServiceSetupScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Initialize controller here so it can be found by DogWalkingDetailScreen
-    final controller = Get.put(DogWalkingController());
-
+    final controller = Get.find<DogWalkingController>();
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: _buildCustomAppBar(context, 'Dog Walking'),
@@ -224,52 +86,57 @@ class DogWalkingRateScreen extends StatelessWidget {
           children: [
             SizedBox(height: 10.h),
 
+            // --- Service Name (from image_9000da.png) ---
             _buildServiceSelection(controller),
+
+            // --- Info Banner (from image_9000da.png) ---
             _buildInfoBanner(),
             SizedBox(height: 20.h),
 
-            // --- Set your base rate ---
-            _buildSectionTitle('Set your base rate', isMainTitle: true),
-            _buildBaseRateInput(
-              title: 'Per walk ',
-              initialValue: '28.00',
-              keepPercentage: 'What you will earn per service: \$24.00',
+            // --- Set your base rate (from image_9000da.png) ---
+            _buildSectionTitle('Set your base rate'),
+            _buildRateInputField(
+              title: 'Per walk',
+              placeholderValue: '28.00',
+              keepText: 'What you will earn per service: \$24.00',
+              rateType: 'Per walk',
+              showKeepText: true,
             ),
-
             SizedBox(height: 20.h),
-            // Checkbox (Update my additional rates)
-            Obx(() => _buildSwitchToggle(
+
+            // --- Checkbox (Update my additional rates) ---
+            Obx(() => _buildSquareCheckbox(
                 text: 'Update my additional rates based on my base rate',
                 value: controller.updateAdditionalRates.value,
                 onChanged: (val) => controller.updateAdditionalRates.value = val!
             )),
             Text('Turn off to adjust your rate manually', style: GoogleFonts.montserrat(fontSize: 12.sp, color: AppColors.secondaryText)),
-
             SizedBox(height: 20.h),
 
-            // --- Additional Rates Section (Toggleable) ---
+            // --- Additional Rates Section (Toggleable) (from image_9001b2.png) ---
             Obx(() {
               if (controller.showAdditionalRates.value) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildRateInput(title: '60 minute rate', initialValue: '45.00', keepPercentage: 'You keep: \$38.00'),
-                    _buildRateInput(title: 'Holiday Rate', initialValue: '35.00', keepPercentage: 'You keep: \$28.00'),
-                    _buildRateInput(title: 'Additional Dog Rate', initialValue: '10.00', keepPercentage: 'You keep: \$8.00'),
-                    _buildRateInput(title: 'Puppy Rate', initialValue: '32.00', keepPercentage: 'You keep: \$26.00'),
+                    _buildRateInputField(title: '60 minute rate', placeholderValue: '28.00', keepText: 'You keep: \$24.00', rateType: 'Per day', showKeepText: true),
+                    _buildRateInputField(title: 'Holiday Rate', placeholderValue: '28.00', keepText: 'You keep: \$24.00', rateType: 'Per day', showKeepText: true),
+                    _buildRateInputField(title: 'Additional Rate', placeholderValue: '28.00', keepText: 'You keep: \$24.00', rateType: 'Per day', showKeepText: true),
+                    _buildRateInputField(title: 'Puppy Rate', placeholderValue: '28.00', keepText: 'You keep: \$24.00', rateType: 'Per day', showKeepText: true),
 
-                    Obx(() => _buildSquareCheckbox(
+                    _buildSquareCheckbox(
                         text: 'Offer for free',
-                        value: false,
+                        value: false, // Default value from screenshot
                         onChanged: (val) => {}
-                    )),
-                    SizedBox(height: 10.h),
+                    ),
+                    SizedBox(height: 15.h),
 
-                    _buildRateInput(
+                    _buildRateInputField(
                       title: 'Daily Sitter Pick-Up/Drop-Off',
-                      initialValue: '15.00',
-                      keepPercentage: 'You keep: \$12.00',
-                      addBottomSpacing: true,
+                      placeholderValue: '28.00',
+                      keepText: 'You keep: 80%', // Match screenshot
+                      rateType: 'Per day',
+                      showKeepText: true,
                     ),
                   ],
                 );
@@ -283,57 +150,200 @@ class DogWalkingRateScreen extends StatelessWidget {
                 controller.toggleAdditionalRates,
                 controller.showAdditionalRates.value
             )),
-
             SizedBox(height: 30.h),
             Divider(color: AppColors.border, height: 1.h),
             SizedBox(height: 30.h),
 
-            // --- AVAILABILITY SECTION ---
+            // --- AVAILABILITY SECTION (from image_9000da.png & 9004a1.png) ---
             _buildSectionTitle('Availability'),
-
             Text('How many walks can you do per day?', style: GoogleFonts.montserrat(fontSize: 14.sp, color: AppColors.primaryText)),
             SizedBox(height: 10.h),
-            _buildWalksCountSelector(controller),
-            SizedBox(height: 15.h),
 
+            // **MODIFIED** - Changed to a simple input to match the design
+            _buildWalksCountInput(controller),
+
+            SizedBox(height: 15.h),
             Text('You can edit any date individually by going to your calendar.', style: GoogleFonts.montserrat(fontSize: 12.sp, color: AppColors.secondaryText)),
             SizedBox(height: 10.h),
-
             _buildDaySelectors(),
+            SizedBox(height: 20.h),
 
-            SizedBox(height: 30.h),
+            // --- Time Slots (from image_9004a1.png) ---
+            _buildSectionTitle('What times are you available for Dog walking on weekdays?'),
+            Obx(() => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildRadioOption<String>(text: '6am - 11am', value: '6am - 11am', groupValue: controller.availableTimes.value, onChanged: (val) => controller.availableTimes.value = val!),
+                _buildRadioOption<String>(text: '11am - 3am', value: '11am - 3am', groupValue: controller.availableTimes.value, onChanged: (val) => controller.availableTimes.value = val!),
+                _buildRadioOption<String>(text: '3am - 10am', value: '3am - 10am', groupValue: controller.availableTimes.value, onChanged: (val) => controller.availableTimes.value = val!),
+                _buildRadioOption<String>(text: 'None', value: 'None', groupValue: controller.availableTimes.value, onChanged: (val) => controller.availableTimes.value = val!),
+              ],
+            )),
+            SizedBox(height: 20.h),
+
+            // --- Location Toggle & Input (from image_9004a1.png) ---
+            Obx(() => _buildSwitchToggle(
+                text: 'Use my home address',
+                value: controller.useHomeAddress.value,
+                onChanged: (val) => controller.useHomeAddress.value = val!
+            )),
+            SizedBox(height: 10.h),
+            _buildInputWithLabel(label: 'Location', initialValue: '1000, BD'),
+            SizedBox(height: 20.h),
+            Divider(color: AppColors.border, height: 1.h),
+            SizedBox(height: 20.h),
+
+            // --- Service Area (from image_9004a1.png) ---
+            _buildSectionTitle('Service Area'),
+            Text('The service area you define here will be for house sitting.', style: GoogleFonts.montserrat(fontSize: 12.sp, color: AppColors.secondaryText)),
+            SizedBox(height: 15.h),
+
+            // **MODIFIED** - Map placeholder updated to match design
+            _buildMapPlaceholder(),
+            SizedBox(height: 15.h),
+
+            // Distance Type Radio
+            Obx(() => Row(
+              children: [
+                _buildRadioOption<String>(text: 'Miles', value: 'Miles', groupValue: controller.selectedDistanceType.value, onChanged: (val) => controller.selectedDistanceType.value = val!),
+                SizedBox(width: 20.w),
+                _buildRadioOption<String>(text: 'Minutes', value: 'Minutes', groupValue: controller.selectedDistanceType.value, onChanged: (val) => controller.selectedDistanceType.value = val!),
+              ],
+            )),
+            SizedBox(height: 15.h),
+
+            // Service Area Input
+            _buildServiceAreaInputField(controller),
+            SizedBox(height: 20.h),
+
+            // Travel Mode Checkboxes
+            _buildSectionTitle('Travel mode'),
+            ...controller.selectedTravelModes.keys.map((key) => Obx(() => _buildSquareCheckbox(
+                text: key,
+                value: controller.selectedTravelModes[key]!.value,
+                onChanged: (val) => controller.toggleCheckbox(controller.selectedTravelModes, key, val!)
+            ))).toList(),
+            SizedBox(height: 20.h),
+            Divider(color: AppColors.border, height: 1.h),
+            SizedBox(height: 20.h),
+
+            // --- Pet Hosting (from image_900137.png) ---
+            _buildSectionTitle('What type of pets can you host in your home?'),
+            ...controller.petSizes.keys.map((key) => Obx(() => _buildSquareCheckbox(
+                text: key,
+                value: controller.petSizes[key]!.value,
+                onChanged: (val) => controller.toggleCheckbox(controller.petSizes, key, val!)
+            ))).toList(),
+            SizedBox(height: 20.h),
+
+            // --- Puppies (from image_900137.png) ---
+            _buildSectionTitle('Do you accept puppies under 1 year old?'),
+            Obx(() => Row(
+              children: [
+                _buildRadioOption<bool>(text: 'Yes', value: true, groupValue: controller.acceptsPuppies.value, onChanged: (val) => controller.acceptsPuppies.value = val!),
+                SizedBox(width: 20.w),
+                _buildRadioOption<bool>(text: 'No', value: false, groupValue: controller.acceptsPuppies.value, onChanged: (val) => controller.acceptsPuppies.value = val!),
+              ],
+            )),
+            SizedBox(height: 20.h),
+            Divider(color: AppColors.border, height: 1.h),
+            SizedBox(height: 20.h),
+
+            // --- Cancellation Policy (from image_90015c.png) ---
+            _buildSectionTitle('What is your cancellation policy for Doggy Day Care?'),
+            ...controller.cancellationPolicy.keys.map((key) => Obx(() => _buildSquareCheckbox(
+                text: key,
+                value: controller.cancellationPolicy[key]!.value,
+                onChanged: (val) => controller.toggleCheckbox(controller.cancellationPolicy, key, val!)
+            ))).toList(),
+
+            SizedBox(height: 100.h), // Extra space for sticky footer
           ],
         ),
       ),
-      bottomNavigationBar: _buildStickyFooter(context, 'Continue'),
+      // --- Bottom CTA Button (from image_90015c.png) ---
+      bottomNavigationBar: _buildStickyFooter(context, 'Create Service'),
     );
   }
 }
 
-
 // =============================================================================
-// V. SHARED UTILITY WIDGETS (Helper functions used by both screens)
+// VI. SHARED UTILITY WIDGETS (Helper functions matching all screenshots)
 // =============================================================================
 
 // --- AppBar ---
 AppBar _buildCustomAppBar(BuildContext context, String title) {
   return AppBar(
+
     backgroundColor: AppColors.mainAppColor,
+
     elevation: 0,
-    leading: IconButton(icon: const Icon(Icons.arrow_back_ios, color: Colors.white), onPressed: () => Get.back()),
-    title: Text(title, style: GoogleFonts.montserrat(fontSize: 18.sp, fontWeight: FontWeight.w600, color: Colors.white)),
+
+    leading: IconButton(
+
+      icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+
+      onPressed: () => Get.back(),
+
+    ),
+
+    title: Text(
+
+      'Dog Walking',
+
+      style: GoogleFonts.montserrat(
+
+        fontSize: 18.sp,
+
+        fontWeight: FontWeight.w600,
+
+        color: Colors.white,
+
+      ),
+
+    ),
+
     centerTitle: true,
+
+
+
     actions: [
-      IconButton(icon: const Icon(Icons.edit_outlined, color: Colors.white), onPressed: () {}),
+
+      IconButton(
+
+        onPressed: () {
+
+// Handle edit action
+
+        },
+
+        icon: const Icon(Icons.edit_outlined, color: Colors.white),
+
+      ),
+
       SizedBox(width: 8.w),
+
     ],
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30.r), bottomRight: Radius.circular(30.r))),
+
+
+
+    shape: RoundedRectangleBorder(
+
+      borderRadius: BorderRadius.only(
+
+        bottomLeft: Radius.circular(30.r),
+
+        bottomRight: Radius.circular(30.r),
+
+      ),
+
+    ),
+
   );
 }
 
 // --- Footer CTA ---
 Widget _buildStickyFooter(BuildContext context, String text) {
-  final isContinue = text == 'Continue';
   return Container(
     padding: EdgeInsets.all(16.w),
     decoration: BoxDecoration(
@@ -346,9 +356,11 @@ Widget _buildStickyFooter(BuildContext context, String text) {
       decoration: BoxDecoration(color: AppColors.mainAppColor, borderRadius: BorderRadius.circular(10.r)),
       child: TextButton(
         onPressed: () {
-          if (isContinue) {
-            Get.to(() => const DogWalkingDetailScreen());
+          if (text == 'Continue') {
+            // This case is no longer used but logic is kept
+            // Get.to(() => const DogWalkingDetailScreen());
           } else {
+            // Placeholder action for Create Service
             Get.snackbar('Service Created', 'The Dog Walking service settings have been saved.', snackPosition: SnackPosition.BOTTOM);
           }
         },
@@ -358,62 +370,50 @@ Widget _buildStickyFooter(BuildContext context, String text) {
   );
 }
 
-// --- Service Dropdown (Used in Rate Screen) ---
+// --- **NEW** Service Selection (from image_9000da.png) ---
 Widget _buildServiceSelection(DogWalkingController controller) {
-  final List<Map<String, dynamic>> services = [
-    {'name': 'Boarding', 'icon': Icons.home_outlined, 'screen': BoardingSetupScreen()},
-    {'name': 'Dog Walking', 'icon': Icons.directions_walk_outlined, 'screen': const DogWalkingSetupScreen()},
-    {'name': 'Dog Day Care', 'icon': Icons.pets_outlined, 'screen': const DogDayCareSetupScreen()},
-  ];
-
-  return Padding(
-    padding: EdgeInsets.only(bottom: 20.h),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Service name', style: GoogleFonts.montserrat(fontSize: 14.sp, color: AppColors.primaryText)),
-        SizedBox(height: 5.h),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 0.h),
-          decoration: BoxDecoration(border: Border.all(color: AppColors.Secondaryborder), borderRadius: BorderRadius.circular(10.r)),
-          child: DropdownButtonHideUnderline(
-            child: Obx(() => DropdownButton<String>(
-              value: controller.selectedService.value,
-              isExpanded: true,
-              icon: Icon(Icons.keyboard_arrow_down, color: AppColors.grey, size: 24.r),
-              style: GoogleFonts.montserrat(fontSize: 16.sp, fontWeight: FontWeight.w500, color: AppColors.textDark),
-
-              onChanged: (String? newValue) {
-                if (newValue != null) {
-                  controller.selectedService.value = newValue;
-                  final selected = services.firstWhere((s) => s['name'] == newValue);
-                  Get.off(() => selected['screen'] as Widget); // Use Get.off to replace current route
-                }
-              },
-              items: services.map<DropdownMenuItem<String>>((service) {
-                return DropdownMenuItem<String>(
-                  value: service['name'],
-                  child: Row(
-                    children: [
-                      Icon(service['icon'] as IconData, color: AppColors.mainAppColor, size: 24.r),
-                      SizedBox(width: 10.w),
-                      Text(service['name'] as String),
-                    ],
-                  ),
-                );
-              }).toList(),
-            )),
-          ),
-        ),
-      ],
+  return Container(
+    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+    decoration: BoxDecoration(
+      border: Border.all(color: AppColors.Secondaryborder),
+      borderRadius: BorderRadius.circular(8.r),
     ),
+    child: Obx(() => DropdownButtonHideUnderline(
+      child: DropdownButton<String>(
+        value: controller.selectedService.value,
+        isExpanded: true,
+        icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.grey),
+        onChanged: (String? newValue) {
+          if (newValue != null) {
+            controller.selectedService.value = newValue;
+          }
+        },
+        items: <String>['Dog Walking'] // Only one option shown
+            .map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Row(
+              children: [
+                Icon(Icons.home, color: AppColors.grey), // Icon from screenshot
+                SizedBox(width: 8.w),
+                Text(
+                  value,
+                  style: GoogleFonts.montserrat(fontSize: 14.sp, color: AppColors.primaryText),
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
+    )),
   );
 }
 
-// --- Info Banner ---
+
+// --- Info Banner (Matches Screenshot 1) ---
 Widget _buildInfoBanner() {
   return Container(
-    margin: EdgeInsets.only(bottom: 10.h),
+    margin: EdgeInsets.only(top: 15.h, bottom: 10.h),
     padding: EdgeInsets.all(12.w),
     decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(8.r), border: Border.all(color: Colors.grey.shade300)),
     child: Row(
@@ -433,9 +433,9 @@ Widget _buildInfoBanner() {
 }
 
 // --- Section Title ---
-Widget _buildSectionTitle(String title, {bool isMainTitle = false}) {
+Widget _buildSectionTitle(String title) {
   return Padding(
-    padding: EdgeInsets.only(bottom: 10.h),
+    padding: EdgeInsets.only(bottom: 10.h, top: 5.h),
     child: Text(
       title,
       style: GoogleFonts.montserrat(fontSize: 16.sp, fontWeight: FontWeight.w600, color: AppColors.textDark),
@@ -443,148 +443,161 @@ Widget _buildSectionTitle(String title, {bool isMainTitle = false}) {
   );
 }
 
-// --- Day Selectors (Used in Rate Screen) ---
 Widget _buildDaySelectors() {
+
   final days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  final activeDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']; // Example active days
 
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: days.map((day) {
-      final isActive = activeDays.contains(day);
-      return Expanded(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 2.w),
+
+
+  final activeDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+
+
+
+
+  return Container(
+
+    decoration: BoxDecoration(
+
+
+
+      border: Border.all(color: Color(0xFF9ABFC8), width: 2.r),
+
+      borderRadius: BorderRadius.circular(10.r),
+
+    ),
+
+    child: Row(
+
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+      children: days.asMap().entries.map((entry) {
+
+        final index = entry.key;
+
+        final day = entry.value;
+
+        final isActive = activeDays.contains(day);
+
+
+
+        final bool showRightDivider = index < days.length - 1;
+
+
+
+        return Expanded(
+
           child: Container(
-            height: 40.r,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: isActive ? AppColors.mainAppColor : Colors.white,
-              borderRadius: BorderRadius.circular(8.r),
-              border: Border.all(color: isActive ? AppColors.mainAppColor : AppColors.inputBorder, width: 1.r),
-            ),
-            child: Text(day, style: GoogleFonts.montserrat(fontSize: 12.sp, fontWeight: FontWeight.w500, color: isActive ? Colors.white : AppColors.primaryText)),
-          ),
-        ),
-      );
-    }).toList(),
-  );
-}
 
-// --- Small Day Selectors (Used in Detail Screen) ---
-Widget _buildSmallDaySelectors() {
-  final days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  final activeDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
-
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: days.map((day) {
-      final isActive = activeDays.contains(day);
-      return Expanded(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 2.w),
-          child: Container(
             height: 35.r,
+
             alignment: Alignment.center,
+
+
+
             decoration: BoxDecoration(
-              color: isActive ? AppColors.mainAppColor : Colors.white,
-              borderRadius: BorderRadius.circular(8.r),
-              border: Border.all(color: isActive ? AppColors.mainAppColor : AppColors.inputBorder, width: 1.r),
+
+              color: isActive ? AppColors.white : AppColors.Secondaryborder ,
+
+              border: Border(
+
+                right: showRightDivider
+
+                    ? BorderSide(color: Color(0xFF9ABFC8), width: 2.r)
+
+                    : BorderSide.none,
+
+              ),
+
             ),
-            child: Text(day, style: GoogleFonts.montserrat(fontSize: 11.sp, fontWeight: FontWeight.w500, color: isActive ? Colors.white : AppColors.primaryText)),
+
+            child: Text(
+
+              day,
+
+              style: GoogleFonts.montserrat(
+
+                fontSize: 12.sp,
+
+                fontWeight: FontWeight.w500,
+
+                color: Colors.black,
+
+              ),
+
+            ),
+
           ),
-        ),
-      );
-    }).toList(),
+
+        );
+
+      }).toList(),
+
+    ),
+
   );
+
 }
 
-
-// --- Base Rate Input (Special Structure) ---
-Widget _buildBaseRateInput({required String title, required String initialValue, required String keepPercentage}) {
+// --- Rate Input Field (Matches Screenshot 1 - Unified for Base and Additional Rates) ---
+Widget _buildRateInputField({
+  required String title,
+  required String placeholderValue,
+  required String keepText,
+  required String rateType,
+  required bool showKeepText,
+}) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      SizedBox(height: 5.h),
-      Container(
-        decoration: BoxDecoration(border: Border.all(color: AppColors.Secondaryborder), borderRadius: BorderRadius.circular(8.r)),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Padding(padding: EdgeInsets.symmetric(horizontal: 10.w), child: Text(title, style: GoogleFonts.montserrat(fontSize: 14.sp, color: AppColors.primaryText))),
-                const VerticalDivider(width: 1, color: AppColors.inputBorder),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10.w),
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: Text('\$$initialValue', style: GoogleFonts.montserrat(fontSize: 16.sp, fontWeight: FontWeight.w600, color: AppColors.textDark)),
-                    ),
-                  ),
-                ),
-                Container(
-                  width: 40.w, height: 40.h, alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
-                    border: Border(left: BorderSide(color: AppColors.inputBorder, width: 1.r)),
-                  ),
-                  child: Text('\$', style: GoogleFonts.montserrat(fontSize: 16.sp, color: AppColors.grey)),
-                ),
-              ],
-            ),
-            Divider(color: AppColors.inputBorder, height: 1.h),
-            Padding(
-              padding: EdgeInsets.all(10.w),
-              child: Align(child: Text(keepPercentage, style: GoogleFonts.montserrat(fontSize: 12.sp, color: AppColors.textDark)), alignment: Alignment.centerLeft),
-            ),
-          ],
+      if (title != 'Per walk') // Title only for non-base rates
+        Padding(
+          padding: EdgeInsets.only(bottom: 5.h),
+          child: Text(title, style: GoogleFonts.montserrat(fontSize: 14.sp, fontWeight: FontWeight.w500, color: AppColors.textDark)),
         ),
-      ),
-    ],
-  );
-}
-
-// --- Additional Rate Input (Simple) ---
-Widget _buildRateInput({required String title, required String initialValue, required String keepPercentage, bool addBottomSpacing = false,}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(title, style: GoogleFonts.montserrat(fontSize: 14.sp, fontWeight: FontWeight.w500, color: AppColors.textDark)),
-      SizedBox(height: 5.h),
+      // **MODIFIED** - 'keepText' is now outside this container
       Container(
-        height: 45.h,
         decoration: BoxDecoration(border: Border.all(color: AppColors.Secondaryborder), borderRadius: BorderRadius.circular(8.r)),
         child: Row(
           children: [
-            Padding(padding: EdgeInsets.symmetric(horizontal: 10.w), child: Text('Per day', style: GoogleFonts.montserrat(fontSize: 14.sp, color: AppColors.grey))),
-            const VerticalDivider(width: 1, color: AppColors.inputBorder),
+            // "Per walk" / "Per day" Label
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 12.h),
+              width: 100.w,
+              alignment: Alignment.centerLeft,
+              child: Text(rateType, style: GoogleFonts.montserrat(fontSize: 14.sp, color: AppColors.grey)),
+            ),
+            // Rate Input
             Expanded(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                padding: EdgeInsets.only(right: 10.w),
                 child: Align(
                   alignment: Alignment.centerRight,
-                  child: Text('\$$initialValue', style: GoogleFonts.montserrat(fontSize: 14.sp, fontWeight: FontWeight.w400, color: AppColors.textDark)),
+                  child: Text('\$$placeholderValue', style: GoogleFonts.montserrat(fontSize: 16.sp, fontWeight: FontWeight.w400, color: AppColors.textDark)),
                 ),
               ),
             ),
           ],
         ),
       ),
-      Padding(
-        padding: EdgeInsets.only(top: 4.h, bottom: addBottomSpacing ? 10.h : 5.h),
-        child: Text(keepPercentage, style: GoogleFonts.montserrat(fontSize: 12.sp, color: AppColors.textDark)),
-      ),
-      SizedBox(height: 15.h),
+      SizedBox(height: 5.h),
+
+      // **MODIFIED** - Moved keepText here to match design
+      if (showKeepText)
+        Padding(
+          padding: EdgeInsets.only(left: 10.w),
+          child: Text(keepText, style: GoogleFonts.montserrat(fontSize: 12.sp, color: AppColors.secondaryText)),
+        ),
     ],
   );
 }
 
-// --- Show/Hide Button ---
+// --- Show/Hide Button (Matches Screenshot 1) ---
 Widget _buildShowHideButton(String text, VoidCallback onPressed, bool isHideButton) {
   return Container(
     width: double.infinity,
     height: 50.h,
+    margin: EdgeInsets.only(top: 15.h),
     decoration: BoxDecoration(
       color: isHideButton ? AppColors.mainAppColor : AppColors.white,
       borderRadius: BorderRadius.circular(10.r),
@@ -592,77 +605,83 @@ Widget _buildShowHideButton(String text, VoidCallback onPressed, bool isHideButt
     ),
     child: TextButton(
       onPressed: onPressed,
-      child: Text(
-        text,
-        style: GoogleFonts.montserrat(
-          fontSize: 16.sp,
-          fontWeight: FontWeight.w600,
-          color: isHideButton ? Colors.white : AppColors.mainAppColor,
-        ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            text,
+            style: GoogleFonts.montserrat(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
+              color: isHideButton ? Colors.white : AppColors.mainAppColor,
+            ),
+          ),
+          SizedBox(width: 8.w),
+          Icon(
+            isHideButton ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+            color: isHideButton ? Colors.white : AppColors.mainAppColor,
+            size: 20.r,
+          ),
+        ],
       ),
     ),
   );
 }
 
-// --- Walks Count Selector ---
-Widget _buildWalksCountSelector(DogWalkingController controller) {
+// --- **MODIFIED** Walks Count Input (Matches Screenshot 1 & 3) ---
+Widget _buildWalksCountInput(DogWalkingController controller) {
+  // This widget is now styled exactly like the Rate Input field
+  // to match the design.
   return Container(
     height: 45.h,
     decoration: BoxDecoration(border: Border.all(color: AppColors.Secondaryborder), borderRadius: BorderRadius.circular(8.r)),
     child: Row(
       children: [
-        _buildCounterButton(icon: Icons.remove, onPressed: controller.decrementMaxWalks),
-        const VerticalDivider(width: 1, color: AppColors.inputBorder),
-        Expanded(
-          child: Obx(() => Container(
-            alignment: Alignment.center,
-            child: Text(controller.maxWalksPerDay.value.toString(), style: GoogleFonts.montserrat(fontSize: 16.sp, fontWeight: FontWeight.w600, color: AppColors.primaryText)),
-          )),
-        ),
-        const VerticalDivider(width: 1, color: AppColors.inputBorder),
-        _buildCounterButton(icon: Icons.add, onPressed: controller.incrementMaxWalks),
-
+        // "Per day" Label
         Container(
-          width: 70.w, height: double.infinity, alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: Colors.grey.shade100,
-            borderRadius: BorderRadius.only(topRight: Radius.circular(7.r), bottomRight: Radius.circular(7.r)),
-            border: Border(left: BorderSide(color: AppColors.inputBorder, width: 1.r)),
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 12.h),
+          width: 100.w,
+          alignment: Alignment.centerLeft,
           child: Text('Per day', style: GoogleFonts.montserrat(fontSize: 14.sp, color: AppColors.grey)),
+        ),
+        // Number Display
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.only(right: 10.w),
+            child: Obx(() => Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                controller.maxWalksPerDay.value.toString(),
+                style: GoogleFonts.montserrat(fontSize: 16.sp, fontWeight: FontWeight.w400, color: AppColors.textDark),
+              ),
+            )),
+          ),
         ),
       ],
     ),
   );
 }
 
-// --- Counter Button (Helper for Walks Selector) ---
-Widget _buildCounterButton({required IconData icon, required VoidCallback onPressed}) {
+// --- Square Checkbox (Matches Checkbox style in Screenshots) ---
+Widget _buildSquareCheckbox({required String text, required bool value, required ValueChanged<bool?> onChanged}) {
   return InkWell(
-    onTap: onPressed,
-    borderRadius: BorderRadius.circular(8.r),
-    child: Container(
-      width: 40.r, height: 40.r, alignment: Alignment.center,
-      child: Icon(icon, color: AppColors.mainAppColor, size: 20.r),
+    onTap: () => onChanged(!value),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Checkbox(
+          value: value,
+          onChanged: onChanged,
+          activeColor: AppColors.mainAppColor,
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        ),
+        Expanded(child: Text(text, style: GoogleFonts.montserrat(fontSize: 14.sp, color: AppColors.primaryText))),
+      ],
     ),
   );
 }
 
-// --- Time Slot Chip (Used in Detail Screen) ---
-Widget _buildTimeSlotChip(String text, DogWalkingController controller) {
-  return Obx(() => ChoiceChip(
-    label: Text(text),
-    selected: controller.availableTimes.value == text,
-    onSelected: (selected) { if (selected) { controller.availableTimes.value = text; }},
-    selectedColor: AppColors.mainAppColor,
-    labelStyle: GoogleFonts.montserrat(color: controller.availableTimes.value == text ? Colors.white : AppColors.primaryText, fontSize: 14.sp, fontWeight: FontWeight.w500),
-    backgroundColor: AppColors.white,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r), side: BorderSide(color: controller.availableTimes.value == text ? AppColors.mainAppColor : AppColors.Secondaryborder, width: 1.r)),
-    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-  ));
-}
-
-// --- Switch Toggle (Used in both screens) ---
+// --- Switch Toggle (Matches Screenshot 3) ---
 Widget _buildSwitchToggle({required String text, required bool value, required ValueChanged<bool?> onChanged}) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -676,18 +695,17 @@ Widget _buildSwitchToggle({required String text, required bool value, required V
   );
 }
 
-// --- Input with Label (Used in Detail Screen) ---
+// --- Input with Label (Matches Screenshot 3) ---
 Widget _buildInputWithLabel({required String label, required String initialValue}) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text(label, style: GoogleFonts.montserrat(fontSize: 14.sp, fontWeight: FontWeight.w500, color: AppColors.primaryText)),
-      SizedBox(height: 5.h),
       TextFormField(
-        initialValue: initialValue,
+        initialValue: initialValue, // Shows 1000, BD
         style: GoogleFonts.montserrat(fontSize: 14.sp, color: AppColors.primaryText),
         decoration: InputDecoration(
           contentPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+          hintText: label,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r), borderSide: BorderSide(color: AppColors.Secondaryborder, width: 1.r)),
           enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r), borderSide: BorderSide(color: AppColors.Secondaryborder, width: 1.r)),
           focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r), borderSide: BorderSide(color: AppColors.mainAppColor, width: 2.r)),
@@ -697,85 +715,99 @@ Widget _buildInputWithLabel({required String label, required String initialValue
   );
 }
 
-// --- Map Placeholder (Used in Detail Screen) ---
+// --- **MODIFIED** Map Placeholder (Matches Screenshot 3) ---
 Widget _buildMapPlaceholder() {
   return Container(
-    height: 150.h,
-    decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.r), border: Border.all(color: AppColors.Secondaryborder), color: Colors.grey.shade200),
+    height: 300.h,
+    width: 350.w,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(8.r),
+      border: Border.all(color: Color(0xFFE3E6F0)),
+      color: Color(0xFFFFFFFF),
+    ),
     child: Stack(
       children: [
-        Center(child: Icon(Icons.location_on, color: AppColors.grey, size: 50.r)),
-        Padding(
-          padding: EdgeInsets.all(10.w),
-          child: Text('NEW YORK, NY', style: GoogleFonts.montserrat(fontWeight: FontWeight.w600, fontSize: 14.sp, color: AppColors.textDark)),
-        ),
+        Positioned( 
+          top: 10.w,
+          left: 10.w,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Location', style: GoogleFonts.montserrat(fontWeight: FontWeight.w600, fontSize: 14.sp, color: AppColors.textDark)),
+              Text('New York, NY', style: GoogleFonts.montserrat(fontSize: 12.sp, color: AppColors.secondaryText)),
+            ],
+          ),
+
+          ),
+SizedBox(height: 30),
+        // Simple placeholder, as we cannot render a real map
+        Center(child: Image(image: AssetImage('assets/images/map.png'), height: 300.h, width: 320.w)),
+
+        // White box with location text, as seen in image_9004a1.png
+        // Positioned(
+        //   top: 10.w,
+        //   left: 10.w,
+        //   child: Container(
+        //     padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),
+        //     decoration: BoxDecoration(
+        //         color: AppColors.white,
+        //         borderRadius: BorderRadius.circular(8.r),
+        //         boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4, offset: Offset(0, 2))]
+        //     ),
+        //     child: Column(
+        //       crossAxisAlignment: CrossAxisAlignment.start,
+        //       children: [
+        //         Text('Location', style: GoogleFonts.montserrat(fontWeight: FontWeight.w600, fontSize: 14.sp, color: AppColors.textDark)),
+        //         Text('New York, NY', style: GoogleFonts.montserrat(fontSize: 12.sp, color: AppColors.secondaryText)),
+        //       ],
+        //     ),
+        //   ),
+        // ),
       ],
     ),
   );
 }
 
-// --- Radio Option (Used in Detail Screen) ---
+// --- Radio Option (Matches Radio style in Screenshots 2 & 3) ---
 Widget _buildRadioOption<T>({required String text, required T value, required T groupValue, required ValueChanged<T?> onChanged}) {
-  return Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Radio<T>(value: value, groupValue: groupValue, onChanged: onChanged, activeColor: AppColors.mainAppColor, materialTapTargetSize: MaterialTapTargetSize.shrinkWrap),
-      Text(text, style: GoogleFonts.montserrat(fontSize: 14.sp, color: AppColors.primaryText)),
-    ],
+  return InkWell(
+    onTap: () => onChanged(value),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Radio<T>(value: value, groupValue: groupValue, onChanged: onChanged, activeColor: AppColors.mainAppColor, materialTapTargetSize: MaterialTapTargetSize.shrinkWrap),
+        Text(text, style: GoogleFonts.montserrat(fontSize: 14.sp, color: AppColors.primaryText)),
+      ],
+    ),
   );
 }
 
-// --- Service Area Input (Used in Detail Screen) ---
-Widget _buildServiceAreaInput(DogWalkingController controller) {
+// --- Service Area Input Field (Matches Screenshot 2 layout) ---
+Widget _buildServiceAreaInputField(DogWalkingController controller) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Text('Service area', style: GoogleFonts.montserrat(fontSize: 14.sp, fontWeight: FontWeight.w500, color: AppColors.primaryText)),
       SizedBox(height: 5.h),
-      Container(
-        height: 45.h,
-        decoration: BoxDecoration(border: Border.all(color: AppColors.Secondaryborder), borderRadius: BorderRadius.circular(8.r)),
-        child: Row(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.w),
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(controller.serviceAreaDistance.value.toString(), style: GoogleFonts.montserrat(fontSize: 14.sp, fontWeight: FontWeight.w400, color: AppColors.textDark)),
-                ),
+      Row(
+        children: [
+          Expanded(
+            child: TextFormField(
+              initialValue: '0', // Matches screenshot 2
+              keyboardType: TextInputType.number,
+              style: GoogleFonts.montserrat(fontSize: 14.sp, color: AppColors.primaryText),
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r), borderSide: BorderSide(color: AppColors.Secondaryborder, width: 1.r)),
+                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r), borderSide: BorderSide(color: AppColors.Secondaryborder, width: 1.r)),
+                focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r), borderSide: BorderSide(color: AppColors.mainAppColor, width: 2.r)),
               ),
             ),
-            Obx(() => Container(
-              width: 70.w, height: double.infinity, alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: BorderRadius.only(topRight: Radius.circular(7.r), bottomRight: Radius.circular(7.r)),
-                border: Border(left: BorderSide(color: AppColors.inputBorder, width: 1.r)),
-              ),
-              child: Text(controller.selectedDistanceType.value, style: GoogleFonts.montserrat(fontSize: 14.sp, color: AppColors.grey)),
-            )),
-          ],
-        ),
+          ),
+          SizedBox(width: 8.w),
+          Obx(() => Text(controller.selectedDistanceType.value, style: GoogleFonts.montserrat(fontSize: 14.sp, color: AppColors.primaryText))),
+        ],
       ),
     ],
-  );
-}
-
-// --- Square Checkbox (Used in both screens) ---
-Widget _buildSquareCheckbox({required String text, required bool value, required ValueChanged<bool?> onChanged}) {
-  return Padding(
-    padding: EdgeInsets.only(bottom: 5.h),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Transform.scale(
-          scale: 1.1,
-          child: Checkbox(value: value, onChanged: onChanged, activeColor: AppColors.mainAppColor, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3.r)), materialTapTargetSize: MaterialTapTargetSize.shrinkWrap),
-        ),
-        SizedBox(width: 4.w),
-        Expanded(child: Text(text, style: GoogleFonts.montserrat(fontSize: 14.sp, color: AppColors.primaryText))),
-      ],
-    ),
   );
 }

@@ -11,7 +11,7 @@ class ChangePasswordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.bgColor,
       appBar:AppBar(
         backgroundColor: AppColors.mainAppColor,
         elevation: 0,
@@ -90,7 +90,7 @@ class ChangePasswordScreen extends StatelessWidget {
           style: GoogleFonts.montserrat(
             fontSize: 14.sp,
             fontWeight: FontWeight.w600,
-            color: AppColors.textDark,
+            color: Color(0xFF2B4237),
           ),
         ),
         SizedBox(height: 8.h),

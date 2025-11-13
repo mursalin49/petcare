@@ -6,7 +6,7 @@ import 'package:petcare/view/profile/profile_screen.dart' hide AppColors;
 import '../../utils/app_colors.dart';
 import '../../utils/app_icons.dart';
 import '../create_service/create_service.dart';
-import '../home/home_screen.dart';
+import '../home/home_screen.dart' hide AppColors;
 
 
 
@@ -37,7 +37,7 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
 
   // Create nav items in a getter
   List<BottomNavigationBarItem> get _navItems => [
-    _navItem(AppIcons.home, AppIcons.homes, "Home", 0),
+    _navItem(AppIcons.nirobIcon, AppIcons.nirobsIconS, "Home", 0),
     _navItem(AppIcons.create, AppIcons.creates, " Create Service",  1),
     _navItem(AppIcons.bookingsICon, AppIcons.bookingsIConS, "Bookings",  2),
     _navItem(AppIcons.profileIcon, AppIcons.profileIconS, "Profile",  3),

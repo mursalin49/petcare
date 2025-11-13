@@ -28,7 +28,7 @@ class CustomTextField extends StatefulWidget {
     this.suffixIcon,
     this.suffixIconColor,
     this.fieldBorderRadius = 12,
-    this.fieldBorderColor = Colors.transparent, //const Color(0xffB5D8EE),
+    this.fieldBorderColor = Colors.transparent,
     this.isPassword = false,
     this.isPrefixIcon = true,
     this.readOnly = false,
@@ -91,7 +91,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           GoogleFonts.inter(
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            color: AppColors.mainAppColor,
+            color: AppColors.textDark,
           ),
       onChanged: widget.onChanged,
       obscuringCharacter: ".",
@@ -136,7 +136,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           suffixIconColor: widget.suffixIconColor,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(widget.fieldBorderRadius),
-            borderSide: BorderSide(color: widget.fieldBorderColor, width: 1),
+            borderSide: BorderSide(color:Color(0xFFE3E6F0), width: 1),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(widget.fieldBorderRadius),
@@ -145,7 +145,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(widget.fieldBorderRadius),
-            borderSide: BorderSide(color: Color(0xFF9ABFC8), width: 1),
+            borderSide: BorderSide(color: Color(0xFFE3E6F0), width: 1),
           ),
           contentPadding: EdgeInsets.symmetric(
               horizontal: 12,

@@ -13,8 +13,6 @@ import 'DogWalking.dart';
 
 
 
-// ⚠️ Note: Define AppColors based on your project structure.
-
 class AppColors {
 
   static const Color mainAppColor = Color(0xFF035F75);
@@ -36,42 +34,6 @@ class AppColors {
   static const Color inputBorder = Color(0xFFD1D1D6);
 
 }
-
-
-
-// -----------------------------------------------------------------------------
-
-// ডামি স্ক্রিন (Dummy Screens for Navigation)
-
-// -----------------------------------------------------------------------------
-
-
-
-
-
-// class DogDayCareSetupScreen extends StatelessWidget {
-//
-//   const DogDayCareSetupScreen({super.key});
-//
-//   @override
-//
-//   Widget build(BuildContext context) {
-//
-//     return Scaffold(
-//
-//       appBar: AppBar(title: Text('Dog Day Care Setup', style: GoogleFonts.montserrat(color: Colors.white)), backgroundColor: AppColors.mainAppColor),
-//
-//       body: Center(child: Text('Dog Day Care Page', style: GoogleFonts.montserrat())),
-//
-//     );
-//
-//   }
-//
-// }
-
-// -----------------------------------------------------------------------------
-
-
 
 
 
@@ -359,10 +321,9 @@ class BoardingSetupScreen extends StatelessWidget {
 
             Wrap(
 
-              spacing: 20.w, // কলামগুলির মধ্যে দূরত্ব
+              spacing: 20.w,
 
-              runSpacing: 10.h, // রো-গুলির মধ্যে দূরত্ব
-
+              runSpacing: 10.h,
               children: [
 
                 _buildPottyBreakOption('0-2 hours', controller),

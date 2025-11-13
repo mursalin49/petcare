@@ -59,8 +59,9 @@ class CreateService extends StatelessWidget {
             title: 'House Sitting',
             subtitle: 'In your home',
             onTap: () {
+
               // Replace with the actual route for the House Sitting Setup Screen
-              // Get.toNamed(AppRoutes.houseSittingSetupScreen);
+              Get.toNamed(AppRoutes.dogDay);
             },
           ),
           SizedBox(height: 16.h),

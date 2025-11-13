@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart'; // <<< 1. Import flutter_svg
 
 import '../../helpers/route.dart';
 import '../../utils/app_colors.dart';
+import '../auth/Signup_screen.dart';
 
 class SitterOnboardingScreen extends StatelessWidget {
   const SitterOnboardingScreen({super.key});
@@ -46,7 +47,7 @@ class SitterOnboardingScreen extends StatelessWidget {
             ),
             SizedBox(height: 20.h),
             _buildPrimaryButton(text: 'Get started', onPressed: () {
-              Get.toNamed(AppRoutes.loginScreen);
+              Get.toNamed(AppRoutes.signUpScreen);
             }),
 
             SizedBox(height: 30.h),
@@ -62,9 +63,6 @@ class SitterOnboardingScreen extends StatelessWidget {
             SizedBox(height: 20.h),
 
             // Image and text box sections... (omitted for brevity)
-            // ...
-
-            // --- Image 1 (dog1.png) ---
             Center(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10.r),
@@ -115,7 +113,7 @@ class SitterOnboardingScreen extends StatelessWidget {
             _buildHowItWorksItem(title: 'Get paid', description: 'Payments are sent directly to your bank once you have completed a service.'),
             SizedBox(height: 10.h),
             _buildPrimaryButton(text: 'Get started', onPressed: () {
-              Get.toNamed(AppRoutes.loginScreen);
+              Get.toNamed(AppRoutes.signUpScreen);
             }),
             SizedBox(height: 20.h),
             Center(
@@ -155,7 +153,6 @@ class SitterOnboardingScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 10.h),
-            // ...
 
             // --- Section: Services ---
             Text('Services', style: GoogleFonts.montserrat(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black87)),
@@ -178,7 +175,7 @@ class SitterOnboardingScreen extends StatelessWidget {
 
             // Example 3: Using the NEW svgIconPath
             _buildServiceCard(
-              svgIconPath: 'assets/icons/doggyfoot.svg', // <<< Using another SVG icon
+              svgIconPath: 'assets/icons/doggyfoot.svg',
               title: 'Dog Walking',
               subtitle: 'Take dogs out for a walk in your schedule.',
             ),
@@ -197,7 +194,9 @@ class SitterOnboardingScreen extends StatelessWidget {
             SizedBox(height: 30.h),
             Text('Connect with pet owners ones your profile is approve', style: GoogleFonts.montserrat(fontSize: 16.sp, fontWeight: FontWeight.w600, color: Colors.black87)),
             SizedBox(height: 10.h),
-            _buildPrimaryButton(text: 'Start creating your profile', onPressed: () {}),
+            _buildPrimaryButton(text: 'Start creating your profile', onPressed: () {
+              Get.toNamed(AppRoutes.signUpScreen);
+            }),
             SizedBox(height: 40.h),
           ],
         ),
@@ -263,7 +262,7 @@ class SitterOnboardingScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: GoogleFonts.montserrat(fontSize: 18.sp, fontWeight: FontWeight.w600, color: AppColors.mainAppColor)),
+          Text(title, style: GoogleFonts.montserrat(fontSize: 18.sp, fontWeight: FontWeight.w600, color: AppColors.textDark)),
           SizedBox(height: 5.h),
           Text(description, style: GoogleFonts.montserrat(fontSize: 14.sp, height: 1.4, color: Colors.black54)),
         ],
@@ -273,8 +272,8 @@ class SitterOnboardingScreen extends StatelessWidget {
 
   // <<< 2. Modified _buildServiceCard to accept IconData or String? svgIconPath
   Widget _buildServiceCard({
-    IconData? icon, // Made optional (IconData?)
-    String? svgIconPath, // New optional parameter for SVG path
+    IconData? icon,
+    String? svgIconPath,
     required String title,
     required String subtitle,
     String? highlight,
@@ -310,7 +309,7 @@ class SitterOnboardingScreen extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          iconWidget, // <<< Display the chosen icon widget
+          iconWidget,
           SizedBox(width: 15.w),
           Expanded(
             child: Column(
