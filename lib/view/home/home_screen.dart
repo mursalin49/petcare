@@ -5,6 +5,9 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../utils/app_colors.dart';
+import '../bookings/widgets/custom_calendar.dart';
+
+
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -12,19 +15,25 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F7F7),
+      backgroundColor: Color(0xFFF3F8F4),
       appBar: _buildCustomAppBar(),
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildStatCards(),
-            SizedBox(height: 24.h),
-            _buildBookingTabs(),
-            SizedBox(height: 20.h),
-            _buildCalendarSection(),
-            SizedBox(height: 24.h),
-            _buildRecentBookings(),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildStatCards(),
+          SizedBox(height: 24.h),
+          _buildBookingTabs(),
+          SizedBox(height: 20.h),
+          CustomCalendarWidget(
+            unavailableDays: [
+              DateTime(2025, 11, 16),
+              DateTime(2025, 11, 14),
+              DateTime(2025, 11, 18),
+            ],
+          ),
+          SizedBox(height: 24.h),
+          _buildRecentBookings(),
           ],
         ),
       ),
@@ -79,16 +88,11 @@ class HomeScreen extends StatelessWidget {
               shape: BoxShape.circle,
               color: Colors.white.withOpacity(0.15),
             ),
-            child:CircleAvatar(
-              radius: 30,
-              backgroundColor: Colors.white,
-              child: SvgPicture.asset(
-                'assets/icons/Notification.svg',
-                width: 35,
-                height: 35,
-                color: AppColors.mainAppColor,
-              ),
-            )
+            child: Icon(
+              Icons.notifications_none_rounded,
+              color: Colors.white,
+              size: 24.sp,
+            ),
           ),
         ),
       ],
@@ -101,37 +105,43 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // --- ৪টি স্ট্যাটাস কার্ড ---
+
   Widget _buildStatCards() {
+
+
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
       child: GridView.count(
         crossAxisCount: 2,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        crossAxisSpacing: 16.w,
-        mainAxisSpacing: 16.h,
-        childAspectRatio: 1.4, // কার্ডগুলোর সাইজ ঠিক করার জন্য
+        crossAxisSpacing: 10.w,
+        mainAxisSpacing: 10.h,
+        childAspectRatio: 1.4,
         children: [
           _buildStatCard(
               title: 'Total Bookings',
               count: '800',
-              borderColor: Colors.blue.shade300
+              borderColor: AppColors.mainC,
+              countColor:  AppColors.mainC,
           ),
           _buildStatCard(
               title: 'On going services',
               count: '06',
-              borderColor: Colors.lightBlue.shade300
+              borderColor: AppColors.blueColor,
+              countColor: AppColors.blueColor,
           ),
           _buildStatCard(
-              title: 'Completed services',
+              title: 'Complete services',
               count: '400',
-              borderColor: Colors.green.shade300
+              borderColor: AppColors.greenColor,
+              countColor: AppColors.greenColor,
           ),
           _buildStatCard(
               title: 'Upcoming services',
               count: '14',
-              borderColor: Colors.red.shade300
+              borderColor: AppColors.redColor,
+              countColor: AppColors.redColor,
           ),
         ],
       ),
@@ -142,7 +152,8 @@ class HomeScreen extends StatelessWidget {
   Widget _buildStatCard({
     required String title,
     required String count,
-    required Color borderColor
+    required Color borderColor,
+    required Color countColor,
   }) {
     return Container(
       padding: EdgeInsets.all(16.w),
@@ -166,17 +177,20 @@ class HomeScreen extends StatelessWidget {
             title,
             style: GoogleFonts.montserrat(
               fontSize: 14.sp,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w600,
               color: AppColors.subHeadingColor,
             ),
           ),
           SizedBox(height: 8.h),
-          Text(
-            count,
-            style: GoogleFonts.montserrat(
-              fontSize: 26.sp,
-              fontWeight: FontWeight.w700,
-              color: AppColors.textDark,
+          Center(
+            child: Text(
+              count,
+              style: GoogleFonts.montserrat(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+
+                color: countColor,
+              ),
             ),
           ),
         ],
@@ -184,195 +198,68 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // --- "Bookings" এবং "Upcoming" ট্যাব ---
+
   Widget _buildBookingTabs() {
+
+
+    Widget _buildTabItem(Color color, String text) {
+      return Row(
+        children: [
+          Container(
+            width: 18.w,
+            height: 18.w,
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(5.r),
+            ),
+          ),
+          SizedBox(width: 10.w),
+          Text(
+            text,
+            style: GoogleFonts.montserrat(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textDark.withOpacity(0.9),
+            ),
+          ),
+        ],
+      );
+    }
+
+
+
+
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+       crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // "Bookings" Tab
-          Column(
-            children: [
-              Text(
-                'Bookings',
-                style: GoogleFonts.montserrat(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.primary, // সিলেক্টেড কালার
-                ),
-              ),
-              SizedBox(height: 4.h),
-              Container(
-                width: 24.w,
-                height: 3.h,
-                color: AppColors.primary,
-              )
-            ],
-          ),
+          _buildTabItem(AppColors.primary, 'Booked'),
           SizedBox(width: 20.w),
-
-          // "Upcoming" Tab
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Text(
-                'Upcoming',
-                style: GoogleFonts.montserrat(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textDark.withOpacity(0.7), // ডি-সিলেক্টেড
-                ),
-              ),
-              // --- অবতারগুলো ---
-              Positioned(
-                left: 10.w,
-                top: -10.h,
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 10.r,
-                      backgroundColor: Colors.pink.shade100,
-                      child: Text('A', style: TextStyle(fontSize: 10.sp, color: Colors.pink.shade800)),
-                    ),
-                    Transform.translate(
-                      offset: Offset(-8.w, 0),
-                      child: CircleAvatar(
-                        radius: 10.r,
-                        backgroundColor: Colors.orange.shade100,
-                        child: Text('A', style: TextStyle(fontSize: 10.sp, color: Colors.orange.shade800)),
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
+          _buildTabItem(AppColors.greenColor, 'Upcoming'),
         ],
       ),
     );
   }
 
-  // --- ক্যালেন্ডার সেকশন ---
-  // নোট: এটি ডিজাইনের সাথে মেলানোর জন্য একটি স্ট্যাটিক ক্যালেন্ডার
-  // রিয়েল অ্যাপে 'table_calendar' এর মতো প্যাকেজ ব্যবহার করা ভালো
-  Widget _buildCalendarSection() {
-    // ক্যালেন্ডারের দিনগুলো (নভেম্বর ২০২১, ছবির মতো)
-    const List<String> calendarDays = [
-      '27', '28', '29', '30', '31', '1', '2',
-      '3', '4', '5', '6', '7', '8', '9',
-      '10', '11', '12', '13', '14', '15', '16',
-      '17', '18', '19', '20', '21', '22', '23',
-      '24', '25', '26', '27', '28', '29', '30',
-      '31', '1', '2', '3', '4', '5', '6'
-    ];
-    // হাইলাইটেড দিনগুলো
-    final Set<String> redDays = {'12', '14'};
-    final Set<String> tealDays = {'13', '20'};
-    final Set<String> greyDays = {'27', '28', '29', '30', '31', '1', '2', '3', '4', '5', '6'};
 
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w),
-      child: Column(
-        children: [
-          // --- ক্যালেন্ডার হেডার (Month/Year) ---
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Icon(Icons.arrow_back_ios, size: 18.sp, color: AppColors.textDark),
-              Text(
-                'November 2025',
-                style: GoogleFonts.montserrat(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textDark,
-                ),
-              ),
-              Icon(Icons.arrow_forward_ios, size: 18.sp, color: AppColors.textDark),
-            ],
-          ),
-          SizedBox(height: 16.h),
 
-          // --- সপ্তাহের দিন (Sun, Mon...) ---
-          GridView.count(
-            crossAxisCount: 7,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            children: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-                .map((day) => Center(
-              child: Text(
-                day,
-                style: GoogleFonts.montserrat(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.subHeadingColor,
-                ),
-              ),
-            ))
-                .toList(),
-          ),
-          SizedBox(height: 8.h),
 
-          // --- ক্যালেন্ডারের দিনগুলো ---
-          GridView.count(
-            crossAxisCount: 7,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            children: List.generate(calendarDays.length, (index) {
-              final day = calendarDays[index];
-              final isGrey = index < 7 || index >= 35; // প্রথম ও শেষ লাইনের দিন
-              final isRed = redDays.contains(day) && !isGrey;
-              final isTeal = tealDays.contains(day) && !isGrey;
-
-              Color bgColor = Colors.transparent;
-              Color textColor = Colors.red;
-
-              if (isRed) {
-                bgColor = AppColors.primary;
-                textColor = AppColors.primary;
-              } else if (isTeal) {
-                bgColor = AppColors.mainAppColor.withOpacity(0.1);
-                textColor = AppColors.mainAppColor;
-              }
-
-              return Container(
-                margin: EdgeInsets.all(4.w),
-                decoration: BoxDecoration(
-                  color: bgColor,
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: Text(
-                    day,
-                    style: GoogleFonts.montserrat(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w600,
-                      color: textColor,
-                    ),
-                  ),
-                ),
-              );
-            }),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // --- "Recent Bookings" সেকশন ---
   Widget _buildRecentBookings() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Column(
         children: [
-          // --- হেডার (Recent Bookings + See all) ---
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'Recent Bookings',
                 style: GoogleFonts.montserrat(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
                   color: AppColors.textDark,
                 ),
               ),
@@ -381,8 +268,8 @@ class HomeScreen extends StatelessWidget {
                 child: Text(
                   'See all',
                   style: GoogleFonts.montserrat(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
                     color: AppColors.mainAppColor,
                   ),
                 ),
@@ -391,7 +278,6 @@ class HomeScreen extends StatelessWidget {
           ),
           SizedBox(height: 10.h),
 
-          // --- বুকিং কার্ড লিস্ট ---
           _buildBookingCard(
             userName: 'Tamim',
             location: 'New York, NY',
@@ -401,6 +287,7 @@ class HomeScreen extends StatelessWidget {
             price: '\$20/hr',
             petName: 'Max',
             petBreed: 'Labrador',
+            petImage: 'assets/images/max.jpg',
           ),
           SizedBox(height: 16.h),
           _buildBookingCard(
@@ -412,6 +299,7 @@ class HomeScreen extends StatelessWidget {
             price: '\$20/hr',
             petName: 'Max',
             petBreed: 'Labrador',
+            petImage: 'assets/images/max.jpg',
           ),
           SizedBox(height: 20.h),
         ],
@@ -419,7 +307,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // --- একটি সিঙ্গেল বুকিং কার্ডের ডিজাইন (image_acc2fe.png অনুযায়ী) ---
+
   Widget _buildBookingCard({
     required String userName,
     required String location,
@@ -429,6 +317,8 @@ class HomeScreen extends StatelessWidget {
     required String price,
     required String petName,
     required String petBreed,
+    required String petImage,
+    // --- [FIXED]
   }) {
     return Container(
       padding: EdgeInsets.all(16.w),
@@ -446,12 +336,11 @@ class HomeScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // --- উপরের অংশ: ইউজার ইনফো ---
           Row(
             children: [
               const CircleAvatar(
                 radius: 24,
-                backgroundImage: AssetImage('assets/images/profileImg.png'), // ইউজার ছবি
+                backgroundImage: AssetImage('assets/images/profileImg.png'),
               ),
               SizedBox(width: 12.w),
               Column(
@@ -495,7 +384,6 @@ class HomeScreen extends StatelessWidget {
           ),
           SizedBox(height: 16.h),
 
-          // --- সার্ভিস ইনফো ---
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -533,7 +421,6 @@ class HomeScreen extends StatelessWidget {
           ),
           SizedBox(height: 16.h),
 
-          // --- সময় এবং পেমেন্ট ---
           Row(
             children: [
               _buildInfoChip('For 2 hours'),
@@ -543,18 +430,24 @@ class HomeScreen extends StatelessWidget {
           ),
           SizedBox(height: 16.h),
 
-          // --- পেট ইনফো ---
           Container(
             padding: EdgeInsets.all(12.w),
             decoration: BoxDecoration(
-                color: AppColors.mainAppColor.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(12.r)
+                color: AppColors.white.withOpacity(0.05),
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(color: AppColors.grey.withOpacity(0.2))
             ),
             child: Row(
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(12.r),
-                  child: SvgPicture.asset( 'assets/icons/max.svg', width: 60.w, height: 60.h),
+                  borderRadius: BorderRadius.circular(24.r),
+
+                  child: Image.asset(
+                    petImage,
+                    width: 60.w,
+                    height: 60.w,
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 SizedBox(width: 12.w),
                 Column(
@@ -586,14 +479,13 @@ class HomeScreen extends StatelessWidget {
           ),
           SizedBox(height: 16.h),
 
-          // --- বাটন (Cancel/Accept) ---
           Row(
             children: [
               Expanded(
                 child: ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
+                    backgroundColor: AppColors.redColor,
                     elevation: 0,
                     padding: EdgeInsets.symmetric(vertical: 14.h),
                     shape: RoundedRectangleBorder(
@@ -605,7 +497,7 @@ class HomeScreen extends StatelessWidget {
                     style: GoogleFonts.montserrat(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.primary,
+                      color: Colors.white,
                     ),
                   ),
                 ),
@@ -615,7 +507,7 @@ class HomeScreen extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.mainAppColor,
+                    backgroundColor: AppColors.mainAppColor, // টিল ব্যাকগ্রাউন্ড
                     elevation: 0,
                     padding: EdgeInsets.symmetric(vertical: 14.h),
                     shape: RoundedRectangleBorder(
@@ -627,7 +519,7 @@ class HomeScreen extends StatelessWidget {
                     style: GoogleFonts.montserrat(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                      color: Colors.white, // সাদা টেক্সট
                     ),
                   ),
                 ),
@@ -639,7 +531,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // --- বুকিং কার্ডের ছোট চিপ ("For 2 hours") ---
+
   Widget _buildInfoChip(String text) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
@@ -661,52 +553,6 @@ class HomeScreen extends StatelessWidget {
 
 
 
-  // --- "Creations" আইটেম (ডিজাইন অনুযায়ী) ---
-  Widget _buildCreationsItem() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            Icon(
-                Icons.maps_ugc_rounded,
-                size: 26.sp,
-                color: AppColors.grey
-            ),
-            Positioned(
-              left: 3.w,
-              top: 0.h,
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 7.r,
-                    backgroundColor: Colors.pink.shade100,
-                    child: Text('A', style: TextStyle(fontSize: 7.sp, color: Colors.pink.shade800)),
-                  ),
-                  Transform.translate(
-                    offset: Offset(-5.w, 0),
-                    child: CircleAvatar(
-                      radius: 7.r,
-                      backgroundColor: Colors.orange.shade100,
-                      child: Text('A', style: TextStyle(fontSize: 7.sp, color: Colors.orange.shade800)),
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
-        SizedBox(height: 4.h),
-        Text(
-          'creations',
-          style: GoogleFonts.montserrat(
-            fontSize: 12.sp,
-            fontWeight: FontWeight.w500,
-            color: AppColors.grey,
-          ),
-        )
-      ],
-    );
-  }
+
+
 }
