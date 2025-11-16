@@ -12,7 +12,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     required this.title,
     this.onBackTap,
-    this.showBackButton = true, // ✅ optional by default
+    this.showBackButton = true,
   });
 
   @override
@@ -33,7 +33,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // ✅ Conditionally show back button
               showBackButton
                   ? InkWell(
                 onTap: onBackTap ?? () => Navigator.pop(context),
@@ -44,7 +43,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               )
                   : const SizedBox(width: 24),
 
-              // Title in center
               Text(
                 title,
                 style: TextStyle(
@@ -55,7 +53,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
 
-              // Spacer for balance
+
               const SizedBox(width: 24),
             ],
           ),

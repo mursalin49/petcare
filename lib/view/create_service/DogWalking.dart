@@ -3,10 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// =============================================================================
-// I. DUMMY COLORS & ROUTING (For self-contained example)
-// =============================================================================
-
 class AppColors {
   static const Color mainAppColor = Color(0xFF035F75);
   static const Color primaryText = Color(0xFF1C1C1E);
@@ -19,9 +15,6 @@ class AppColors {
   static const Color inputBorder = Color(0xFFD1D1D6);
 }
 
-// =============================================================================
-// II. GETX CONTROLLER (Data Model - Unchanged, already correct)
-// =============================================================================
 class DogWalkingController extends GetxController {
   // --- Rates ---
   var selectedService = 'Dog Walking'.obs;
@@ -35,7 +28,7 @@ class DogWalkingController extends GetxController {
   // --- Location/Area ---
   var useHomeAddress = true.obs;
   var selectedDistanceType = 'Miles'.obs;
-  var serviceAreaDistance = 5.obs; // Example initial distance
+  var serviceAreaDistance = 5.obs;
   var selectedTravelModes = {'Walking': true.obs, 'Cycling': false.obs, 'Driving': false.obs}.obs;
 
   // --- Pet Preferences ---
@@ -54,9 +47,6 @@ class DogWalkingController extends GetxController {
   }
 }
 
-// =============================================================================
-// III. MAIN SCREEN (Merged from all screenshots)
-// =============================================================================
 
 /// Wrapper screen to initialize the controller
 class DogWalkingSetupScreen extends StatelessWidget {
@@ -69,7 +59,6 @@ class DogWalkingSetupScreen extends StatelessWidget {
   }
 }
 
-/// This is the main screen, combining all elements from the screenshots.
 class DogWalkingServiceSetupScreen extends StatelessWidget {
   const DogWalkingServiceSetupScreen({super.key});
 
@@ -86,14 +75,11 @@ class DogWalkingServiceSetupScreen extends StatelessWidget {
           children: [
             SizedBox(height: 10.h),
 
-            // --- Service Name (from image_9000da.png) ---
             _buildServiceSelection(controller),
 
-            // --- Info Banner (from image_9000da.png) ---
             _buildInfoBanner(),
             SizedBox(height: 20.h),
 
-            // --- Set your base rate (from image_9000da.png) ---
             _buildSectionTitle('Set your base rate'),
             _buildRateInputField(
               title: 'Per walk',
@@ -104,7 +90,6 @@ class DogWalkingServiceSetupScreen extends StatelessWidget {
             ),
             SizedBox(height: 20.h),
 
-            // --- Checkbox (Update my additional rates) ---
             Obx(() => _buildSquareCheckbox(
                 text: 'Update my additional rates based on my base rate',
                 value: controller.updateAdditionalRates.value,
@@ -113,7 +98,6 @@ class DogWalkingServiceSetupScreen extends StatelessWidget {
             Text('Turn off to adjust your rate manually', style: GoogleFonts.montserrat(fontSize: 12.sp, color: AppColors.secondaryText)),
             SizedBox(height: 20.h),
 
-            // --- Additional Rates Section (Toggleable) (from image_9001b2.png) ---
             Obx(() {
               if (controller.showAdditionalRates.value) {
                 return Column(
@@ -126,7 +110,7 @@ class DogWalkingServiceSetupScreen extends StatelessWidget {
 
                     _buildSquareCheckbox(
                         text: 'Offer for free',
-                        value: false, // Default value from screenshot
+                        value: false,
                         onChanged: (val) => {}
                     ),
                     SizedBox(height: 15.h),
@@ -134,7 +118,7 @@ class DogWalkingServiceSetupScreen extends StatelessWidget {
                     _buildRateInputField(
                       title: 'Daily Sitter Pick-Up/Drop-Off',
                       placeholderValue: '28.00',
-                      keepText: 'You keep: 80%', // Match screenshot
+                      keepText: 'You keep: 80%',
                       rateType: 'Per day',
                       showKeepText: true,
                     ),
@@ -154,12 +138,10 @@ class DogWalkingServiceSetupScreen extends StatelessWidget {
             Divider(color: AppColors.border, height: 1.h),
             SizedBox(height: 30.h),
 
-            // --- AVAILABILITY SECTION (from image_9000da.png & 9004a1.png) ---
             _buildSectionTitle('Availability'),
             Text('How many walks can you do per day?', style: GoogleFonts.montserrat(fontSize: 14.sp, color: AppColors.primaryText)),
             SizedBox(height: 10.h),
 
-            // **MODIFIED** - Changed to a simple input to match the design
             _buildWalksCountInput(controller),
 
             SizedBox(height: 15.h),
@@ -168,7 +150,6 @@ class DogWalkingServiceSetupScreen extends StatelessWidget {
             _buildDaySelectors(),
             SizedBox(height: 20.h),
 
-            // --- Time Slots (from image_9004a1.png) ---
             _buildSectionTitle('What times are you available for Dog walking on weekdays?'),
             Obx(() => Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -181,7 +162,6 @@ class DogWalkingServiceSetupScreen extends StatelessWidget {
             )),
             SizedBox(height: 20.h),
 
-            // --- Location Toggle & Input (from image_9004a1.png) ---
             Obx(() => _buildSwitchToggle(
                 text: 'Use my home address',
                 value: controller.useHomeAddress.value,
@@ -193,16 +173,13 @@ class DogWalkingServiceSetupScreen extends StatelessWidget {
             Divider(color: AppColors.border, height: 1.h),
             SizedBox(height: 20.h),
 
-            // --- Service Area (from image_9004a1.png) ---
             _buildSectionTitle('Service Area'),
             Text('The service area you define here will be for house sitting.', style: GoogleFonts.montserrat(fontSize: 12.sp, color: AppColors.secondaryText)),
             SizedBox(height: 15.h),
 
-            // **MODIFIED** - Map placeholder updated to match design
             _buildMapPlaceholder(),
             SizedBox(height: 15.h),
 
-            // Distance Type Radio
             Obx(() => Row(
               children: [
                 _buildRadioOption<String>(text: 'Miles', value: 'Miles', groupValue: controller.selectedDistanceType.value, onChanged: (val) => controller.selectedDistanceType.value = val!),
@@ -227,7 +204,6 @@ class DogWalkingServiceSetupScreen extends StatelessWidget {
             Divider(color: AppColors.border, height: 1.h),
             SizedBox(height: 20.h),
 
-            // --- Pet Hosting (from image_900137.png) ---
             _buildSectionTitle('What type of pets can you host in your home?'),
             ...controller.petSizes.keys.map((key) => Obx(() => _buildSquareCheckbox(
                 text: key,
@@ -236,7 +212,6 @@ class DogWalkingServiceSetupScreen extends StatelessWidget {
             ))).toList(),
             SizedBox(height: 20.h),
 
-            // --- Puppies (from image_900137.png) ---
             _buildSectionTitle('Do you accept puppies under 1 year old?'),
             Obx(() => Row(
               children: [
@@ -249,7 +224,6 @@ class DogWalkingServiceSetupScreen extends StatelessWidget {
             Divider(color: AppColors.border, height: 1.h),
             SizedBox(height: 20.h),
 
-            // --- Cancellation Policy (from image_90015c.png) ---
             _buildSectionTitle('What is your cancellation policy for Doggy Day Care?'),
             ...controller.cancellationPolicy.keys.map((key) => Obx(() => _buildSquareCheckbox(
                 text: key,
@@ -257,19 +231,15 @@ class DogWalkingServiceSetupScreen extends StatelessWidget {
                 onChanged: (val) => controller.toggleCheckbox(controller.cancellationPolicy, key, val!)
             ))).toList(),
 
-            SizedBox(height: 100.h), // Extra space for sticky footer
+            SizedBox(height: 100.h),
           ],
         ),
       ),
-      // --- Bottom CTA Button (from image_90015c.png) ---
       bottomNavigationBar: _buildStickyFooter(context, 'Create Service'),
     );
   }
 }
 
-// =============================================================================
-// VI. SHARED UTILITY WIDGETS (Helper functions matching all screenshots)
-// =============================================================================
 
 // --- AppBar ---
 AppBar _buildCustomAppBar(BuildContext context, String title) {
@@ -305,15 +275,12 @@ AppBar _buildCustomAppBar(BuildContext context, String title) {
 
     centerTitle: true,
 
-
-
     actions: [
 
       IconButton(
 
         onPressed: () {
 
-// Handle edit action
 
         },
 
@@ -357,8 +324,7 @@ Widget _buildStickyFooter(BuildContext context, String text) {
       child: TextButton(
         onPressed: () {
           if (text == 'Continue') {
-            // This case is no longer used but logic is kept
-            // Get.to(() => const DogWalkingDetailScreen());
+
           } else {
             // Placeholder action for Create Service
             Get.snackbar('Service Created', 'The Dog Walking service settings have been saved.', snackPosition: SnackPosition.BOTTOM);
@@ -370,7 +336,6 @@ Widget _buildStickyFooter(BuildContext context, String text) {
   );
 }
 
-// --- **NEW** Service Selection (from image_9000da.png) ---
 Widget _buildServiceSelection(DogWalkingController controller) {
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
@@ -394,7 +359,7 @@ Widget _buildServiceSelection(DogWalkingController controller) {
             value: value,
             child: Row(
               children: [
-                Icon(Icons.home, color: AppColors.grey), // Icon from screenshot
+                Icon(Icons.home, color: AppColors.grey),
                 SizedBox(width: 8.w),
                 Text(
                   value,
@@ -410,7 +375,6 @@ Widget _buildServiceSelection(DogWalkingController controller) {
 }
 
 
-// --- Info Banner (Matches Screenshot 1) ---
 Widget _buildInfoBanner() {
   return Container(
     margin: EdgeInsets.only(top: 15.h, bottom: 10.h),
@@ -538,8 +502,6 @@ Widget _buildDaySelectors() {
   );
 
 }
-
-// --- Rate Input Field (Matches Screenshot 1 - Unified for Base and Additional Rates) ---
 Widget _buildRateInputField({
   required String title,
   required String placeholderValue,
@@ -550,24 +512,24 @@ Widget _buildRateInputField({
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      if (title != 'Per walk') // Title only for non-base rates
+      if (title != 'Per walk')
         Padding(
           padding: EdgeInsets.only(bottom: 5.h),
           child: Text(title, style: GoogleFonts.montserrat(fontSize: 14.sp, fontWeight: FontWeight.w500, color: AppColors.textDark)),
         ),
-      // **MODIFIED** - 'keepText' is now outside this container
+
       Container(
         decoration: BoxDecoration(border: Border.all(color: AppColors.Secondaryborder), borderRadius: BorderRadius.circular(8.r)),
         child: Row(
           children: [
-            // "Per walk" / "Per day" Label
+
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 12.h),
               width: 100.w,
               alignment: Alignment.centerLeft,
               child: Text(rateType, style: GoogleFonts.montserrat(fontSize: 14.sp, color: AppColors.grey)),
             ),
-            // Rate Input
+
             Expanded(
               child: Padding(
                 padding: EdgeInsets.only(right: 10.w),
@@ -582,7 +544,7 @@ Widget _buildRateInputField({
       ),
       SizedBox(height: 5.h),
 
-      // **MODIFIED** - Moved keepText here to match design
+
       if (showKeepText)
         Padding(
           padding: EdgeInsets.only(left: 10.w),
@@ -592,7 +554,6 @@ Widget _buildRateInputField({
   );
 }
 
-// --- Show/Hide Button (Matches Screenshot 1) ---
 Widget _buildShowHideButton(String text, VoidCallback onPressed, bool isHideButton) {
   return Container(
     width: double.infinity,
@@ -628,23 +589,22 @@ Widget _buildShowHideButton(String text, VoidCallback onPressed, bool isHideButt
   );
 }
 
-// --- **MODIFIED** Walks Count Input (Matches Screenshot 1 & 3) ---
+
 Widget _buildWalksCountInput(DogWalkingController controller) {
-  // This widget is now styled exactly like the Rate Input field
-  // to match the design.
+
   return Container(
     height: 45.h,
     decoration: BoxDecoration(border: Border.all(color: AppColors.Secondaryborder), borderRadius: BorderRadius.circular(8.r)),
     child: Row(
       children: [
-        // "Per day" Label
+
         Container(
           padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 12.h),
           width: 100.w,
           alignment: Alignment.centerLeft,
           child: Text('Per day', style: GoogleFonts.montserrat(fontSize: 14.sp, color: AppColors.grey)),
         ),
-        // Number Display
+
         Expanded(
           child: Padding(
             padding: EdgeInsets.only(right: 10.w),
@@ -662,7 +622,6 @@ Widget _buildWalksCountInput(DogWalkingController controller) {
   );
 }
 
-// --- Square Checkbox (Matches Checkbox style in Screenshots) ---
 Widget _buildSquareCheckbox({required String text, required bool value, required ValueChanged<bool?> onChanged}) {
   return InkWell(
     onTap: () => onChanged(!value),
@@ -681,7 +640,7 @@ Widget _buildSquareCheckbox({required String text, required bool value, required
   );
 }
 
-// --- Switch Toggle (Matches Screenshot 3) ---
+
 Widget _buildSwitchToggle({required String text, required bool value, required ValueChanged<bool?> onChanged}) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -695,7 +654,7 @@ Widget _buildSwitchToggle({required String text, required bool value, required V
   );
 }
 
-// --- Input with Label (Matches Screenshot 3) ---
+
 Widget _buildInputWithLabel({required String label, required String initialValue}) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -740,29 +699,10 @@ Widget _buildMapPlaceholder() {
 
           ),
 SizedBox(height: 30),
-        // Simple placeholder, as we cannot render a real map
+
         Center(child: Image(image: AssetImage('assets/images/map.png'), height: 300.h, width: 320.w)),
 
-        // White box with location text, as seen in image_9004a1.png
-        // Positioned(
-        //   top: 10.w,
-        //   left: 10.w,
-        //   child: Container(
-        //     padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),
-        //     decoration: BoxDecoration(
-        //         color: AppColors.white,
-        //         borderRadius: BorderRadius.circular(8.r),
-        //         boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4, offset: Offset(0, 2))]
-        //     ),
-        //     child: Column(
-        //       crossAxisAlignment: CrossAxisAlignment.start,
-        //       children: [
-        //         Text('Location', style: GoogleFonts.montserrat(fontWeight: FontWeight.w600, fontSize: 14.sp, color: AppColors.textDark)),
-        //         Text('New York, NY', style: GoogleFonts.montserrat(fontSize: 12.sp, color: AppColors.secondaryText)),
-        //       ],
-        //     ),
-        //   ),
-        // ),
+
       ],
     ),
   );
@@ -782,7 +722,6 @@ Widget _buildRadioOption<T>({required String text, required T value, required T 
   );
 }
 
-// --- Service Area Input Field (Matches Screenshot 2 layout) ---
 Widget _buildServiceAreaInputField(DogWalkingController controller) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -793,7 +732,7 @@ Widget _buildServiceAreaInputField(DogWalkingController controller) {
         children: [
           Expanded(
             child: TextFormField(
-              initialValue: '0', // Matches screenshot 2
+              initialValue: '0',
               keyboardType: TextInputType.number,
               style: GoogleFonts.montserrat(fontSize: 14.sp, color: AppColors.primaryText),
               decoration: InputDecoration(

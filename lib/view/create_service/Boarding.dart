@@ -81,8 +81,6 @@ class BoardingController extends GetxController {
 
   }
 
-
-
   void toggleAdditionalRates() {
 
     showAdditionalRates.value = !showAdditionalRates.value;
@@ -91,23 +89,15 @@ class BoardingController extends GetxController {
 
 }
 
-
-
-
-
 class BoardingSetupScreen extends StatelessWidget {
 
   const BoardingSetupScreen({super.key});
-
-
 
   @override
 
   Widget build(BuildContext context) {
 
     final controller = Get.put(BoardingController());
-
-
 
     return Scaffold(
 
@@ -127,9 +117,6 @@ class BoardingSetupScreen extends StatelessWidget {
 
             SizedBox(height: 10.h),
 
-
-
-// Service Name Dropdown
 
             _buildServiceSelection(controller),
 
@@ -160,9 +147,6 @@ class BoardingSetupScreen extends StatelessWidget {
               isStandalone: true,
 
             ),
-
-
-
 // Checkbox (Update my additional rates)
 
             Obx(() => _buildSquareCheckbox(
@@ -177,13 +161,6 @@ class BoardingSetupScreen extends StatelessWidget {
 
             Text('Turn off to adjust your rate manually', style: GoogleFonts.montserrat(fontSize: 12.sp, color: AppColors.secondaryText)),
 
-
-
-// -----------------------------------------------------------------
-
-// --- Additional Rates Section (Toggleable) ---
-
-// -----------------------------------------------------------------
 
             SizedBox(height: 20.h),
 
@@ -205,8 +182,6 @@ class BoardingSetupScreen extends StatelessWidget {
 
                     _buildRateInput(title: 'Bathing / Grooming', initialValue: '28.00'),
 
-
-
                     Obx(() => _buildSquareCheckbox(
 
                         text: 'Offer for free',
@@ -218,8 +193,6 @@ class BoardingSetupScreen extends StatelessWidget {
                     )),
 
                     SizedBox(height: 10.h),
-
-
 
                     _buildRateInput(
 
@@ -246,12 +219,10 @@ class BoardingSetupScreen extends StatelessWidget {
             }),
 
 
-
             SizedBox(height: 10.h),
 
 
 
-// --- Show/Hide Button ---
 
             Obx(() => _buildShowHideButton(
 
@@ -265,21 +236,11 @@ class BoardingSetupScreen extends StatelessWidget {
 
             SizedBox(height: 30.h),
 
-
-
-// -----------------------------------------------------------------
-
-// --- AVAILABILITY SECTION ---
-
-// -----------------------------------------------------------------
-
             _buildSectionTitle('Availability'),
 
             Text('Are you home full-time during the week?', style: GoogleFonts.montserrat(fontSize: 14.sp, color: AppColors.primaryText)),
 
             SizedBox(height: 10.h),
-
-
 
             Obx(() => Row(
 
@@ -297,10 +258,6 @@ class BoardingSetupScreen extends StatelessWidget {
 
             SizedBox(height: 15.h),
 
-
-
-
-
             Text('You can edit any date individually by going to your calendar.', style: GoogleFonts.montserrat(fontSize: 12.sp, color: AppColors.secondaryText)),
 
             SizedBox(height: 10.h),
@@ -309,16 +266,11 @@ class BoardingSetupScreen extends StatelessWidget {
 
             SizedBox(height: 30.h),
 
-
-
 // --- Potty Breaks ---
 
             _buildSectionTitle('How frequently can you provide potty breaks?'),
 
-
-
-// 2x2 গ্রিড লেআউট
-
+// grid
             Wrap(
 
               spacing: 20.w,
@@ -341,13 +293,6 @@ class BoardingSetupScreen extends StatelessWidget {
             SizedBox(height: 30.h),
 
 
-
-// -----------------------------------------------------------------
-
-// --- PET PREFERENCES SECTION ---
-
-// -----------------------------------------------------------------
-
             _buildSectionTitle('Pet preferences'),
 
             Text('How many pets per day can you host in your home?', style: GoogleFonts.montserrat(fontSize: 14.sp, color: AppColors.primaryText)),
@@ -355,11 +300,9 @@ class BoardingSetupScreen extends StatelessWidget {
             SizedBox(height: 10.h),
 
 
-
             _buildPetCountSelector(controller),
 
             SizedBox(height: 30.h),
-
 
 
             _buildSectionTitle('What type of pets can you host in your home?'),
@@ -369,9 +312,6 @@ class BoardingSetupScreen extends StatelessWidget {
             ...controller.petSizes.keys.map((key) => Obx(() => _buildSquareCheckbox(text: key, value: controller.petSizes[key]!.value, onChanged: (val) => controller.petSizes[key]!.value = val!))).toList(),
 
             SizedBox(height: 30.h),
-
-
-
 
 
 // --- About your home ---
@@ -441,12 +381,7 @@ class BoardingSetupScreen extends StatelessWidget {
   }
 
 
-
   AppBar _buildCustomAppBar(BuildContext context) {
-
-// const String editIconPath = 'assets/icons/edit.svg'; // Placeholder for SVG asset
-
-
 
     return AppBar(
 
@@ -518,19 +453,8 @@ class BoardingSetupScreen extends StatelessWidget {
 
   }
 
-
-
-// -----------------------------------------------------------------
-
-// --- UTILITY WIDGETS ---
-
-// -----------------------------------------------------------------
-
-
-
   Widget _buildServiceSelection(BoardingController controller) {
 
-// Dropdown options and their corresponding screens
 
     final List<Map<String, dynamic>> services = [
 
@@ -541,7 +465,6 @@ class BoardingSetupScreen extends StatelessWidget {
       {'name': 'Dog Day Care', 'icon': Icons.pets_outlined, 'screen': const DogDayCareSetupScreen()},
 
     ];
-
 
 
     return Padding(
@@ -651,7 +574,6 @@ class BoardingSetupScreen extends StatelessWidget {
   }
 
 
-
   Widget _buildInfoBanner() {
 
     return Container(
@@ -701,7 +623,6 @@ class BoardingSetupScreen extends StatelessWidget {
   }
 
 
-
   Widget _buildSectionTitle(String title, {bool isMainTitle = false}) {
 
     return Padding(
@@ -727,7 +648,6 @@ class BoardingSetupScreen extends StatelessWidget {
     );
 
   }
-
 
 
   Widget _buildShowHideButton(String text, VoidCallback onPressed, bool isHideButton) {
@@ -775,7 +695,6 @@ class BoardingSetupScreen extends StatelessWidget {
   }
 
 
-
   Widget _buildRateInput({
 
     required String title,
@@ -795,7 +714,6 @@ class BoardingSetupScreen extends StatelessWidget {
     final showTitle = isStandalone || title != 'Set your base rate';
 
 
-
     return Column(
 
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -813,9 +731,7 @@ class BoardingSetupScreen extends StatelessWidget {
           Text(subtitle, style: GoogleFonts.montserrat(fontSize: 12.sp, color: AppColors.grey)),
 
 
-
         SizedBox(height: 5.h),
-
 
 
         Container(

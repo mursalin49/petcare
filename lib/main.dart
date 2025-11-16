@@ -9,8 +9,6 @@ import 'helpers/route.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // ...
-  // ✅ MUST ADD THIS
   await GetStorage.init();
 
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(

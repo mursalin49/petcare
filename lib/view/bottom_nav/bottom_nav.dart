@@ -37,8 +37,8 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
 
   // Create nav items in a getter
   List<BottomNavigationBarItem> get _navItems => [
-    _navItem(AppIcons.nirobIcon, AppIcons.nirobsIconS, "Home", 0),
-    _navItem(AppIcons.create, AppIcons.creates, " Create Service",  1),
+    _navItem(AppIcons.home, AppIcons.homes, "Home", 0),
+    _navItem(AppIcons.create, AppIcons.creates, "Create Service",  1),
     _navItem(AppIcons.bookingsICon, AppIcons.bookingsIConS, "Bookings",  2),
     _navItem(AppIcons.profileIcon, AppIcons.profileIconS, "Profile",  3),
   ];
@@ -48,7 +48,6 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
     return Scaffold(
       body: _pages[selectedIndex],
 
-      // 🎯 MODIFICATION: Wrap the BottomNavigationBar in a SizedBox
       bottomNavigationBar: Container(
         
         decoration: BoxDecoration(
@@ -99,8 +98,6 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
       ),
     );
   }
-
-  // 🎯 FIX: Simplified _navItem and added color logic for SVG
   BottomNavigationBarItem _navItem(
       String unselected,
       String selected,// Only one path needed
@@ -114,7 +111,6 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
         : AppColors.foundationColor;
 
     return BottomNavigationBarItem(
-      // 🎯 FIX: Removed the unnecessary Column and SizedBox(height: 10.h)
       icon: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

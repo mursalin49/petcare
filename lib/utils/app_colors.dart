@@ -33,7 +33,7 @@ class AppColors {
   static Color blueColor = Color(0xFF359DFF);
   static Color greenColor = Color(0xFF008364);
   static Color redColor = Color(0xFFFE6C5D);
-
+static Color upcomingColor = Color(0xFF9ABFC8);
 
 
 

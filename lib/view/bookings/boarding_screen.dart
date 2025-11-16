@@ -173,62 +173,7 @@ class _BoardingScreenState extends State<BoardingScreen> {
                     ],
                   ),
                 ),
-                // SizedBox(height: 24.h),
-                //
-                // GestureDetector(
-                //   onTap: () {},
-                //   child: DottedBorder(
-                //     color: AppColors.mainAppColor,
-                //     strokeWidth: 1.5,
-                //     dashPattern: const [7, 3],
-                //     borderType: BorderType.RRect,
-                //     radius: const Radius.circular(8),
-                //     child: Container(
-                //       width: double.infinity,
-                //       padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
-                //       child: Row(
-                //         mainAxisAlignment: MainAxisAlignment.center,
-                //         children: [
-                //           Icon(Icons.add, color: AppColors.mainAppColor, size: 20),
-                //           SizedBox(width: 8.w),
-                //           const Text(
-                //             "Select your pets",
-                //             style: TextStyle(
-                //               fontFamily: 'Montserrat-Regular',
-                //               fontSize: 16,
-                //               color: AppColors.mainAppColor,
-                //               fontWeight: FontWeight.w600,
-                //             ),
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                // SizedBox(height: MediaQuery.of(context).size.height * 0.030),
-                // GestureDetector(
-                //   onTap: (){
-                //     Get.to(() => const BoardingSittersScreen());
-                //   },
-                //   child: Container(
-                //     width: double.infinity,
-                //     padding: EdgeInsets.symmetric(vertical: 14.h),
-                //     decoration: BoxDecoration(
-                //       color: AppColors.mainAppColor,
-                //       borderRadius: BorderRadius.circular(8.r),
-                //     ),
-                //     child: Text(
-                //       "Next",
-                //       style: TextStyle(
-                //         fontFamily: 'Montserrat-Regular',
-                //         fontSize: 18.sp,
-                //         fontWeight: FontWeight.w600,
-                //         color: AppColors.white,
-                //       ),
-                //       textAlign: TextAlign.center,
-                //     ),
-                //   ),
-                // ),
+
                 SizedBox(height: MediaQuery.of(context).size.height * 0.050),
               ],
             ),

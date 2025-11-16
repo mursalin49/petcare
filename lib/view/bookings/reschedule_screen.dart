@@ -6,7 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../utils/app_colors.dart'; // আপনার AppColors ইম্পোর্ট করুন
+import '../../utils/app_colors.dart';
 
 class RescheduleScreen extends StatelessWidget {
   const RescheduleScreen({super.key});
@@ -28,22 +28,19 @@ class RescheduleScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // --- ইউজার ইনফো কার্ড ---
             _buildUserInfoCard(),
             SizedBox(height: 24.h),
 
-            // --- Pet sitter available time ইনপুট ---
             _buildTextInputField(
               label: "Pet sitter available time",
               icon: Icons.calendar_today_rounded,
               onIconTap: () {
                 // TODO: এখানে ক্যালেন্ডার পপ-আপ দেখানোর লজিক লিখুন
-                // যেমন: showDialog(...) বা Get.dialog(...)
               },
             ),
             SizedBox(height: 16.h),
 
-            // --- Note ইনপুট ---
+
             _buildTextInputField(
               label: "Note",
               hint: "Please ensure all windows are securely locked after cleaning. Kindly use eco-friendly cleaning products as we prefer them.",
@@ -51,22 +48,20 @@ class RescheduleScreen extends StatelessWidget {
             ),
             SizedBox(height: 24.h),
 
-            // --- তারিখ ও সময় সিলেকশন ---
+
             _buildDateTimeSelection(),
             SizedBox(height: 40.h),
 
-            // --- বাটন (Cancel / Send) ---
             _buildActionButtons(context),
             SizedBox(height: 16.h),
 
-            // --- ফুটার নোট ---
             Center(
               child: Text(
                 "You can reschedule the time only once.",
                 style: GoogleFonts.montserrat(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.w500,
-                  color: AppColors.primary, // লাল
+                  color: AppColors.primary,
                 ),
               ),
             ),
@@ -76,8 +71,6 @@ class RescheduleScreen extends StatelessWidget {
       ),
     );
   }
-
-  // --- [HELPER] ইউজার ইনফো কার্ড ---
   Widget _buildUserInfoCard() {
     return Container(
       padding: EdgeInsets.all(16.w),
@@ -96,7 +89,7 @@ class RescheduleScreen extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 30.r,
-            backgroundImage: AssetImage('assets/images/profileImg.png'), // ইউজার ছবি
+            backgroundImage: AssetImage('assets/images/profileImg.png'),
           ),
           SizedBox(width: 16.w),
           Column(
@@ -126,7 +119,6 @@ class RescheduleScreen extends StatelessWidget {
     );
   }
 
-  // --- [HELPER] টেক্সট ইনপুট ফিল্ড ---
   Widget _buildTextInputField({
     required String label,
     String? hint,
@@ -180,14 +172,13 @@ class RescheduleScreen extends StatelessWidget {
     );
   }
 
-  // --- [HELPER] তারিখ ও সময় সিলেকশন ---
   Widget _buildDateTimeSelection() {
-    // একটি সিঙ্গেল আইটেম (যেমন: Start date, Start time)
+
     Widget _buildDateTimeColumn(String label, String value) {
       return InkWell(
         onTap: () {
-          // TODO: এখানে Date/Time Picker খোলার লজিক লিখুন
-          // যেমন: showDatePicker(...) বা showTimePicker(...)
+          // TODO: Date/Time Picker logic
+
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -244,7 +235,6 @@ class RescheduleScreen extends StatelessWidget {
           ],
         ),
         SizedBox(height: 16.h),
-        // Start time & End time
         Row(
           children: [
             Expanded(child: _buildDateTimeColumn("Start time", "11:00pm")),
@@ -256,11 +246,9 @@ class RescheduleScreen extends StatelessWidget {
     );
   }
 
-  // --- [HELPER] বাটন (Cancel / Send) ---
   Widget _buildActionButtons(BuildContext context) {
     return Row(
       children: [
-        // Cancel বাটন
         Expanded(
           child: OutlinedButton(
             onPressed: () => Get.back(),
@@ -282,11 +270,11 @@ class RescheduleScreen extends StatelessWidget {
           ),
         ),
         SizedBox(width: 12.w),
-        // Send বাটন
+
         Expanded(
           child: ElevatedButton(
             onPressed: () {
-              // --- "Send" ক্লিক করলে সাকসেস পপ-আপ দেখাবে ---
+
               _showSuccessDialog(context);
             },
             style: ElevatedButton.styleFrom(
@@ -311,7 +299,7 @@ class RescheduleScreen extends StatelessWidget {
     );
   }
 
-  // --- [HELPER] সাকসেস পপ-আপ (image_cd444d.png অনুযায়ী) ---
+
   void _showSuccessDialog(BuildContext context) {
     Get.dialog(
       AlertDialog(
@@ -320,7 +308,7 @@ class RescheduleScreen extends StatelessWidget {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Close বাটন
+            // Close button
             Align(
               alignment: Alignment.topRight,
               child: InkWell(
@@ -329,7 +317,6 @@ class RescheduleScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 10.h),
-            // সবুজ চেকমার্ক
             Container(
               width: 70.w,
               height: 70.w,
@@ -341,7 +328,7 @@ class RescheduleScreen extends StatelessWidget {
               child: Icon(Icons.check_rounded, color: Colors.green, size: 40.sp),
             ),
             SizedBox(height: 24.h),
-            // টেক্সট
+
             Text(
               "Your reschedule has been successfully confirmed.",
               textAlign: TextAlign.center,

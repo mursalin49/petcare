@@ -8,7 +8,7 @@ Future<DateTime?> showCustomDatePickerSheet(
   required DateTime initialDate,
   DateTime? firstDate,
   DateTime? lastDate,
-  DateTime? rangeStart, // when provided, highlights rangeStart..selected
+  DateTime? rangeStart,
 }) async {
   return await showModalBottomSheet<DateTime>(
     context: context,
@@ -17,7 +17,6 @@ Future<DateTime?> showCustomDatePickerSheet(
     builder: (ctx) {
       return _DatePickerContent(
         initialDate: initialDate,
-        // By default, do not allow past dates
         firstDate: _dateOnly(firstDate ?? DateTime.now()),
         lastDate: lastDate ?? DateTime.now().add(const Duration(days: 3650)),
         rangeStart: rangeStart != null ? _dateOnly(rangeStart) : null,
@@ -55,7 +54,6 @@ class _DatePickerContentState extends State<_DatePickerContent> {
     final DateTime firstDateOnly = _dateOnly(widget.firstDate);
     final DateTime initialOnly = _dateOnly(widget.initialDate);
     _selectedDate = initialOnly.isBefore(firstDateOnly) ? firstDateOnly : initialOnly;
-    // Ensure visible month is not before firstDate's month
     final DateTime initMonth = DateTime(_selectedDate.year, _selectedDate.month);
     final DateTime minMonth = DateTime(firstDateOnly.year, firstDateOnly.month);
     _visibleMonth = _isMonthAfterOrEqual(initMonth, minMonth) ? initMonth : minMonth;
@@ -69,7 +67,7 @@ class _DatePickerContentState extends State<_DatePickerContent> {
 
   List<DateTime?> _daysForMonth(DateTime month) {
     final firstDayOfMonth = DateTime(month.year, month.month, 1);
-    final firstWeekday = firstDayOfMonth.weekday % 7; // make Sunday = 0
+    final firstWeekday = firstDayOfMonth.weekday % 7;
     final daysInMonth = DateTime(month.year, month.month + 1, 0).day;
 
     final List<DateTime?> grid = List<DateTime?>.filled(firstWeekday, null, growable: true);

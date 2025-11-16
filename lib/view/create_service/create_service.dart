@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../helpers/route.dart'; // <<< Using your existing route file import
+import '../../helpers/route.dart';
 import '../../utils/app_colors.dart';
 
 class CreateService extends StatelessWidget {
@@ -47,7 +47,6 @@ class CreateService extends StatelessWidget {
             title: 'Boarding',
             subtitle: 'In the sitter\'s home',
             onTap: () {
-              // Replace with the actual route for the Boarding Setup Screen
               Get.toNamed(AppRoutes.bording);
             },
           ),
@@ -60,21 +59,17 @@ class CreateService extends StatelessWidget {
             subtitle: 'In your home',
             onTap: () {
 
-              // Replace with the actual route for the House Sitting Setup Screen
               Get.toNamed(AppRoutes.dogDay);
             },
           ),
           SizedBox(height: 16.h),
 
-          // --- 3. Drop-In Visits Service ---
           _buildServiceItem(
             iconPath: 'assets/icons/lochome.svg',
             title: 'Dog Walking',
             subtitle: 'Visits in your home',
             onTap: () {
               Get.toNamed(AppRoutes.dogwalk);
-              // Replace with the actual route for the Drop-In Visits Setup Screen
-              // Get.toNamed(AppRoutes.dropInVisitsSetupScreen);
             },
           ),
         ],
@@ -86,11 +81,10 @@ class CreateService extends StatelessWidget {
     required String iconPath,
     required String title,
     required String subtitle,
-    VoidCallback? onTap, // <<< Added onTap parameter
+    VoidCallback? onTap,
   }) {
     const Color cardBorderColor = Color(0xFFE3E6F0);
 
-    // <<< Wrapped the Container with GestureDetector
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -107,7 +101,6 @@ class CreateService extends StatelessWidget {
               height: 32.sp,
               width: 32.sp,
               colorFilter: ColorFilter.mode(AppColors.mainAppColor, BlendMode.srcIn),
-              // It's generally better to use a simple SizedBox/Container as placeholder
               placeholderBuilder: (_) => SizedBox(height: 32.sp, width: 32.sp),
             ),
             SizedBox(width: 16.w),
@@ -121,7 +114,6 @@ class CreateService extends StatelessWidget {
                     style: GoogleFonts.montserrat(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
-                      // Assuming AppColors.textDark is defined
                       color: AppColors.textDark,
                     ),
                   ),
@@ -131,7 +123,6 @@ class CreateService extends StatelessWidget {
                     style: GoogleFonts.montserrat(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w500,
-                      // Assuming AppColors.subHeadingColor is defined
                       color: AppColors.subHeadingColor,
                     ),
                   ),

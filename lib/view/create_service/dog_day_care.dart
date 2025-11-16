@@ -36,8 +36,6 @@ class AppColors {
 
 }
 
-
-
 class DogController extends GetxController {
 
   var selectedService = 'Boarding'.obs;
@@ -83,7 +81,6 @@ class DogController extends GetxController {
   }
 
 
-
   void toggleAdditionalRates() {
 
     showAdditionalRates.value = !showAdditionalRates.value;
@@ -91,9 +88,6 @@ class DogController extends GetxController {
   }
 
 }
-
-
-
 
 
 class DogDayCareSetupScreen extends StatelessWidget {
@@ -107,7 +101,6 @@ class DogDayCareSetupScreen extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final controller = Get.put(DogController());
-
 
 
     return Scaffold(
@@ -178,13 +171,6 @@ class DogDayCareSetupScreen extends StatelessWidget {
 
             Text('Turn off to adjust your rate manually', style: GoogleFonts.montserrat(fontSize: 12.sp, color: AppColors.secondaryText)),
 
-
-
-// -----------------------------------------------------------------
-
-// --- Additional Rates Section (Toggleable) ---
-
-// -----------------------------------------------------------------
 
             SizedBox(height: 20.h),
 
@@ -264,12 +250,6 @@ class DogDayCareSetupScreen extends StatelessWidget {
 
 
 
-// -----------------------------------------------------------------
-
-// --- AVAILABILITY SECTION ---
-
-// -----------------------------------------------------------------
-
             _buildSectionTitle('Availability'),
 
             Text('Are you home full-time during the week?', style: GoogleFonts.montserrat(fontSize: 14.sp, color: AppColors.primaryText)),
@@ -297,7 +277,6 @@ class DogDayCareSetupScreen extends StatelessWidget {
 
 
 
-
             Text('You can edit any date individually by going to your calendar.', style: GoogleFonts.montserrat(fontSize: 12.sp, color: AppColors.secondaryText)),
 
             SizedBox(height: 10.h),
@@ -314,7 +293,7 @@ class DogDayCareSetupScreen extends StatelessWidget {
 
 
 
-// 2x2 গ্রিড লেআউট
+// 2x2 grid
 
             Wrap(
 
