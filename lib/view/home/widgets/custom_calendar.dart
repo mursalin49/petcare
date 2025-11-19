@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../../../../utils/app_colors.dart';
+// আপনার প্রোজেক্টের কালার ফাইল ইম্পোর্ট করুন
+import '../../../utils/app_colors.dart';
 
 
 class CustomCalendarWidget extends StatefulWidget {
@@ -23,6 +24,7 @@ class _CustomCalendarWidgetState extends State<CustomCalendarWidget> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
+  // দিনটি Unavailable কি না চেক করার ফাংশন
   bool _isUnavailable(DateTime day) {
     return widget.unavailableDays.any(
           (d) => d.year == day.year && d.month == day.month && d.day == day.day,
@@ -33,11 +35,12 @@ class _CustomCalendarWidgetState extends State<CustomCalendarWidget> {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(12.0),
+      padding: const EdgeInsets.all(8.0),
+      margin: EdgeInsets.symmetric(horizontal: 20.w),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Color(0xFFE5E5E5), width: 1),
+        border: Border.all(color: AppColors.borderColor, width: 1),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.10),
@@ -52,6 +55,9 @@ class _CustomCalendarWidgetState extends State<CustomCalendarWidget> {
         focusedDay: _focusedDay,
         startingDayOfWeek: StartingDayOfWeek.sunday,
         calendarFormat: CalendarFormat.month,
+        // rowHeight একটু কমিয়ে দিলে ক্যালেন্ডার কম্প্যাক্ট দেখাবে
+        rowHeight: 45.h,
+
         onPageChanged: (focusedDay) {
           final now = DateTime.now();
           if (focusedDay.isBefore(DateTime(now.year, now.month))) {
@@ -60,47 +66,45 @@ class _CustomCalendarWidgetState extends State<CustomCalendarWidget> {
             setState(() => _focusedDay = focusedDay);
           }
         },
+
+        // --- Header Style ---
         headerStyle: HeaderStyle(
           formatButtonVisible: false,
           titleCentered: true,
-          leftChevronIcon: const Icon(Icons.chevron_left, size: 24),
-          rightChevronIcon: const Icon(Icons.chevron_right, size: 24),
-          titleTextStyle: TextStyle(
-            fontFamily: 'Montserrat-Regular',
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF11293A),
-          ),
-        ),
-        daysOfWeekStyle: const DaysOfWeekStyle(
-          weekdayStyle: TextStyle(
+          leftChevronIcon: const Icon(Icons.chevron_left, size: 20, color: AppColors.textDark),
+          rightChevronIcon: const Icon(Icons.chevron_right, size: 20, color: AppColors.textDark),
+          titleTextStyle: const TextStyle(
             fontFamily: 'Montserrat-Regular',
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF11293A),
-          ),
-          weekendStyle: TextStyle(
-            fontFamily: 'Montserrat-Regular',
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF11293A),
+            color: AppColors.textDark,
           ),
         ),
+
+        // --- Calendar Body Style (Rectangular) ---
         calendarStyle: CalendarStyle(
+          cellMargin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
+
+          // আজকের দিনের স্টাইল (চতুর্ভুজ)
           todayDecoration: BoxDecoration(
             color: AppColors.mainAppColor,
-            shape: BoxShape.circle,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(4),
           ),
+
+          // সিলেক্ট করা দিনের স্টাইল (চতুর্ভুজ)
           selectedDecoration: BoxDecoration(
             color: AppColors.mainAppColor,
-            shape: BoxShape.circle,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(4),
           ),
           outsideDaysVisible: true,
-          defaultTextStyle: const TextStyle(color: Colors.black87),
-          weekendTextStyle: const TextStyle(color: Colors.black87),
         ),
+
         selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+
         onDaySelected: (selectedDay, focusedDay) {
+          // Unavailable দিন সিলেক্ট করা যাবে না
           if (!_isUnavailable(selectedDay)) {
             setState(() {
               _selectedDay = selectedDay;
@@ -109,49 +113,31 @@ class _CustomCalendarWidgetState extends State<CustomCalendarWidget> {
             widget.onDaySelected?.call(selectedDay);
           }
         },
+
+        // --- Custom Builder for Unavailable Days (Red Box) ---
         calendarBuilders: CalendarBuilders(
           defaultBuilder: (context, day, focusedDay) {
-            // Red-mark unavailable days
             if (_isUnavailable(day)) {
               return Container(
-                margin: EdgeInsets.symmetric(horizontal: 6.w, vertical: 8.h),
+                margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
                 decoration: BoxDecoration(
-                  color: Color(0xFFFE6C5D),
-                  borderRadius: BorderRadius.circular(4),
+                  color: AppColors.redColor, // লাল রং
+                  borderRadius: BorderRadius.circular(4), // চতুর্ভুজ শেপ
                 ),
                 child: Center(
                   child: Text(
                     '${day.day}',
                     style: const TextStyle(
                       fontFamily: 'Montserrat-Regular',
-                      fontSize: 15,
-                      color: Colors.white,
+                      fontSize: 13,
+                      color: AppColors.white,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
               );
             }
-
-            // Normal day cell
-            return Container(
-              margin: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Center(
-                child: Text(
-                  '${day.day}',
-                  style: TextStyle(
-                    fontFamily: 'Montserrat-Regular',
-                    fontSize: 15,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            );
+            return null; // সাধারণ দিনের জন্য ডিফল্ট স্টাইল
           },
         ),
       ),

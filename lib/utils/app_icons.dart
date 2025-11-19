@@ -9,6 +9,7 @@ class AppIcons{
   static String hom ="assets/icons/hom.svg";
   static String home ="assets/icons/home.svg";
   static String homes ="assets/icons/homes.svg";
+  static const String location = "assets/icons/location.svg";
 
   static String profileIconS ="assets/icons/profileS.svg";
   static String bookingsIConS ="assets/icons/bookIngS.svg";
@@ -17,4 +18,14 @@ class AppIcons{
   static String fbIcon ="assets/icons/fbIcon.svg";
   static String create ="assets/icons/add-circle.svg";
   static String creates ="assets/icons/add_navbar.svg";
+  static String order = "assets/icons/order.svg";
+  static String calendar = "assets/icons/calendar.svg";
+  static String call = "assets/icons/call.svg";
+  static String gor = "assets/icons/home.svg";
+  static String gors = "assets/icons/homes.svg";
+  static String care = "assets/icons/care.svg";
+
+
+
+
 }

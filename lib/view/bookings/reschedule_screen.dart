@@ -1,15 +1,119 @@
 import 'package:flutter/material.dart';
-
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 import '../../utils/app_colors.dart';
+import '../components/custom_date_picker_sheet.dart';
+import '../components/custom_time_picker_sheet.dart';
+import '../home/widgets/custom_calendar.dart';
 
-class RescheduleScreen extends StatelessWidget {
+
+class RescheduleScreen extends StatefulWidget {
   const RescheduleScreen({super.key});
+
+  @override
+  State<RescheduleScreen> createState() => _RescheduleScreenState();
+}
+
+class _RescheduleScreenState extends State<RescheduleScreen> {
+
+  bool _isCalendarVisible = false;
+
+
+  DateTime? _selectedStartDate;
+  DateTime? _selectedEndDate;
+  TimeOfDay? _selectedTime;
+  TimeOfDay? _selectedStartTime;
+  TimeOfDay? _selectedEndTime;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _selectedStartDate = DateTime.now();
+    _selectedEndDate = DateTime.now().add(const Duration(days: 1));
+    _selectedStartTime = const TimeOfDay(hour: 10, minute: 0);
+    _selectedEndTime = const TimeOfDay(hour: 12, minute: 0);
+    _selectedTime = const TimeOfDay(hour: 11, minute: 0);
+  }
+
+
+  Future<void> _selectDate(BuildContext context, String type) async {
+    DateTime initialDate = DateTime.now();
+    DateTime? rangeStart;
+
+    if (type == 'Start' && _selectedStartDate != null) {
+      initialDate = _selectedStartDate!;
+    } else if (type == 'End') {
+      if (_selectedStartDate != null) {
+        rangeStart = _selectedStartDate;
+        if (_selectedEndDate != null && _selectedEndDate!.isAfter(_selectedStartDate!)) {
+          initialDate = _selectedEndDate!;
+        } else {
+          initialDate = _selectedStartDate!.add(const Duration(days: 1));
+        }
+      } else if (_selectedEndDate != null) {
+        initialDate = _selectedEndDate!;
+      }
+    }
+
+
+    final DateTime? picked = await showCustomDatePickerSheet(
+      context,
+      initialDate: initialDate,
+      firstDate: DateTime.now(),
+      rangeStart: rangeStart,
+    );
+
+    if (picked != null) {
+      setState(() {
+        if (type == 'Start') {
+          _selectedStartDate = picked;
+          if (_selectedEndDate != null && picked.isAfter(_selectedEndDate!)) {
+            _selectedEndDate = picked;
+          }
+        } else if (type == 'End') {
+          if (_selectedStartDate != null && picked.isBefore(_selectedStartDate!)) {
+            _selectedEndDate = _selectedStartDate;
+          } else {
+            _selectedEndDate = picked;
+          }
+        }
+      });
+    }
+  }
+
+  Future<void> _selectTime(BuildContext context, String type) async {
+    TimeOfDay initialTime = TimeOfDay.now();
+
+    if (type == 'Start' && _selectedStartTime != null) {
+      initialTime = _selectedStartTime!;
+    } else if (type == 'End' && _selectedEndTime != null) {
+      initialTime = _selectedEndTime!;
+    } else if (type == 'PetSitter' && _selectedTime != null) {
+      initialTime = _selectedTime!;
+    }
+
+    final TimeOfDay? picked = await showCustomTimePickerSheet(
+      context,
+      initialTime: initialTime,
+    );
+
+    if (picked != null) {
+      setState(() {
+        if (type == 'Start') {
+          _selectedStartTime = picked;
+        } else if (type == 'End') {
+          _selectedEndTime = picked;
+        } else if (type == 'PetSitter') {
+          _selectedTime = picked;
+        }
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -19,113 +123,336 @@ class RescheduleScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textDark),
+          icon: Icon(Icons.arrow_back_ios, color: AppColors.textDark, size: 20.sp),
           onPressed: () => Get.back(),
         ),
+        title: Text(
+          "Reschedule Booking",
+          style: GoogleFonts.montserrat(
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textDark,
+          ),
+        ),
+        centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildUserInfoCard(),
-            SizedBox(height: 24.h),
+      body: Stack(
+        children: [
+          // --- Main Content ---
+          SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
 
-            _buildTextInputField(
-              label: "Pet sitter available time",
-              icon: Icons.calendar_today_rounded,
-              onIconTap: () {
-                // TODO: এখানে ক্যালেন্ডার পপ-আপ দেখানোর লজিক লিখুন
-              },
+                _buildUserInfoCard(),
+                SizedBox(height: 24.h),
+
+
+                // _buildLabelText("Pet sitter available time"),
+                SizedBox(height: 8.h),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _isCalendarVisible = !_isCalendarVisible;
+                    });
+                  },
+                  child: _buildInputContainer(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          _selectedTime == null
+                              ? "Select time"
+                              : _selectedTime!.format(context),
+                          style: GoogleFonts.montserrat(
+                            fontSize: 14.sp,
+                            color: _selectedTime == null ? AppColors.subHeadingColor : AppColors.textDark,
+                          ),
+                        ),
+                        Icon(Icons.calendar_today_outlined, color: AppColors.subHeadingColor, size: 20.sp),
+                      ],
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 20.h),
+
+
+                _buildLabelText("Note"),
+                SizedBox(height: 8.h),
+                _buildInputContainer(
+                  child: Text(
+                    "Please ensure all windows are securely locked after cleaning. Kindly use eco-friendly cleaning products as we prefer them.",
+                    style: GoogleFonts.montserrat(
+                      fontSize: 14.sp,
+                      color: AppColors.subHeadingColor,
+                      height: 1.5,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20.h),
+
+
+                _buildLabelText("Select reschedule date & time"),
+                SizedBox(height: 12.h),
+
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(16.w),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16.r),
+                    border: Border.all(color: AppColors.borderColor),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildSmallPickerBox(
+                              "Start date",
+                              _selectedStartDate != null
+                                  ? DateFormat('dd/MM/yyyy').format(_selectedStartDate!)
+                                  : "Select Date",
+                              onTap: () => _selectDate(context, 'Start'),
+                            ),
+                          ),
+                          SizedBox(width: 12.w),
+                          Expanded(
+                            child: _buildSmallPickerBox(
+                              "End date",
+                              _selectedEndDate != null
+                                  ? DateFormat('dd/MM/yyyy').format(_selectedEndDate!)
+                                  : "Select Date",
+                              onTap: () => _selectDate(context, 'End'),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 16.h),
+                      /// --- Time Row ---
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildSmallPickerBox(
+                              "Start time",
+                              _selectedStartTime != null
+                                  ? _selectedStartTime!.format(context)
+                                  : "Select Time",
+                              onTap: () => _selectTime(context, 'Start'),
+                            ),
+                          ),
+                          SizedBox(width: 12.w),
+                          Expanded(
+                            child: _buildSmallPickerBox(
+                              "End time",
+                              _selectedEndTime != null
+                                  ? _selectedEndTime!.format(context)
+                                  : "Select Time",
+                              onTap: () => _selectTime(context, 'End'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 40.h),
+
+
+                _buildActionButtons(context),
+
+                SizedBox(height: 16.h),
+
+
+                Center(
+                  child: Text(
+                    "You can reschedule the time only once.",
+                    style: GoogleFonts.montserrat(
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.redColor,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20.h),
+              ],
             ),
-            SizedBox(height: 16.h),
+          ),
 
-
-            _buildTextInputField(
-              label: "Note",
-              hint: "Please ensure all windows are securely locked after cleaning. Kindly use eco-friendly cleaning products as we prefer them.",
-              maxLines: 4,
-            ),
-            SizedBox(height: 24.h),
-
-
-            _buildDateTimeSelection(),
-            SizedBox(height: 40.h),
-
-            _buildActionButtons(context),
-            SizedBox(height: 16.h),
-
-            Center(
-              child: Text(
-                "You can reschedule the time only once.",
-                style: GoogleFonts.montserrat(
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.primary,
+          if (_isCalendarVisible)
+            Positioned(
+              top: 150.h,
+              left: 20.w,
+              right: 20.w,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 15,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Close/Date Header
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.arrow_back_ios_new, size: 18.sp, color: AppColors.subHeadingColor),
+                            onPressed: () {},
+                          ),
+                          Row(
+                            children: [
+                              Icon(Icons.date_range, size: 18.sp, color: AppColors.redColor),
+                              SizedBox(width: 8.w),
+                              Text(
+                                "${_selectedStartDate != null ? DateFormat('MMMM yyyy').format(_selectedStartDate!) : 'Select Date'}",
+                                style: GoogleFonts.montserrat(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.textDark,
+                                ),
+                              ),
+                            ],
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.arrow_forward_ios, size: 18.sp, color: AppColors.subHeadingColor),
+                            onPressed: () {},
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.close, size: 24.sp, color: AppColors.textDark),
+                            onPressed: () {
+                              setState(() {
+                                _isCalendarVisible = false;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    // Calendar Body
+                    CustomCalendarWidget(
+                      unavailableDays: [
+                        DateTime.now().add(const Duration(days: 3)),
+                        DateTime.now().add(const Duration(days: 4)),
+                        DateTime.now().add(const Duration(days: 5)),
+                      ],
+                      onDaySelected: (day) {
+                        setState(() {
+                          _selectedStartDate = day;
+                          _isCalendarVisible = false; // Close calendar after selection
+                        });
+                      },
+                    ),
+                    SizedBox(height: 10.h),
+                  ],
                 ),
               ),
             ),
-            SizedBox(height: 20.h),
-          ],
-        ),
+        ],
       ),
     );
   }
+
+
+  // --- Helper Widgets ---
+
   Widget _buildUserInfoCard() {
     return Container(
-      padding: EdgeInsets.all(16.w),
+      width: double.infinity,
+      padding: EdgeInsets.all(20.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: AppColors.white),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.white,
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Container(
+            width: 80.w,
+            height: 80.w,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                image: AssetImage("assets/images/profileImg.png"),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          SizedBox(height: 12.h),
+          Text(
+            "Tamim Sarkar",
+            style: GoogleFonts.montserrat(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w700,
+              color: AppColors.textDark,
+            ),
+          ),
+          SizedBox(height: 4.h),
+          Text(
+            "Dhanmondi, Dhaka 1209",
+            style: GoogleFonts.montserrat(
+              fontSize: 13.sp,
+              fontWeight: FontWeight.w500,
+              color: AppColors.subHeadingColor,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLabelText(String text) {
+    return Text(
+      text,
+      style: GoogleFonts.montserrat(
+        fontSize: 16.sp,
+        fontWeight: FontWeight.w600,
+        color: AppColors.textDark,
+      ),
+    );
+  }
+
+  Widget _buildInputContainer({required Widget child}) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          )
-        ],
+        border: Border.all(color: AppColors.borderColor),
       ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 30.r,
-            backgroundImage: AssetImage('assets/images/profileImg.png'),
-          ),
-          SizedBox(width: 16.w),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Tamim Sarkar",
-                style: GoogleFonts.montserrat(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textDark,
-                ),
-              ),
-              SizedBox(height: 6.h),
-              Text(
-                "Dhanmondi,Dhaka 1209",
-                style: GoogleFonts.montserrat(
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.subHeadingColor,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+      child: child,
     );
   }
 
-  Widget _buildTextInputField({
-    required String label,
-    String? hint,
-    IconData? icon,
-    int maxLines = 1,
-    VoidCallback? onIconTap,
-  }) {
+  // Interactive Picker Box
+  Widget _buildSmallPickerBox(String label, String value, {VoidCallback? onTap}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -133,118 +460,35 @@ class RescheduleScreen extends StatelessWidget {
           label,
           style: GoogleFonts.montserrat(
             fontSize: 16.sp,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w700,
             color: AppColors.textDark,
           ),
         ),
-        SizedBox(height: 12.h),
-        TextFormField(
-          maxLines: maxLines,
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: GoogleFonts.montserrat(
-              color: AppColors.subHeadingColor,
-              fontSize: 14.sp,
+        SizedBox(height: 6.h),
+        GestureDetector(
+          onTap: onTap,
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 12.w),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: AppColors.borderColor),
+              borderRadius: BorderRadius.circular(10.r),
             ),
-            suffixIcon: icon != null
-                ? InkWell(
-              onTap: onIconTap,
-              child: Icon(icon, color: AppColors.subHeadingColor, size: 20.sp),
-            )
-                : null,
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(color: Colors.grey.shade300),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(color: Colors.grey.shade300),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(color: AppColors.mainAppColor, width: 1.5),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDateTimeSelection() {
-
-    Widget _buildDateTimeColumn(String label, String value) {
-      return InkWell(
-        onTap: () {
-          // TODO: Date/Time Picker logic
-
-        },
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              label,
+            child: Text(
+              value,
               style: GoogleFonts.montserrat(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w500,
                 color: AppColors.subHeadingColor,
               ),
             ),
-            SizedBox(height: 8.h),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 12.w),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(color: Colors.grey.shade300),
-              ),
-              child: Text(
-                value,
-                style: GoogleFonts.montserrat(
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textDark,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Select reschedule date & time",
-          style: GoogleFonts.montserrat(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w600,
-            color: AppColors.textDark,
           ),
-        ),
-        SizedBox(height: 16.h),
-        // Start date & End date
-        Row(
-          children: [
-            Expanded(child: _buildDateTimeColumn("Start date", "01/09/2025")),
-            SizedBox(width: 16.w),
-            Expanded(child: _buildDateTimeColumn("End date", "01/09/2025")),
-          ],
-        ),
-        SizedBox(height: 16.h),
-        Row(
-          children: [
-            Expanded(child: _buildDateTimeColumn("Start time", "11:00pm")),
-            SizedBox(width: 16.w),
-            Expanded(child: _buildDateTimeColumn("End time", "11:00pm")),
-          ],
         ),
       ],
     );
   }
+
 
   Widget _buildActionButtons(BuildContext context) {
     return Row(
@@ -254,7 +498,7 @@ class RescheduleScreen extends StatelessWidget {
             onPressed: () => Get.back(),
             style: OutlinedButton.styleFrom(
               padding: EdgeInsets.symmetric(vertical: 14.h),
-              side: BorderSide(color: AppColors.primary, width: 1.5),
+              side: BorderSide(color: AppColors.redColor, width: 1),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.r),
               ),
@@ -264,19 +508,15 @@ class RescheduleScreen extends StatelessWidget {
               style: GoogleFonts.montserrat(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w600,
-                color: AppColors.primary,
+                color: AppColors.redColor,
               ),
             ),
           ),
         ),
         SizedBox(width: 12.w),
-
         Expanded(
           child: ElevatedButton(
-            onPressed: () {
-
-              _showSuccessDialog(context);
-            },
+            onPressed: () => _showSuccessDialog(context),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.mainAppColor,
               elevation: 0,
@@ -299,47 +539,44 @@ class RescheduleScreen extends StatelessWidget {
     );
   }
 
-
   void _showSuccessDialog(BuildContext context) {
     Get.dialog(
-      AlertDialog(
-        contentPadding: EdgeInsets.all(24.w),
+      Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Close button
-            Align(
-              alignment: Alignment.topRight,
-              child: InkWell(
-                onTap: () => Get.back(),
-                child: Icon(Icons.close, color: Colors.grey.shade500, size: 24.sp),
+        child: Padding(
+          padding: EdgeInsets.all(24.w),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Align(
+                alignment: Alignment.topRight,
+                child: GestureDetector(
+                  onTap: () => Get.back(),
+                  child: Icon(Icons.close, color: Colors.grey, size: 24.sp),
+                ),
               ),
-            ),
-            SizedBox(height: 10.h),
-            Container(
-              width: 70.w,
-              height: 70.w,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.green.shade50,
-                border: Border.all(color: Colors.green, width: 2),
+              Container(
+                width: 80.w,
+                height: 80.w,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.green.withOpacity(0.1),
+                ),
+                child: Icon(Icons.check, color: Colors.green, size: 40.sp),
               ),
-              child: Icon(Icons.check_rounded, color: Colors.green, size: 40.sp),
-            ),
-            SizedBox(height: 24.h),
-
-            Text(
-              "Your reschedule has been successfully confirmed.",
-              textAlign: TextAlign.center,
-              style: GoogleFonts.montserrat(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textDark,
+              SizedBox(height: 20.h),
+              Text(
+                "Your reschedule has been\nsuccessfully confirmed.",
+                textAlign: TextAlign.center,
+                style: GoogleFonts.montserrat(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textDark,
+                ),
               ),
-            ),
-            SizedBox(height: 20.h),
-          ],
+              SizedBox(height: 10.h),
+            ],
+          ),
         ),
       ),
     );

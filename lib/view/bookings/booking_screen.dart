@@ -1,30 +1,78 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../utils/app_colors.dart';
+import '../../utils/app_icons.dart';
 
+// --------------------------------------------------------------------------
+// --- DUMMY SCREENS/UTILITY CLASSES (Replace with your actual imports) ---
+// --------------------------------------------------------------------------
 
-
-class AppAssets {
-  static const String seamProfileImg = 'assets/images/profileImg.png';
-  static const String tamimProfileImg = 'assets/images/tamim.png';
-  static const String petImage = 'assets/images/maxx.png';
-}
-
-
-class BookingStatusController extends GetxController {
-  var selectedStatus = 'On going'.obs;
-
-  void selectStatus(String status) {
-    selectedStatus.value = status;
+// Placeholder for RescheduleScreen
+class RescheduleScreen extends StatelessWidget {
+  const RescheduleScreen({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Reschedule Booking')),
+      body: const Center(child: Text('Reschedule UI Placeholder')),
+    );
   }
 }
 
+
+class CustomCalendarWidget extends StatelessWidget {
+  final List<DateTime> unavailableDays;
+  final Function(DateTime day) onDaySelected;
+  const CustomCalendarWidget({super.key, required this.unavailableDays, required this.onDaySelected});
+  @override
+  Widget build(BuildContext context) {
+    // A simplified TableCalendar for demonstration
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.borderColor, width: 1),
+        ),
+        child: TableCalendar(
+          focusedDay: DateTime.now(),
+          firstDay: DateTime.utc(2020, 1, 1),
+          lastDay: DateTime.utc(2030, 12, 31),
+          calendarFormat: CalendarFormat.month,
+          // Simplified appearance settings
+          headerStyle: HeaderStyle(
+            titleCentered: true,
+            formatButtonVisible: false,
+            titleTextStyle: GoogleFonts.montserrat(fontWeight: FontWeight.w700, fontSize: 16),
+          ),
+          calendarStyle: CalendarStyle(
+            todayDecoration: BoxDecoration(color: AppColors.mainAppColor.withOpacity(0.5), shape: BoxShape.circle),
+            selectedDecoration: const BoxDecoration(color: AppColors.mainAppColor, shape: BoxShape.circle),
+          ),
+          onDaySelected: (selectedDay, focusedDay) => onDaySelected(selectedDay),
+        ),
+      ),
+    );
+  }
+}
+
+class AppAssets {
+  // Placeholder images for running code without actual assets
+  static const String tamimProfileImg = 'assets/images/tamim.png'; // Placeholder for user profile
+  static const String petImage = 'assets/images/cat.png'; // Placeholder for pet image
+}
+
+// --------------------------------------------------------------------------
+// --- BOOKING DATA MODEL ---
+// --------------------------------------------------------------------------
 
 class BookingData {
   final String userName;
@@ -43,7 +91,6 @@ class BookingData {
   final String status;
   final double rating;
   final int totalReviews;
-
   final String petType;
   final String petWeight;
   final String petAge;
@@ -155,9 +202,8 @@ class BookingData {
   }
 }
 
-
-final List<BookingData> allBookings = [
-
+// --- UPDATED DUMMY DATA ---
+final List<BookingData> initialBookings = [
   BookingData(
     userName: 'Tamim',
     userProfileImage: AppAssets.tamimProfileImg,
@@ -166,12 +212,12 @@ final List<BookingData> allBookings = [
     contact: '(229) 555-0109',
     pickupTime: '10:00 AM',
     dropoffTime: '10:00 AM',
-    petName: 'Max boy',
-    petBreed: 'Mix',
+    petName: 'Max', // UNIFORM DATA
+    petBreed: 'Labrador', // UNIFORM DATA
     petImage: AppAssets.petImage,
     date: '02/09/2025',
     price: '\$99',
-    isRebooked: false,
+    isRebooked: true, // Rebooked example for On going
     status: 'On going',
     rating: 3.8,
     totalReviews: 1200,
@@ -198,58 +244,56 @@ final List<BookingData> allBookings = [
     additionalRate: 10.00,
     total: 170.00,
   ),
-
   BookingData(
-    userName: 'Tamim',
+    userName: 'Seam',
     userProfileImage: AppAssets.tamimProfileImg,
     location: 'New York, NY',
-    service: 'Dog walking',
+    service: 'Pet Sitting',
     contact: '(229) 555-0109',
-    pickupTime: '10:00 AM',
-    dropoffTime: '10:00 AM',
-    petName: 'Max boy',
-    petBreed: 'Mix',
+    pickupTime: '09:00 AM',
+    dropoffTime: '05:00 PM',
+    petName: 'Max', // UNIFORM DATA
+    petBreed: 'Labrador', // UNIFORM DATA
     petImage: AppAssets.petImage,
     date: '07/09/2025',
-    price: '\$99',
+    price: '\$150',
     isRebooked: false,
     status: 'Completed',
-    rating: 3.8,
-    totalReviews: 1200,
+    rating: 4.5,
+    totalReviews: 500,
     petType: 'Dog',
-    petWeight: '8Kg',
-    petAge: '3 Yer 4Month',
-    petGender: 'Male',
-    dateOfBirth: '10/01/2022',
-    adoptionDate: '10/12/2025',
-    aboutPet: 'Good for eating my share 😊',
-    pottyBreak: 'Needs a potty break every hour',
-    energyLevel: 'High energy level',
-    feedingSchedule: 'Needs to be fed in the morning',
-    canBeLeftAlone: 'Can be left alone for 1 hour or less',
-    medications: 'ABCD Pill',
-    vetName: 'Dr. Emily Carter',
-    clinicName: 'Happy Paws Animal Clinic',
-    vetAddress: '20 Green Park Rd, Boston, MA',
-    vetNumber: '(406) 555-0120',
-    petInsuranceProvider: 'Labrador',
-    vetNote: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
-    bathingPrice: 60.00,
-    extendedCarePrice: 40.00,
-    additionalRate: 10.00,
-    total: 170.00,
+    petWeight: '25Kg',
+    petAge: '5 Yer',
+    petGender: 'Female',
+    dateOfBirth: '10/01/2020',
+    adoptionDate: '10/12/2020',
+    aboutPet: 'Very friendly and loves cuddles.',
+    pottyBreak: 'Needs a potty break every 3 hours',
+    energyLevel: 'Medium energy level',
+    feedingSchedule: 'Needs to be fed twice a day',
+    canBeLeftAlone: 'Can be left alone for 4 hours',
+    medications: 'None',
+    vetName: 'Dr. John Smith',
+    clinicName: 'City Vet',
+    vetAddress: '10 Main St, Boston, MA',
+    vetNumber: '(406) 555-0121',
+    petInsuranceProvider: 'Rover',
+    vetNote: 'Needs lots of playtime.',
+    bathingPrice: 0.00,
+    extendedCarePrice: 0.00,
+    additionalRate: 0.00,
+    total: 150.00,
   ),
-
   BookingData(
-    userName: 'Tamim',
+    userName: 'Rima',
     userProfileImage: AppAssets.tamimProfileImg,
     location: 'New York, NY',
     service: 'Dog walking',
     contact: '(229) 555-0109',
     pickupTime: '10:00 AM',
     dropoffTime: '10:00 AM',
-    petName: 'Max boy',
-    petBreed: 'Mix',
+    petName: 'Max', // UNIFORM DATA
+    petBreed: 'Labrador', // UNIFORM DATA
     petImage: AppAssets.petImage,
     date: '05/09/2025',
     price: '\$99',
@@ -280,179 +324,246 @@ final List<BookingData> allBookings = [
     additionalRate: 10.00,
     total: 170.00,
   ),
-
   BookingData(
-    userName: 'Tamim',
+    userName: 'Kawsar',
     userProfileImage: AppAssets.tamimProfileImg,
     location: 'New York, NY',
-    service: 'Dog walking',
+    service: 'Cat Care',
     contact: '(229) 555-0109',
     pickupTime: '10:00 AM',
     dropoffTime: '10:00 AM',
-    petName: 'Max boy',
-    petBreed: 'Mix',
+    petName: 'Max', // UNIFORM DATA
+    petBreed: 'Labrador', // UNIFORM DATA
     petImage: AppAssets.petImage,
     date: '02/09/2025',
-    price: '\$99',
+    price: '\$50',
     isRebooked: false,
     status: 'Upcoming',
-    rating: 3.8,
-    totalReviews: 1200,
-    petType: 'Dog',
-    petWeight: '8Kg',
-    petAge: '3 Yer 4Month',
-    petGender: 'Male',
-    dateOfBirth: '10/01/2022',
-    adoptionDate: '10/12/2025',
-    aboutPet: 'Good for eating my share 😊',
-    pottyBreak: 'Needs a potty break every hour',
-    energyLevel: 'High energy level',
-    feedingSchedule: 'Needs to be fed in the morning',
-    canBeLeftAlone: 'Can be left alone for 1 hour or less',
-    medications: 'ABCD Pill',
-    vetName: 'Dr. Emily Carter',
-    clinicName: 'Happy Paws Animal Clinic',
-    vetAddress: '20 Green Park Rd, Boston, MA',
-    vetNumber: '(406) 555-0120',
-    petInsuranceProvider: 'Labrador',
-    vetNote: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
-    bathingPrice: 60.00,
-    extendedCarePrice: 40.00,
-    additionalRate: 10.00,
-    total: 170.00,
+    rating: 4.2,
+    totalReviews: 800,
+    petType: 'Cat',
+    petWeight: '5Kg',
+    petAge: '1 Yer 6Month',
+    petGender: 'Female',
+    dateOfBirth: '01/01/2024',
+    adoptionDate: '01/01/2024',
+    aboutPet: 'Shy but sweet.',
+    pottyBreak: 'Uses litter box',
+    energyLevel: 'Low energy level',
+    feedingSchedule: 'Free feeding kibble',
+    canBeLeftAlone: 'Can be left alone for 8 hours',
+    medications: 'None',
+    vetName: 'Dr. Mark Lee',
+    clinicName: 'Feline Friends Clinic',
+    vetAddress: '30 Catnip Ave, Boston, MA',
+    vetNumber: '(406) 555-0122',
+    petInsuranceProvider: 'CatGuard',
+    vetNote: 'Loves tuna.',
+    bathingPrice: 0.00,
+    extendedCarePrice: 0.00,
+    additionalRate: 0.00,
+    total: 50.00,
   ),
 ];
 
+// --------------------------------------------------------------------------
+// --- GETX CONTROLLERS AND SERVICE ---
+// --------------------------------------------------------------------------
 
-class CustomCalendarWidget extends StatefulWidget {
-  final List<DateTime> unavailableDays;
-  final Function(DateTime)? onDaySelected;
+class BookingStatusController extends GetxController {
+  var selectedStatus = 'On going'.obs;
 
-  const CustomCalendarWidget({
-    super.key,
-    required this.unavailableDays,
-    this.onDaySelected,
-  });
-
-  @override
-  State<CustomCalendarWidget> createState() => _CustomCalendarWidgetState();
+  void selectStatus(String status) {
+    selectedStatus.value = status;
+  }
 }
 
-class _CustomCalendarWidgetState extends State<CustomCalendarWidget> {
-  DateTime _focusedDay = DateTime(2025, 11, 15);
-  DateTime? _selectedDay;
+class BookingService extends GetxController {
+  final RxList<BookingData> bookings = initialBookings.obs;
 
-  bool _isUnavailable(DateTime day) {
-    return widget.unavailableDays.any(
-          (d) => d.year == day.year && d.month == day.month && d.day == day.day,
-    );
+  void updateBookingStatus(BookingData booking, String newStatus) {
+    int index = bookings.indexWhere((b) => b == booking);
+    if (index != -1) {
+      BookingData updatedBooking = booking.copyWith(status: newStatus);
+      bookings[index] = updatedBooking;
+    }
   }
+}
+
+// --------------------------------------------------------------------------
+// --- DIALOG WIDGETS ---
+// --------------------------------------------------------------------------
+
+class CancellationConfirmationDialog extends StatelessWidget {
+  final VoidCallback onConfirm;
+
+  const CancellationConfirmationDialog({super.key, required this.onConfirm});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(8.0),
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.borderColor, width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.10),
-            offset: const Offset(0, 2),
-            blurRadius: 2,
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      contentPadding: const EdgeInsets.all(24),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.warning_amber_rounded, color: AppColors.redColor, size: 40),
+          const SizedBox(height: 16),
+          Text(
+            'Are you sure you want to cancel the booking?',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textDark),
+          ),
+          const SizedBox(height: 24),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => Get.back(),
+                  style: OutlinedButton.styleFrom(
+                    side:  BorderSide(color: AppColors.redColor, width: 1.5),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                  child: Text('No', style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.redColor)),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Get.back();
+                    onConfirm();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.redColor,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                  child: Text('Yes', style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white)),
+                ),
+              ),
+            ],
           ),
         ],
       ),
-      child: TableCalendar(
-        headerStyle: HeaderStyle(
-          formatButtonVisible: false,
-          titleCentered: true,
-          titleTextFormatter: (date, locale) {
+    );
+  }
+}
 
-            if (date.month == 11 && date.year == 2025) {
-              return 'November 2025';
-            }
-            return '${MaterialLocalizations.of(context).formatMonthYear(date)}';
-          },
-          leftChevronIcon: const Icon(Icons.chevron_left, size: 24, color: AppColors.textDark),
-          rightChevronIcon: const Icon(Icons.chevron_right, size: 24, color: AppColors.textDark),
-          titleTextStyle: GoogleFonts.montserrat(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: AppColors.textDark,
+class CompletionRatingDialog extends StatefulWidget {
+  final String userName;
+  final VoidCallback onDone;
+
+  const CompletionRatingDialog({super.key, required this.userName, required this.onDone});
+
+  @override
+  State<CompletionRatingDialog> createState() => _CompletionRatingDialogState();
+}
+
+class _CompletionRatingDialogState extends State<CompletionRatingDialog> {
+  int _rating = 5;
+  final List<String> ratingLabels = ['Bad', 'Average', 'Good', 'Great', 'Amazing'];
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      contentPadding: EdgeInsets.zero,
+      content: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+             Icon(Icons.check_circle_outline, color: AppColors.greenColor, size: 50),
+              const SizedBox(height: 16),
+              Text(
+                'Your task has been completed',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.montserrat(fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.textDark),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Average Rating and Feedback\n${widget.userName}',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.montserrat(fontSize: 14, color: AppColors.subHeadingColor),
+              ),
+              const SizedBox(height: 24),
+              Text('Avg. Rating', style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w600)),
+              const SizedBox(height: 16),
+
+              // --- Rating Stars ---
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(5, (index) {
+                  final starValue = index + 1;
+                  return GestureDetector(
+                    onTap: () => setState(() => _rating = starValue),
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.star,
+                          size: 30,
+                          color: starValue <= _rating ? Colors.amber : AppColors.subHeadingColor.withOpacity(0.5),
+                        ),
+                        Text(
+                          ratingLabels[index],
+                          style: GoogleFonts.montserrat(fontSize: 10, color: starValue <= _rating ? AppColors.textDark : AppColors.subHeadingColor),
+                        )
+                      ],
+                    ),
+                  );
+                }),
+              ),
+              const SizedBox(height: 24),
+
+              // --- Feedback Note ---
+              Text('Feedback Note', style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textDark)),
+              const SizedBox(height: 8),
+              TextFormField(
+                maxLines: 4,
+                decoration: InputDecoration(
+                  hintText: 'Type here...',
+                  hintStyle: GoogleFonts.montserrat(color: AppColors.subHeadingColor),
+                  fillColor: AppColors.inputBorderColor,
+                  filled: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // --- Done Button ---
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Get.back();
+                    widget.onDone();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.mainAppColor,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                  child: Text('Done', style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white)),
+                ),
+              ),
+            ],
           ),
-        ),
-        daysOfWeekStyle: DaysOfWeekStyle(
-          weekdayStyle: GoogleFonts.montserrat(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textDark),
-          weekendStyle: GoogleFonts.montserrat(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textDark),
-        ),
-        firstDay: DateTime.utc(2020, 1, 1),
-        lastDay: DateTime.utc(2030, 12, 31),
-        focusedDay: _focusedDay,
-        onPageChanged: (focusedDay) {
-          _focusedDay = focusedDay;
-        },
-        selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-        onDaySelected: (selectedDay, focusedDay) {
-          if (!_isUnavailable(selectedDay)) {
-            setState(() {
-              _selectedDay = selectedDay;
-              _focusedDay = focusedDay;
-            });
-            widget.onDaySelected?.call(selectedDay);
-          }
-        },
-        calendarStyle: CalendarStyle(
-          cellMargin: const EdgeInsets.all(2),
-          todayDecoration: BoxDecoration(
-            color: AppColors.greenColor,
-            shape: BoxShape.circle,
-          ),
-          selectedDecoration: BoxDecoration(
-            color: AppColors.mainAppColor,
-            shape: BoxShape.circle,
-          ),
-          defaultTextStyle: GoogleFonts.montserrat(color: AppColors.primaryText, fontSize: 14),
-          weekendTextStyle: GoogleFonts.montserrat(color: AppColors.primaryText, fontSize: 14),
-          outsideTextStyle: GoogleFonts.montserrat(color: AppColors.grey.withOpacity(0.5), fontSize: 14),
-        ),
-        calendarBuilders: CalendarBuilders(
-
-
-          defaultBuilder: (context, day, focusedDay) {
-
-            if (day.month == 11 && day.year == 2025) {
-              if (day.day == 12) { // Red
-                return _buildSolidDayBlock(day.day, AppColors.redColor);
-              } else if (day.day == 13) { // Green
-                return _buildSolidDayBlock(day.day, AppColors.greenColor);
-              } else if (day.day == 14) { // Dark Teal
-                return _buildSolidDayBlock(day.day, AppColors.mainAppColor);
-              }
-            }
-
-            if (_isUnavailable(day)) {
-              return _buildSolidDayBlock(day.day, AppColors.redColor.withOpacity(0.7));
-            }
-
-            return null;
-          },
         ),
       ),
     );
   }
-
-  Widget _buildSolidDayBlock(int day, Color color) {
-    return Container(
-      margin: const EdgeInsets.all(4),
-      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(8)),
-      child: Center(child: Text('$day', style: GoogleFonts.montserrat(fontSize: 14, color: AppColors.white))),
-    );
-  }
 }
+
+// --------------------------------------------------------------------------
+// --- BOOKINGSSCREEN IMPLEMENTATION ---
+// --------------------------------------------------------------------------
 
 class BookingsScreen extends StatefulWidget{
   const BookingsScreen({super.key});
@@ -464,6 +575,7 @@ class BookingsScreen extends StatefulWidget{
 class _BookingsScreenState extends State<BookingsScreen> {
 
   final BookingStatusController controller = Get.put(BookingStatusController());
+  final BookingService bookingService = Get.put(BookingService());
 
   final List<Map<String, dynamic>> statuses = [
     {'name': 'On going', 'color': AppColors.mainAppColor},
@@ -472,17 +584,17 @@ class _BookingsScreenState extends State<BookingsScreen> {
     {'name': 'Upcoming', 'color': AppColors.upcomingColor},
   ];
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bgColor,
+      backgroundColor: const Color(0xFFF3F8F4),
       appBar: _buildCustomAppBar(),
 
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
+            // Status Filter Row
             Obx(() => SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.only(left: 20),
@@ -525,9 +637,14 @@ class _BookingsScreenState extends State<BookingsScreen> {
 
             CustomCalendarWidget(
               unavailableDays: [
-                DateTime(2025, 11, 18),
+                DateTime.now().add(const Duration(days: 3)),
+                DateTime.now().add(const Duration(days: 4)),
+                DateTime.now().add(const Duration(days: 5)),
               ],
+              onDaySelected: (day) {},
             ),
+            SizedBox(height: 24.h),
+
             const SizedBox(height: 24),
 
             /// ----------------------------------------- Booking Section ----------------------------
@@ -535,11 +652,9 @@ class _BookingsScreenState extends State<BookingsScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
 
               child: Obx(() {
-
                 String selectedStatus = controller.selectedStatus.value;
 
-
-                List<BookingData> filteredList = allBookings
+                List<BookingData> filteredList = bookingService.bookings
                     .where((booking) => booking.status == selectedStatus)
                     .toList();
 
@@ -554,7 +669,6 @@ class _BookingsScreenState extends State<BookingsScreen> {
                     ),
                   );
                 }
-
 
                 return ListView.builder(
                   padding: EdgeInsets.zero,
@@ -574,34 +688,60 @@ class _BookingsScreenState extends State<BookingsScreen> {
           ],
         ),
       ),
+      // --- Floating Messenger Button ---
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Action for the floating messenger button
+          Get.snackbar(
+              'Chat',
+              'Opening general chat window...',
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: AppColors.mainAppColor,
+              colorText: Colors.white
+          );
+        },
+        backgroundColor: AppColors.mainAppColor,
+        child: const Icon(Icons.chat_bubble_outline_rounded, color: Colors.white),
+      ),
+      // --- END Floating Messenger Button ---
     );
   }
-
-
 
   PreferredSizeWidget _buildCustomAppBar() {
     return AppBar(
       backgroundColor: AppColors.mainAppColor,
       elevation: 0,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.white),
+        icon: const Icon(Icons.arrow_back_ios, color: Colors.white,size: 24),
         onPressed: () => Get.back(),
       ),
       title: Text(
         'Order Details',
         style: GoogleFonts.montserrat(
-          fontSize: 18,
+          fontSize: 18.sp,
           fontWeight: FontWeight.w600,
           color: Colors.white,
         ),
       ),
       centerTitle: true,
-      actions: [
-        IconButton(
-          onPressed: () { },
-          icon: Icon(Icons.filter_list_rounded, color: Colors.white, size: 26), // SOLVED: .sp রিমুভ করা হয়েছে
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(30.r),
+          bottomRight: Radius.circular(30.r),
         ),
-        const SizedBox(width: 10),
+      ),
+      actions: [
+        Padding(
+          padding: EdgeInsets.only(right: 20.w),
+          child: Center(
+            child: SvgPicture.asset(
+              AppIcons.order,
+              colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+              height: 24.w,
+              width: 24.w,
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -616,7 +756,6 @@ class _BookingsScreenState extends State<BookingsScreen> {
             height: 12,
             decoration: BoxDecoration(
               color: color,
-
               shape: BoxShape.rectangle,
             ),
           ),
@@ -635,21 +774,15 @@ class _BookingsScreenState extends State<BookingsScreen> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-
       child: SingleChildScrollView(
-
         scrollDirection: Axis.horizontal,
         child: Row(
-
           children: [
             legendItem(AppColors.mainAppColor, 'On going'),
-
             const SizedBox(width: 16),
             legendItem(AppColors.greenColor, 'Completed'),
-
             const SizedBox(width: 16),
             legendItem(AppColors.redColor, 'Cancelled'),
-
             const SizedBox(width: 16),
             legendItem(AppColors.upcomingColor, 'Upcoming'),
           ],
@@ -659,8 +792,9 @@ class _BookingsScreenState extends State<BookingsScreen> {
   }
 }
 
-
-
+// --------------------------------------------------------------------------
+// --- EXPANDABLE BOOKING CARD (LOGIC UPDATED) ---
+// --------------------------------------------------------------------------
 
 class ExpandableBookingCard extends StatefulWidget {
   final BookingData booking;
@@ -677,6 +811,17 @@ class ExpandableBookingCard extends StatefulWidget {
 class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
 
   bool _isExpanded = false;
+  // True if it's 'On going' or 'Upcoming' (where dropdown icon is primary toggle)
+  bool get _hasDropdownIconLogic => widget.booking.status == 'On going' || widget.booking.status == 'Upcoming';
+  // True if it's 'Completed' or 'Cancelled' (where full card click toggles)
+  bool get _isFullCardToggleLogic => widget.booking.status == 'Completed' || widget.booking.status == 'Cancelled';
+
+
+  void _toggleExpansion() {
+    setState(() {
+      _isExpanded = !_isExpanded;
+    });
+  }
 
   Widget _buildSectionCard({required Widget child, EdgeInsets? padding}) {
     return Container(
@@ -692,11 +837,17 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
     );
   }
 
-  Widget _buildSectionTitle(String title, {bool useIcon = false}) {
+  Widget _buildSectionTitle(String title, {bool useIcon = false,  String? svgPath, }) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        if (useIcon) ...[
-          Icon(Icons.pets_rounded, color: AppColors.mainAppColor, size: 22),
+        if (useIcon && svgPath != null) ...[
+          SvgPicture.asset(
+            svgPath,
+            width: 20,
+            height: 20,
+            colorFilter: const ColorFilter.mode(AppColors.mainAppColor, BlendMode.srcIn),
+          ),
           const SizedBox(width: 8),
         ],
         Text(
@@ -710,7 +861,6 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
       ],
     );
   }
-
 
   Widget _buildInfoRow(String label, String value, {bool isBold = false}) {
     return Padding(
@@ -757,19 +907,24 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
           ),
           if (!lastItem) ...[
             const SizedBox(height: 10),
-            const Divider(color: AppColors.borderColor, height: 1),
           ]
         ],
       ),
     );
   }
 
+  // --- Widget for Status Display (Completed/Cancelled) ---
+  Widget _buildStatusDisplay(String status, Color color) {
+    return Text(
+        status,
+        style: GoogleFonts.montserrat(fontSize: 14, fontWeight: FontWeight.w600, color: color)
+    );
+  }
+  // --- End Status Widget ---
 
   @override
   Widget build(BuildContext context) {
-
     final booking = widget.booking;
-
 
     Widget buildContactInfoRow(IconData icon, String text) {
       return Row(
@@ -788,208 +943,246 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
       );
     }
 
+    // Determine the main card structure
+    Widget cardContent = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Header Row
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CircleAvatar(radius: 24, backgroundImage: AssetImage(booking.userProfileImage)),
+            const SizedBox(width: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(booking.userName, style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.textDark)),
+                const SizedBox(height: 4),
+                // Show rating for all statuses for uniformity, unless specified otherwise
+                Row(
+                  children: [
+                    const Icon(Icons.star, color: Colors.amber, size: 16),
+                    const SizedBox(width: 4),
+                    Text('${booking.rating} (${booking.totalReviews})', style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.subHeadingColor)),
+                  ],
+                ),
+              ],
+            ),
+            const Spacer(),
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          )
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CircleAvatar(radius: 24, backgroundImage: AssetImage(booking.userProfileImage)),
-              const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(booking.userName, style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.textDark)),
-                  const SizedBox(height: 4),
-
-                  Row(
-                    children: [
-                      Icon(Icons.star, color: Colors.amber, size: 16),
-                      const SizedBox(width: 4),
-                      Text('${booking.rating} (${booking.totalReviews})', style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.subHeadingColor)),
-                    ],
-                  ),
-                ],
+            // --- Rebooked Tag ---
+            if (booking.status == 'On going' && booking.isRebooked) ...[
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                margin: const EdgeInsets.only(right: 8),
+                decoration: BoxDecoration(
+                    color: AppColors.redColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8)
+                ),
+                child: Text(
+                    'Rebooked',
+                    style: GoogleFonts.montserrat(color: AppColors.redColor, fontSize: 11, fontWeight: FontWeight.w600)
+                ),
               ),
-              const Spacer(),
+            ],
+            // --- END Rebooked Tag ---
 
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(color: AppColors.mainAppColor.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
-                    child: Text(booking.date, style: GoogleFonts.montserrat(color: AppColors.mainAppColor, fontSize: 12, fontWeight: FontWeight.w600)),
-                  ),
-                  const SizedBox(height: 4),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                      color: booking.status == 'On going' ? AppColors.mainAppColor.withOpacity(0.1) : AppColors.redColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8)),
+                  child: Text(
+                      booking.date,
+                      style: GoogleFonts.montserrat(
+                        // If it's Completed or Cancelled, use the main status color for date background if necessary.
+                        // Keeping status-specific color for simplicity here.
+                          color: (booking.status == 'Completed' || booking.status == 'Cancelled') ? AppColors.redColor : AppColors.mainAppColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600)),
+                ),
+                const SizedBox(height: 4),
+                if (booking.status != 'Upcoming') ...[ // Assuming Upcoming doesn't show price
                   Text(booking.price, style: GoogleFonts.montserrat(fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.textDark)),
                   Text("Per walk", style: GoogleFonts.montserrat(fontSize: 12, color: AppColors.subHeadingColor)),
-                ],
-              )
-            ],
-          ),
-          const SizedBox(height: 16),
-
-
-          Text(booking.service, style: GoogleFonts.montserrat(fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.textDark)),
-          const SizedBox(height: 12),
-
-          buildContactInfoRow(Icons.phone_outlined, booking.contact),
-          const SizedBox(height: 8),
-          buildContactInfoRow(Icons.calendar_today_outlined, booking.date),
-
-          if (booking.status == 'On going') ...[
-            const SizedBox(height: 8),
-            buildContactInfoRow(Icons.access_time_rounded, "Pick-up: ${booking.pickupTime}"),
-            const SizedBox(height: 8),
-            buildContactInfoRow(Icons.access_time_rounded, "Drop-off: ${booking.dropoffTime}"),
+                ]
+              ],
+            )
           ],
+        ),
+        const SizedBox(height: 16),
+        Text(booking.service, style: GoogleFonts.montserrat(fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.textDark)),
+        const SizedBox(height: 12),
 
+        // Contact & Schedule Info
+        buildContactInfoRow(Icons.phone_outlined, booking.contact),
+        const SizedBox(height: 8),
+        buildContactInfoRow(Icons.calendar_today_outlined, booking.date),
 
+        // Pick-up/Drop-off times only shown for active bookings
+        if (booking.status == 'On going' || booking.status == 'Upcoming') ...[
+          const SizedBox(height: 8),
+          buildContactInfoRow(Icons.access_time_rounded, "Pick-up time: ${booking.pickupTime}"),
+          const SizedBox(height: 8),
+          buildContactInfoRow(Icons.access_time_rounded, "Drop-off time: ${booking.dropoffTime}"),
+        ],
 
-          const SizedBox(height: 16),
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                _isExpanded = !_isExpanded;
-              });
-            },
-            child: Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.borderColor)
-              ),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 24,
-                    backgroundImage: AssetImage(booking.petImage),
-                  ),
-                  const SizedBox(width: 12),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(booking.petName, style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textDark)),
-                      Text(booking.petBreed, style: GoogleFonts.montserrat(fontSize: 12, color: AppColors.subHeadingColor)),
-                    ],
-                  ),
-                  const Spacer(),
-                  Icon(_isExpanded ? Icons.expand_less_rounded : Icons.expand_more_rounded, size: 28, color: AppColors.subHeadingColor)
-                ],
-              ),
+        // --- Status Text for Completed/Cancelled Cards in the Footer area ---
+        if (booking.status == 'Completed' || booking.status == 'Cancelled') ...[
+          const SizedBox(height: 8),
+          Align(
+            alignment: Alignment.centerRight,
+            child: _buildStatusDisplay(
+              booking.status,
+              booking.status == 'Completed' ? AppColors.greenColor : AppColors.redColor,
             ),
           ),
+        ],
+        // --- End Status Text ---
 
+        const SizedBox(height: 16),
 
-          AnimatedSize(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-            child: Visibility(
-                visible: _isExpanded,
-                child: Column(
+        // Pet Summary/Dropdown Toggle
+        GestureDetector(
+          // Only link toggle action to the pet summary if it has the dropdown icon logic
+          // Completed/Cancelled cards rely on the parent GestureDetector below.
+          onTap: _hasDropdownIconLogic ? _toggleExpansion : null,
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.borderColor)
+            ),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 24,
+                  backgroundImage: AssetImage(booking.petImage),
+                ),
+                const SizedBox(width: 12),
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Text(booking.petName, style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textDark)),
+                    Text(booking.petBreed, style: GoogleFonts.montserrat(fontSize: 12, color: AppColors.subHeadingColor)),
+                  ],
+                ),
+                const Spacer(),
 
-                    _buildSectionCard(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildSectionTitle("Pet Information"),
-                          const SizedBox(height: 12),
-                          _buildInfoRow("Pet Name", booking.petName),
-                          _buildInfoRow("Type", booking.petType),
-                          _buildInfoRow("Weight (lbs)", booking.petWeight),
-                          _buildInfoRow("Age", booking.petAge),
-                          _buildInfoRow("Breed", booking.petBreed),
-                          _buildInfoRow("Gender", booking.petGender),
-                          _buildInfoRow("Date of Birth", booking.dateOfBirth),
-                        ],
-                      ),
-                    ),
-                    _buildSectionCard(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildSectionTitle("Additional details"),
-                          const SizedBox(height: 12),
-                          _buildInfoColumn("Microchipped?", "Microchipped"),
-                          _buildInfoColumn("Spayed/Neutered?", "Spayed/Neutered"),
-                          _buildInfoColumn("House Trained?", "Not House Trained"),
-                          _buildInfoColumn("friendly with children?", "Friendly with children"),
-                          _buildInfoColumn("friendly with dogs?", "Friendly with dogs"),
-                          _buildInfoColumn("Adoption Date", booking.adoptionDate, lastItem: true),
-                        ],
-                      ),
-                    ),
+                // --- Icon Logic based on Status ---
+                if (_hasDropdownIconLogic) // On going/Upcoming: Expand/Collapse Icon (Clicking on this area toggles)
+                  Icon(_isExpanded ? Icons.expand_less_rounded : Icons.expand_more_rounded, size: 28, color: AppColors.subHeadingColor)
+                else // Completed/Cancelled: Arrow Icon (Clicking on card area toggles)
+                  const Icon(Icons.keyboard_arrow_right_rounded, size: 28, color: AppColors.subHeadingColor)
+                // --- End Icon Logic ---
+              ],
+            ),
+          ),
+        ),
 
-                    _buildSectionCard(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildSectionTitle("Care info", useIcon: true),
-                          const SizedBox(height: 12),
-                          _buildInfoColumn("Potty break", booking.pottyBreak),
-                          _buildInfoColumn("Energy level", booking.energyLevel),
-                          _buildInfoColumn("Feeding schedule", booking.feedingSchedule),
-                          _buildInfoColumn("Can be left alone", booking.canBeLeftAlone),
-                          _buildInfoColumn("Medications", booking.medications),
-                          _buildInfoColumn("Anything else a sitter should know?", "Add instructions for walking, feeding or other care", isValueGrey: true, lastItem: true),
-                        ],
-                      ),
+        // Expanded Details
+        AnimatedSize(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          child: Visibility(
+              visible: _isExpanded,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Pet Information
+                  _buildSectionCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildSectionTitle("Pet Information"),
+                        const SizedBox(height: 12),
+                        _buildInfoRow("Pet Name", booking.petName),
+                        _buildInfoRow("Type", booking.petType),
+                        _buildInfoRow("Weight (lbs)", booking.petWeight),
+                        _buildInfoRow("Age", booking.petAge),
+                        _buildInfoRow("Breed", booking.petBreed),
+                        _buildInfoRow("Gender", booking.petGender),
+                        _buildInfoRow("Date of Birth", booking.dateOfBirth),
+                      ],
                     ),
-
-                    _buildSectionCard(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildSectionTitle("Veterinary info", useIcon: true),
-                          const SizedBox(height: 12),
-                          _buildInfoColumn("Vet's Name", booking.vetName),
-                          _buildInfoColumn("Clinic", booking.clinicName),
-                          _buildInfoRow("Address", booking.vetAddress),
-                          _buildInfoColumn("Number", booking.vetNumber),
-                          _buildInfoColumn("Pet insurance provider", booking.petInsuranceProvider, lastItem: true),
-                        ],
-                      ),
+                  ),
+                  // Additional Details
+                  _buildSectionCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildSectionTitle("Additional details"),
+                        const SizedBox(height: 12),
+                        _buildInfoColumn("Microchipped?", "Microchipped"),
+                        _buildInfoColumn("Spayed/Neutered?", "Spayed/Neutered"),
+                        _buildInfoColumn("House Trained?", "Not House Trained"),
+                        _buildInfoColumn("friendly with children?", "Friendly with children"),
+                        _buildInfoColumn("friendly with dogs?", "Friendly with dogs"),
+                        _buildInfoColumn("Adoption Date", booking.adoptionDate, lastItem: true),
+                      ],
                     ),
-
-                    _buildSectionCard(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildSectionTitle("Note"),
-                          const SizedBox(height: 12),
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: AppColors.inputBorderColor,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(booking.vetNote, style: GoogleFonts.montserrat(fontSize: 14, color: AppColors.secondaryText)),
+                  ),
+                  // Care Info
+                  _buildSectionCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildSectionTitle(
+                          "Care info",
+                          useIcon: true,
+                          svgPath: AppIcons.care,
+                        ),
+                        const SizedBox(height: 12),
+                        _buildInfoColumn("Potty break", booking.pottyBreak),
+                        _buildInfoColumn("Energy level", booking.energyLevel),
+                        _buildInfoColumn("Feeding schedule", booking.feedingSchedule),
+                        _buildInfoColumn("Can be left alone", booking.canBeLeftAlone),
+                        _buildInfoColumn("Medications", booking.medications),
+                        _buildInfoColumn("Anything else a sitter should know?", "Add instructions for walking, feeding or other care", isValueGrey: true, lastItem: true),
+                      ],
+                    ),
+                  ),
+                  // Veterinary Info
+                  _buildSectionCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildSectionTitle("Veterinary info", useIcon: true),
+                        const SizedBox(height: 12),
+                        _buildInfoColumn("Vet's Name", booking.vetName),
+                        _buildInfoColumn("Clinic", booking.clinicName),
+                        _buildInfoRow("Address", booking.vetAddress),
+                        _buildInfoColumn("Number", booking.vetNumber),
+                        _buildInfoColumn("Pet insurance provider", booking.petInsuranceProvider, lastItem: true),
+                      ],
+                    ),
+                  ),
+                  // Note
+                  _buildSectionCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildSectionTitle("Note"),
+                        const SizedBox(height: 12),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: AppColors.inputBorderColor,
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                        ],
-                      ),
+                          child: Text(booking.vetNote, style: GoogleFonts.montserrat(fontSize: 14, color: AppColors.secondaryText)),
+                        ),
+                      ],
                     ),
-                    // --- Pricing Section ---
+                  ),
+
+                  // --- Pricing Section (Conditional - Only for 'On going') ---
+                  if (booking.status == 'On going')
                     _buildSectionCard(
                         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                         child: Column(
@@ -1007,58 +1200,147 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
                           ],
                         )
                     ),
-                  ],
-                )
-            ),
-          ),
+                  // --- END Pricing Section (Conditional) ---
 
-          const SizedBox(height: 16),
-          _buildCardFooter(context, booking.status)
+                  const SizedBox(height: 16),
+
+                  // Footer Buttons (Only for On going/Upcoming)
+                  if (_hasDropdownIconLogic)
+                    _buildCardFooter(context, booking.status)
+                ],
+              )
+          ),
+        ),
+
+        // Footer Buttons/Status Bar for Completed/Cancelled
+        if (_isFullCardToggleLogic)
+          Padding(
+            padding: const EdgeInsets.only(top: 16),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              decoration: BoxDecoration(
+                color: booking.status == 'Completed' ? AppColors.greenColor.withOpacity(0.5) : AppColors.grey.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                booking.status,
+                style: GoogleFonts.montserrat(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.white,
+                ),
+              ),
+            ),
+          )
+      ],
+    );
+
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          )
         ],
+      ),
+      // Use GestureDetector on the main container only for Completed/Cancelled logic
+      child: GestureDetector(
+          onTap: _isFullCardToggleLogic ? _toggleExpansion : null,
+          child: cardContent
       ),
     );
   }
 
+  /// ----------------------------------------- FOOTER LOGIC ----------------------------
   Widget _buildCardFooter(BuildContext context, String status) {
+    final BookingService bookingService = Get.find<BookingService>();
+    final BookingStatusController statusController = Get.find<BookingStatusController>();
+    final BookingData booking = widget.booking;
+
+    void updateAndSelectStatus(String newStatus, String snackbarTitle, String snackbarMessage, Color color) {
+      bookingService.updateBookingStatus(booking, newStatus);
+      statusController.selectStatus(newStatus);
+      Get.snackbar(snackbarTitle, snackbarMessage, snackPosition: SnackPosition.BOTTOM, backgroundColor: color, colorText: Colors.white);
+    }
+
+    void handleCompletionConfirmation() {
+      updateAndSelectStatus('Completed', 'Success', 'Booking marked as Completed.', AppColors.greenColor);
+    }
+
+    void handleCancellationConfirmation() {
+      updateAndSelectStatus('Cancelled', 'Cancelled', 'Booking has been cancelled.', AppColors.redColor);
+    }
+
+    void acceptBooking() {
+      updateAndSelectStatus('On going', 'Accepted', 'Booking has been accepted and is now On going.', AppColors.mainAppColor);
+    }
+
+    void showCompletionDialog() {
+      Get.dialog(
+        CompletionRatingDialog(
+          userName: booking.userName,
+          onDone: handleCompletionConfirmation,
+        ),
+      );
+    }
+
+    void showCancelDialog() {
+      Get.dialog(
+        CancellationConfirmationDialog(
+          onConfirm: handleCancellationConfirmation,
+        ),
+      );
+    }
+
     switch (status) {
       case 'On going':
         return Row(
           children: [
             Expanded(
               child: ElevatedButton(
-                onPressed: () => _showRescheduleSheet(context),
+                onPressed: () => Get.to(() => const RescheduleScreen()),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.redColor,
+                  backgroundColor: const Color(0xFFF7726A), // Reschedule button color from image
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
-                child: Text('Reschedule', style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white)),
+                child: Text('Reschedule', style: GoogleFonts.montserrat(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white)),
               ),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: ElevatedButton(
-                onPressed: () { /* TODO: Ask for complete logic */ },
+                onPressed: showCompletionDialog,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.mainAppColor,
+                  backgroundColor: AppColors.mainAppColor, // Ask for Complete button is MainAppColor
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
-                child: Text('Ask for complete', style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white)),
+                child: Text('Ask for Complete', style: GoogleFonts.montserrat(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white)),
               ),
             ),
           ],
         );
+
       case 'Upcoming':
         return Row(
           children: [
             Expanded(
               child: ElevatedButton(
-                onPressed: () { /* TODO: Decline Logic */ },
+                onPressed: showCancelDialog,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.redColor,
+                  backgroundColor: const Color(0xFFF7726A), // Decline button color from image
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -1069,9 +1351,9 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
             const SizedBox(width: 12),
             Expanded(
               child: ElevatedButton(
-                onPressed: () { /* TODO: Accept Logic */ },
+                onPressed: acceptBooking,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.mainAppColor,
+                  backgroundColor: AppColors.mainAppColor, // Accept button is MainAppColor
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -1081,243 +1363,44 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
             ),
           ],
         );
-      case 'Completed':
-        return Align(
-          alignment: Alignment.centerRight,
-          child: Text(
-              'Completed',
-              style: GoogleFonts.montserrat(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.greenColor)
-          ),
-        );
-      case 'Cancelled':
-        return Align(
-          alignment: Alignment.centerRight,
-          child: Text(
-              'Cancelled',
-              style: GoogleFonts.montserrat(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.redColor)
-          ),
-        );
+
       default:
-        return const SizedBox.shrink();
+        return const SizedBox.shrink(); // Completed/Cancelled cards do not show active buttons
     }
   }
 
-  // --- RESCHEDULE LOGIC (MODAL) ---
-  void _showRescheduleSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (BuildContext context) {
-        return DraggableScrollableSheet(
-          initialChildSize: 0.9,
-          minChildSize: 0.5,
-          maxChildSize: 0.95,
-          builder: (_, scrollController) {
-            return RescheduleBottomSheet(scrollController: scrollController);
-          },
-        );
-      },
-    );
-  }
 }
-class RescheduleBottomSheet extends StatelessWidget {
-  final ScrollController scrollController;
 
-  const RescheduleBottomSheet({super.key, required this.scrollController});
+// --------------------------------------------------------------------------
+// --- MAIN FUNCTION (for running the app) ---
+// --------------------------------------------------------------------------
 
-  void _showConfirmationDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Align(
-                alignment: Alignment.topRight,
-                child: IconButton(
-                  icon: Icon(Icons.close, color: AppColors.redColor),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ),
-              Icon(Icons.check_circle_outline, color: AppColors.greenColor, size: 80),
-              const SizedBox(height: 20),
-              Text(
-                'Your reschedule has been successfully confirmed.',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textDark),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30),
-          topRight: Radius.circular(30),
-        ),
-      ),
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(20, 30, 20, MediaQuery.of(context).viewInsets.bottom + 20),
-        child: SingleChildScrollView(
-          controller: scrollController,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundImage: AssetImage(allBookings[0].userProfileImage),
-                  ),
-                  const SizedBox(width: 12),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Tamim Sarkar', style: GoogleFonts.montserrat(fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.textDark)),
-                      Text('Dhanmondi, Dhaka 1209', style: GoogleFonts.montserrat(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.subHeadingColor)),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-
-
-              Text('Pet sitter available time', style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textDark)),
-              const SizedBox(height: 8),
-              _buildTextInputWithIcon(Icons.calendar_today_outlined),
-              const SizedBox(height: 20),
-
-              Text('Note', style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textDark)),
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.inputBorder),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Text(
-                  'Please ensure all windows are securely locked after cleaning. Kindly use eco-friendly cleaning products as we prefer them.',
-                  style: GoogleFonts.montserrat(fontSize: 14, color: AppColors.secondaryText),
-                ),
-              ),
-              const SizedBox(height: 20),
-
-
-              Text('Select reschedule date & time', style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textDark)),
-              const SizedBox(height: 12),
-
-              // --- Date and Time Pickers ---
-              Row(
-                children: [
-                  Expanded(child: _buildTimeDatePicker('Start date', '01/09/2025')),
-                  const SizedBox(width: 10),
-                  Expanded(child: _buildTimeDatePicker('End date', '01/09/2025')),
-                ],
-              ),
-              const SizedBox(height: 15),
-              Row(
-                children: [
-                  Expanded(child: _buildTimeDatePicker('Start time', '11:00pm')),
-                  const SizedBox(width: 10),
-                  Expanded(child: _buildTimeDatePicker('End time', '11:00pm')),
-                ],
-              ),
-              const SizedBox(height: 20),
-
-              // --- Calendar Component ---
-              CustomCalendarWidget(
-                unavailableDays: [
-                  DateTime(2025, 11, 12),
-                  DateTime(2025, 11, 14),
-                ],
-              ),
-              const SizedBox(height: 20),
-
-              // --- Buttons ---
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => Navigator.pop(context),
-                      style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: AppColors.redColor),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      ),
-                      child: Text('Cancel', style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.redColor)),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        _showConfirmationDialog(context);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.mainAppColor,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      ),
-                      child: Text('Send', style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.white)),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Center(
-                child: Text('You can reschedule the time only once.', style: GoogleFonts.montserrat(fontSize: 12, color: AppColors.redColor)),
-              ),
-            ],
+    // Note: Ensure you have the 'flutter_screenutil' package added to your pubspec.yaml
+    return ScreenUtilInit(
+      designSize: const Size(360, 690), // Standard design size
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return GetMaterialApp(
+          title: 'Booking App',
+          theme: ThemeData(
+            primarySwatch: Colors.green,
+            scaffoldBackgroundColor: const Color(0xFFF3F8F4),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextInputWithIcon(IconData icon) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.inputBorder),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-        child: Align(
-          alignment: Alignment.centerRight,
-          child: Icon(icon, color: AppColors.subHeadingColor, size: 20),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTimeDatePicker(String title, String placeholder) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(title, style: GoogleFonts.montserrat(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textDark)),
-        const SizedBox(height: 4),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-          decoration: BoxDecoration(
-            border: Border.all(color: AppColors.inputBorder),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Text(placeholder, style: GoogleFonts.montserrat(fontSize: 14, color: AppColors.secondaryText)),
-        ),
-      ],
+          home: const BookingsScreen(),
+        );
+      },
     );
   }
 }

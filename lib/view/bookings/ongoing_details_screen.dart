@@ -3,10 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:petcare/view/bookings/custom_app_bar.dart';
-import 'package:petcare/view/bookings/widgets/custom_calendar.dart';
+import 'package:flutter/material.dart';
+import 'package:petcare/utils/app_colors.dart';
 
 import '../../utils/app_colors.dart';
 import '../bookings/widget/custom_calendar.dart';
+import '../home/widgets/custom_calendar.dart';
 
 class OngoingDetailsScreen extends StatelessWidget{
   const OngoingDetailsScreen({super.key});

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:petcare/view/bookings/booking_screen.dart';
-import 'package:petcare/view/profile/profile_screen.dart' hide AppColors;
+import 'package:petcare/view/bookings/booking_screen.dart' hide AppIcons, AppColors;
+import 'package:petcare/view/profile/profile_screen.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_icons.dart';
 import '../create_service/create_service.dart';
-import '../home/home_screen.dart' hide AppColors;
+import '../home/home_screen.dart';
 
 
 
@@ -49,7 +49,7 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
       body: _pages[selectedIndex],
 
       bottomNavigationBar: Container(
-        
+
         decoration: BoxDecoration(
           color: Color(0xFFE7F4F6),
           borderRadius: BorderRadius.only(
