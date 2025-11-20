@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:petcare/view/home/widgets/booking_card.dart';
-import 'package:petcare/view/home/widgets/custom_calendar.dart' hide CustomCalendarWidget;
+import 'package:petcare/view/home/widgets/custom_calendar.dart';
 import 'package:petcare/view/home/widgets/stat_card.dart';
 
 import '../../utils/app_colors.dart';
@@ -58,7 +58,6 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(height: 24.h),
             _buildBookingTabs(),
             SizedBox(height: 20.h),
-
             CustomCalendarWidget(
 
               unavailableDays: [

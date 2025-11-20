@@ -4,75 +4,32 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+// Note: Assuming 'petcare' is your project root and RescheduleScreen exists
+import 'package:petcare/view/bookings/reschedule_screen.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../utils/app_colors.dart';
-import '../../utils/app_icons.dart';
-
-// --------------------------------------------------------------------------
-// --- DUMMY SCREENS/UTILITY CLASSES (Replace with your actual imports) ---
-// --------------------------------------------------------------------------
-
-// Placeholder for RescheduleScreen
-class RescheduleScreen extends StatelessWidget {
-  const RescheduleScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Reschedule Booking')),
-      body: const Center(child: Text('Reschedule UI Placeholder')),
-    );
-  }
-}
+import '../home/widgets/custom_calendar.dart';
 
 
-class CustomCalendarWidget extends StatelessWidget {
-  final List<DateTime> unavailableDays;
-  final Function(DateTime day) onDaySelected;
-  const CustomCalendarWidget({super.key, required this.unavailableDays, required this.onDaySelected});
-  @override
-  Widget build(BuildContext context) {
-    // A simplified TableCalendar for demonstration
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.borderColor, width: 1),
-        ),
-        child: TableCalendar(
-          focusedDay: DateTime.now(),
-          firstDay: DateTime.utc(2020, 1, 1),
-          lastDay: DateTime.utc(2030, 12, 31),
-          calendarFormat: CalendarFormat.month,
-          // Simplified appearance settings
-          headerStyle: HeaderStyle(
-            titleCentered: true,
-            formatButtonVisible: false,
-            titleTextStyle: GoogleFonts.montserrat(fontWeight: FontWeight.w700, fontSize: 16),
-          ),
-          calendarStyle: CalendarStyle(
-            todayDecoration: BoxDecoration(color: AppColors.mainAppColor.withOpacity(0.5), shape: BoxShape.circle),
-            selectedDecoration: const BoxDecoration(color: AppColors.mainAppColor, shape: BoxShape.circle),
-          ),
-          onDaySelected: (selectedDay, focusedDay) => onDaySelected(selectedDay),
-        ),
-      ),
-    );
-  }
-}
 
+// Define AppAssets
 class AppAssets {
-  // Placeholder images for running code without actual assets
   static const String tamimProfileImg = 'assets/images/tamim.png'; // Placeholder for user profile
   static const String petImage = 'assets/images/cat.png'; // Placeholder for pet image
 }
 
-// --------------------------------------------------------------------------
-// --- BOOKING DATA MODEL ---
-// --------------------------------------------------------------------------
+// Define AppIcons (Placeholder, must exist in your assets)
+class AppIcons {
+  static const String order = 'assets/icons/order.svg';
+  static const String location = 'assets/icons/location.svg';
+  static const String clock = 'assets/icons/clock.svg';
+  static const String paw = 'assets/icons/paw.svg';
+  static const String vet = 'assets/icons/vet.svg';
+  static const String billing = 'assets/icons/billing.svg';
+}
+
+
 
 class BookingData {
   final String userName;
@@ -202,7 +159,7 @@ class BookingData {
   }
 }
 
-// --- UPDATED DUMMY DATA ---
+// --- DUMMY DATA ---
 final List<BookingData> initialBookings = [
   BookingData(
     userName: 'Tamim',
@@ -217,7 +174,7 @@ final List<BookingData> initialBookings = [
     petImage: AppAssets.petImage,
     date: '02/09/2025',
     price: '\$99',
-    isRebooked: true, // Rebooked example for On going
+    isRebooked: true,
     status: 'On going',
     rating: 3.8,
     totalReviews: 1200,
@@ -245,7 +202,7 @@ final List<BookingData> initialBookings = [
     total: 170.00,
   ),
   BookingData(
-    userName: 'Seam',
+    userName: 'Tamim',
     userProfileImage: AppAssets.tamimProfileImg,
     location: 'New York, NY',
     service: 'Pet Sitting',
@@ -285,7 +242,7 @@ final List<BookingData> initialBookings = [
     total: 150.00,
   ),
   BookingData(
-    userName: 'Rima',
+    userName: 'Tamim',
     userProfileImage: AppAssets.tamimProfileImg,
     location: 'New York, NY',
     service: 'Dog walking',
@@ -477,7 +434,7 @@ class _CompletionRatingDialogState extends State<CompletionRatingDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-             Icon(Icons.check_circle_outline, color: AppColors.greenColor, size: 50),
+              Icon(Icons.check_circle_outline, color: AppColors.greenColor, size: 50),
               const SizedBox(height: 16),
               Text(
                 'Your task has been completed',
@@ -793,9 +750,8 @@ class _BookingsScreenState extends State<BookingsScreen> {
 }
 
 // --------------------------------------------------------------------------
-// --- EXPANDABLE BOOKING CARD (LOGIC UPDATED) ---
+// --- CORRECTED EXPANDABLE BOOKING CARD WIDGET ---
 // --------------------------------------------------------------------------
-
 class ExpandableBookingCard extends StatefulWidget {
   final BookingData booking;
 
@@ -811,9 +767,11 @@ class ExpandableBookingCard extends StatefulWidget {
 class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
 
   bool _isExpanded = false;
-  // True if it's 'On going' or 'Upcoming' (where dropdown icon is primary toggle)
-  bool get _hasDropdownIconLogic => widget.booking.status == 'On going' || widget.booking.status == 'Upcoming';
-  // True if it's 'Completed' or 'Cancelled' (where full card click toggles)
+
+  // True if it's 'On going' or 'Upcoming' (standard card with pricing/buttons/dropdown)
+  bool get _hasActiveButtons => widget.booking.status == 'On going' || widget.booking.status == 'Upcoming';
+
+  // True if it's 'Completed' or 'Cancelled' (image-like card, full tap expandable, no pricing, no buttons)
   bool get _isFullCardToggleLogic => widget.booking.status == 'Completed' || widget.booking.status == 'Cancelled';
 
 
@@ -913,14 +871,139 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
     );
   }
 
-  // --- Widget for Status Display (Completed/Cancelled) ---
+  // --- Widget for Status Display (Collapsed Tag for C/C) ---
   Widget _buildStatusDisplay(String status, Color color) {
-    return Text(
-        status,
-        style: GoogleFonts.montserrat(fontSize: 14, fontWeight: FontWeight.w600, color: color)
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8)),
+      child: Text(
+          status,
+          style: GoogleFonts.montserrat(
+              color: color,
+              fontSize: 12,
+              fontWeight: FontWeight.w600)),
     );
   }
   // --- End Status Widget ---
+
+  // --- Widget for Completed/Cancelled Status Bar (Full Width, Expanded) ---
+  Widget _buildCompletedCancelledStatusBar(String status) {
+    final Color barColor = status == 'Completed' ? AppColors.greenColor : AppColors.redColor;
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(top: 16),
+      padding: const EdgeInsets.symmetric(vertical: 14),
+      decoration: BoxDecoration(
+        color: barColor.withOpacity(0.15), // Lighter background
+        borderRadius: BorderRadius.circular(12),
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        status,
+        style: GoogleFonts.montserrat(
+          fontSize: 16,
+          fontWeight: FontWeight.w700,
+          color: barColor, // Use the status color for the text
+        ),
+      ),
+    );
+  }
+  // --- End Status Widget ---
+
+  // --- EXPANDED SECTIONS IMPLEMENTATION ---
+
+  Widget _buildPetDetailsSection() {
+    return _buildSectionCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionTitle('Pet Information'),
+          const SizedBox(height: 12),
+          _buildInfoColumn('Pet Name', widget.booking.petName),
+          _buildInfoColumn('Type', widget.booking.petType),
+          _buildInfoColumn('Weight (lbs)', widget.booking.petWeight),
+          _buildInfoColumn('Age', widget.booking.petAge),
+          _buildInfoColumn('Breed', widget.booking.petBreed),
+          _buildInfoColumn('Gender', widget.booking.petGender),
+          _buildInfoColumn('Dates of birth', widget.booking.dateOfBirth, lastItem: true),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAdditionalDetailsSection() {
+    return _buildSectionCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionTitle('Additional details'),
+          const SizedBox(height: 12),
+          _buildInfoColumn('Microchipped?', 'Microchipped', isValueGrey: true),
+          _buildInfoColumn('Spayed/Neutered?', 'Spayed/Neutered', isValueGrey: true),
+          _buildInfoColumn('House Trained?', 'Not House Trained', isValueGrey: true),
+          _buildInfoColumn('Friendly with children?', 'Friendly with children', isValueGrey: true),
+          _buildInfoColumn('Friendly with dogs?', 'Friendly with dogs', isValueGrey: true),
+          _buildInfoColumn('Adoption Date', widget.booking.adoptionDate),
+          _buildInfoColumn('About your pet', widget.booking.aboutPet, lastItem: true),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPetCareInfoSection() {
+    return _buildSectionCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionTitle('Care info', useIcon: true, svgPath: AppIcons.paw),
+          const SizedBox(height: 12),
+          _buildInfoColumn('Potty break', widget.booking.pottyBreak),
+          _buildInfoColumn('Energy level', widget.booking.energyLevel),
+          _buildInfoColumn('Feeding schedule', widget.booking.feedingSchedule),
+          _buildInfoColumn('Can be left alone', widget.booking.canBeLeftAlone),
+          _buildInfoColumn('Medications', widget.booking.medications),
+          _buildInfoColumn('Anything else a sitter should know?', 'Add instructions for walking, feeding or other care', lastItem: true, isValueGrey: true),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildVetInformationSection() {
+    return _buildSectionCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionTitle('Veterinary Info', useIcon: true, svgPath: AppIcons.vet),
+          const SizedBox(height: 12),
+          _buildInfoColumn('Veterinary info', 'Vet\'s Name: ${widget.booking.vetName}\nClinic: ${widget.booking.clinicName}\nAddress: ${widget.booking.vetAddress}\nNumber: ${widget.booking.vetNumber}', isValueGrey: true),
+          _buildInfoColumn('Pet insurance provider', widget.booking.petInsuranceProvider),
+          _buildInfoColumn('Note', widget.booking.vetNote, lastItem: true, isValueGrey: true),
+        ],
+      ),
+    );
+  }
+
+
+  Widget _buildPricingSection() {
+    return _buildSectionCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionTitle('Pricing', useIcon: true, svgPath: AppIcons.billing),
+          const SizedBox(height: 12),
+          _buildInfoRow('Bathing / Grooming', '\$${widget.booking.bathingPrice.toStringAsFixed(2)}'),
+          _buildInfoRow('Extended Care', '\$${widget.booking.extendedCarePrice.toStringAsFixed(2)}'),
+          _buildInfoRow('Additional Pet Rate', '\$${widget.booking.additionalRate.toStringAsFixed(2)}'),
+          const Divider(height: 20, color: AppColors.borderColor),
+          _buildInfoRow('Total', '\$${widget.booking.total.toStringAsFixed(2)}', isBold: true),
+        ],
+      ),
+    );
+  }
+
+  // --- END EXPANDED SECTIONS IMPLEMENTATION ---
 
   @override
   Widget build(BuildContext context) {
@@ -958,7 +1041,7 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
               children: [
                 Text(booking.userName, style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.textDark)),
                 const SizedBox(height: 4),
-                // Show rating for all statuses for uniformity, unless specified otherwise
+                // Show rating for all statuses for uniformity
                 Row(
                   children: [
                     const Icon(Icons.star, color: Colors.amber, size: 16),
@@ -970,19 +1053,20 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
             ),
             const Spacer(),
 
-            // --- Rebooked Tag ---
+            // --- Rebooked Tag (Only for On going) ---
             if (booking.status == 'On going' && booking.isRebooked) ...[
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 margin: const EdgeInsets.only(right: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                    color: AppColors.redColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8)
-                ),
+                    color: AppColors.mainAppColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8)),
                 child: Text(
                     'Rebooked',
-                    style: GoogleFonts.montserrat(color: AppColors.redColor, fontSize: 11, fontWeight: FontWeight.w600)
-                ),
+                    style: GoogleFonts.montserrat(
+                        color: AppColors.mainAppColor,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600)),
               ),
             ],
             // --- END Rebooked Tag ---
@@ -993,19 +1077,24 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                      color: booking.status == 'On going' ? AppColors.mainAppColor.withOpacity(0.1) : AppColors.redColor.withOpacity(0.1),
+                    // Use appropriate colors for the date container background
+                      color: booking.status == 'Completed' ? AppColors.greenColor.withOpacity(0.1) :
+                      booking.status == 'Cancelled' ? AppColors.redColor.withOpacity(0.1) :
+                      AppColors.mainAppColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8)),
                   child: Text(
                       booking.date,
                       style: GoogleFonts.montserrat(
-                        // If it's Completed or Cancelled, use the main status color for date background if necessary.
-                        // Keeping status-specific color for simplicity here.
-                          color: (booking.status == 'Completed' || booking.status == 'Cancelled') ? AppColors.redColor : AppColors.mainAppColor,
+                        // Use the color based on status
+                          color: booking.status == 'Completed' ? AppColors.greenColor :
+                          booking.status == 'Cancelled' ? AppColors.redColor :
+                          AppColors.mainAppColor,
                           fontSize: 12,
                           fontWeight: FontWeight.w600)),
                 ),
                 const SizedBox(height: 4),
-                if (booking.status != 'Upcoming') ...[ // Assuming Upcoming doesn't show price
+                // --- Price Display (Hidden for Completed/Cancelled/Upcoming) ---
+                if (!_isFullCardToggleLogic && booking.status != 'Upcoming') ...[
                   Text(booking.price, style: GoogleFonts.montserrat(fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.textDark)),
                   Text("Per walk", style: GoogleFonts.montserrat(fontSize: 12, color: AppColors.subHeadingColor)),
                 ]
@@ -1022,16 +1111,16 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
         const SizedBox(height: 8),
         buildContactInfoRow(Icons.calendar_today_outlined, booking.date),
 
-        // Pick-up/Drop-off times only shown for active bookings
-        if (booking.status == 'On going' || booking.status == 'Upcoming') ...[
+
+        if (!_isFullCardToggleLogic) ...[ // Only show pick-up/drop-off for active/upcoming
           const SizedBox(height: 8),
           buildContactInfoRow(Icons.access_time_rounded, "Pick-up time: ${booking.pickupTime}"),
           const SizedBox(height: 8),
           buildContactInfoRow(Icons.access_time_rounded, "Drop-off time: ${booking.dropoffTime}"),
         ],
 
-        // --- Status Text for Completed/Cancelled Cards in the Footer area ---
-        if (booking.status == 'Completed' || booking.status == 'Cancelled') ...[
+        // --- Status Text for Completed/Cancelled Cards in the main card area (Only when collapsed) ---
+        if (_isFullCardToggleLogic && !_isExpanded) ...[
           const SizedBox(height: 8),
           Align(
             alignment: Alignment.centerRight,
@@ -1045,195 +1134,89 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
 
         const SizedBox(height: 16),
 
-        // Pet Summary/Dropdown Toggle
-        GestureDetector(
-          // Only link toggle action to the pet summary if it has the dropdown icon logic
-          // Completed/Cancelled cards rely on the parent GestureDetector below.
-          onTap: _hasDropdownIconLogic ? _toggleExpansion : null,
-          child: Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.borderColor)
-            ),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 24,
-                  backgroundImage: AssetImage(booking.petImage),
-                ),
-                const SizedBox(width: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(booking.petName, style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textDark)),
-                    Text(booking.petBreed, style: GoogleFonts.montserrat(fontSize: 12, color: AppColors.subHeadingColor)),
-                  ],
-                ),
-                const Spacer(),
+        // --- PET SUMMARY/DROPDOWN TOGGLE (Hidden if C/C and Collapsed) ---
+        // Condition: Show if it's Active/Upcoming (regardless of expansion) OR if it's C/C AND expanded.
+        if (!_isFullCardToggleLogic || _isExpanded)
+          GestureDetector(
+            // Tap Logic: Active/Upcoming cards use the Pet Summary box as the toggle target.
+            // C/C cards rely on the main card GestureDetector (onTap: _toggleExpansion in the outer container).
+            onTap: _hasActiveButtons ? _toggleExpansion : null,
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColors.borderColor)
+              ),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 24,
+                    backgroundImage: AssetImage(booking.petImage),
+                  ),
+                  const SizedBox(width: 12),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(booking.petName, style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textDark)),
+                      Text(booking.petBreed, style: GoogleFonts.montserrat(fontSize: 12, color: AppColors.subHeadingColor)),
+                    ],
+                  ),
+                  const Spacer(),
 
-                // --- Icon Logic based on Status ---
-                if (_hasDropdownIconLogic) // On going/Upcoming: Expand/Collapse Icon (Clicking on this area toggles)
-                  Icon(_isExpanded ? Icons.expand_less_rounded : Icons.expand_more_rounded, size: 28, color: AppColors.subHeadingColor)
-                else // Completed/Cancelled: Arrow Icon (Clicking on card area toggles)
-                  const Icon(Icons.keyboard_arrow_right_rounded, size: 28, color: AppColors.subHeadingColor)
-                // --- End Icon Logic ---
-              ],
+                  // --- Icon Logic based on Status ---
+                  if (_hasActiveButtons) // On going/Upcoming: Expand/Collapse Icon
+                    Icon(_isExpanded ? Icons.expand_less_rounded : Icons.expand_more_rounded, size: 28, color: AppColors.subHeadingColor)
+                  else // Completed/Cancelled: Arrow Icon
+                    const Icon(Icons.keyboard_arrow_right_rounded, size: 28, color: AppColors.subHeadingColor)
+                  // --- End Icon Logic ---
+                ],
+              ),
             ),
           ),
-        ),
+        // --- END PET SUMMARY ---
 
-        // Expanded Details
+
+        // Expanded Details (Dropdown)
         AnimatedSize(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
-          child: Visibility(
-              visible: _isExpanded,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Pet Information
-                  _buildSectionCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildSectionTitle("Pet Information"),
-                        const SizedBox(height: 12),
-                        _buildInfoRow("Pet Name", booking.petName),
-                        _buildInfoRow("Type", booking.petType),
-                        _buildInfoRow("Weight (lbs)", booking.petWeight),
-                        _buildInfoRow("Age", booking.petAge),
-                        _buildInfoRow("Breed", booking.petBreed),
-                        _buildInfoRow("Gender", booking.petGender),
-                        _buildInfoRow("Date of Birth", booking.dateOfBirth),
-                      ],
-                    ),
-                  ),
-                  // Additional Details
-                  _buildSectionCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildSectionTitle("Additional details"),
-                        const SizedBox(height: 12),
-                        _buildInfoColumn("Microchipped?", "Microchipped"),
-                        _buildInfoColumn("Spayed/Neutered?", "Spayed/Neutered"),
-                        _buildInfoColumn("House Trained?", "Not House Trained"),
-                        _buildInfoColumn("friendly with children?", "Friendly with children"),
-                        _buildInfoColumn("friendly with dogs?", "Friendly with dogs"),
-                        _buildInfoColumn("Adoption Date", booking.adoptionDate, lastItem: true),
-                      ],
-                    ),
-                  ),
-                  // Care Info
-                  _buildSectionCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildSectionTitle(
-                          "Care info",
-                          useIcon: true,
-                          svgPath: AppIcons.care,
-                        ),
-                        const SizedBox(height: 12),
-                        _buildInfoColumn("Potty break", booking.pottyBreak),
-                        _buildInfoColumn("Energy level", booking.energyLevel),
-                        _buildInfoColumn("Feeding schedule", booking.feedingSchedule),
-                        _buildInfoColumn("Can be left alone", booking.canBeLeftAlone),
-                        _buildInfoColumn("Medications", booking.medications),
-                        _buildInfoColumn("Anything else a sitter should know?", "Add instructions for walking, feeding or other care", isValueGrey: true, lastItem: true),
-                      ],
-                    ),
-                  ),
-                  // Veterinary Info
-                  _buildSectionCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildSectionTitle("Veterinary info", useIcon: true),
-                        const SizedBox(height: 12),
-                        _buildInfoColumn("Vet's Name", booking.vetName),
-                        _buildInfoColumn("Clinic", booking.clinicName),
-                        _buildInfoRow("Address", booking.vetAddress),
-                        _buildInfoColumn("Number", booking.vetNumber),
-                        _buildInfoColumn("Pet insurance provider", booking.petInsuranceProvider, lastItem: true),
-                      ],
-                    ),
-                  ),
-                  // Note
-                  _buildSectionCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildSectionTitle("Note"),
-                        const SizedBox(height: 12),
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: AppColors.inputBorderColor,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(booking.vetNote, style: GoogleFonts.montserrat(fontSize: 14, color: AppColors.secondaryText)),
-                        ),
-                      ],
-                    ),
-                  ),
+          child: _isExpanded
+              ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildPetDetailsSection(),
+              _buildAdditionalDetailsSection(),
+              _buildPetCareInfoSection(),
+              _buildVetInformationSection(),
 
-                  // --- Pricing Section (Conditional - Only for 'On going') ---
-                  if (booking.status == 'On going')
-                    _buildSectionCard(
-                        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8, bottom: 8),
-                              child: _buildSectionTitle("Pricing"),
-                            ),
-                            _buildInfoRow("Bathing / Grooming", "\$${booking.bathingPrice.toStringAsFixed(2)}"),
-                            _buildInfoRow("Extended Care", "\$${booking.extendedCarePrice.toStringAsFixed(2)}"),
-                            _buildInfoRow("Additional Pet Rate", "\$${booking.additionalRate.toStringAsFixed(2)}"),
-                            const Divider(height: 20, color: AppColors.borderColor),
-                            _buildInfoRow("Total", "\$${booking.total.toStringAsFixed(2)}", isBold: true),
-                          ],
-                        )
-                    ),
-                  // --- END Pricing Section (Conditional) ---
-
-                  const SizedBox(height: 16),
-
-                  // Footer Buttons (Only for On going/Upcoming)
-                  if (_hasDropdownIconLogic)
-                    _buildCardFooter(context, booking.status)
-                ],
-              )
-          ),
+              // --- PRICING SECTION: Only shown for On going/Upcoming (when _isFullCardToggleLogic is false) ---
+              if (!_isFullCardToggleLogic)
+                _buildPricingSection(),
+            ],
+          )
+              : const SizedBox.shrink(),
         ),
 
-        // Footer Buttons/Status Bar for Completed/Cancelled
-        if (_isFullCardToggleLogic)
+
+        // --------------------------------------------------------------------------
+        // --- FOOTER SECTION: BUTTONS OR STATUS BAR (CONDITIONAL) ---
+        // --------------------------------------------------------------------------
+
+        // Footer Buttons for 'On going' or 'Upcoming' (Only show when collapsed)
+        if (_hasActiveButtons && !_isExpanded)
           Padding(
             padding: const EdgeInsets.only(top: 16),
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              decoration: BoxDecoration(
-                color: booking.status == 'Completed' ? AppColors.greenColor.withOpacity(0.5) : AppColors.grey.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                booking.status,
-                style: GoogleFonts.montserrat(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.white,
-                ),
-              ),
-            ),
-          )
+            child: _buildCardFooter(context, booking.status),
+          ),
+
+        // Full Width Status Bar for 'Completed' or 'Cancelled' (Only visible when expanded)
+        if (_isFullCardToggleLogic && _isExpanded)
+          _buildCompletedCancelledStatusBar(booking.status),
+
+        // --------------------------------------------------------------------------
+        // --- END FOOTER SECTION ---
+        // --------------------------------------------------------------------------
       ],
     );
 
@@ -1252,9 +1235,12 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
           )
         ],
       ),
-      // Use GestureDetector on the main container only for Completed/Cancelled logic
+      // Use GestureDetector on the main container for the full card toggle logic (Completed/Cancelled only)
       child: GestureDetector(
+        // Card will only react to a full tap if it's Completed/Cancelled
           onTap: _isFullCardToggleLogic ? _toggleExpansion : null,
+          // Use HitTestBehavior.opaque to capture taps across the entire widget area for C/C cards
+          behavior: _isFullCardToggleLogic ? HitTestBehavior.opaque : HitTestBehavior.deferToChild,
           child: cardContent
       ),
     );
@@ -1273,14 +1259,17 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
     }
 
     void handleCompletionConfirmation() {
+      // Logic for Completion
       updateAndSelectStatus('Completed', 'Success', 'Booking marked as Completed.', AppColors.greenColor);
     }
 
     void handleCancellationConfirmation() {
+      // Logic for Cancellation
       updateAndSelectStatus('Cancelled', 'Cancelled', 'Booking has been cancelled.', AppColors.redColor);
     }
 
     void acceptBooking() {
+      // Logic for Acceptance
       updateAndSelectStatus('On going', 'Accepted', 'Booking has been accepted and is now On going.', AppColors.mainAppColor);
     }
 
@@ -1307,9 +1296,9 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
           children: [
             Expanded(
               child: ElevatedButton(
-                onPressed: () => Get.to(() => const RescheduleScreen()),
+                onPressed: () => Get.to(() =>  const RescheduleScreen()), // Reschedule is the decline/red button
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFF7726A), // Reschedule button color from image
+                  backgroundColor: const Color(0xFFF7726A), // Red color for reschedule/decline
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -1322,7 +1311,7 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
               child: ElevatedButton(
                 onPressed: showCompletionDialog,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.mainAppColor, // Ask for Complete button is MainAppColor
+                  backgroundColor: AppColors.mainAppColor, // Main color for acceptance/completion
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -1340,7 +1329,7 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
               child: ElevatedButton(
                 onPressed: showCancelDialog,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFF7726A), // Decline button color from image
+                  backgroundColor: const Color(0xFFF7726A), // Decline button color
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -1369,38 +1358,4 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
     }
   }
 
-}
-
-// --------------------------------------------------------------------------
-// --- MAIN FUNCTION (for running the app) ---
-// --------------------------------------------------------------------------
-
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    // Note: Ensure you have the 'flutter_screenutil' package added to your pubspec.yaml
-    return ScreenUtilInit(
-      designSize: const Size(360, 690), // Standard design size
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (context, child) {
-        return GetMaterialApp(
-          title: 'Booking App',
-          theme: ThemeData(
-            primarySwatch: Colors.green,
-            scaffoldBackgroundColor: const Color(0xFFF3F8F4),
-          ),
-          home: const BookingsScreen(),
-        );
-      },
-    );
-  }
 }
