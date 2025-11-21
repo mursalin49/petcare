@@ -24,6 +24,7 @@ class AppIcons{
   static String gor = "assets/icons/home.svg";
   static String gors = "assets/icons/homes.svg";
   static String care = "assets/icons/care.svg";
+  static String paw = "assets/icons/paw.svg";
 
 
 

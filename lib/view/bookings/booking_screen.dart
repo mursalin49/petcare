@@ -282,7 +282,7 @@ final List<BookingData> initialBookings = [
     total: 170.00,
   ),
   BookingData(
-    userName: 'Kawsar',
+    userName: 'Tamim',
     userProfileImage: AppAssets.tamimProfileImg,
     location: 'New York, NY',
     service: 'Cat Care',
@@ -975,7 +975,7 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSectionTitle('Veterinary Info', useIcon: true, svgPath: AppIcons.vet),
+          _buildSectionTitle('Care Info', useIcon: true, svgPath: AppIcons.vet),
           const SizedBox(height: 12),
           _buildInfoColumn('Veterinary info', 'Vet\'s Name: ${widget.booking.vetName}\nClinic: ${widget.booking.clinicName}\nAddress: ${widget.booking.vetAddress}\nNumber: ${widget.booking.vetNumber}', isValueGrey: true),
           _buildInfoColumn('Pet insurance provider', widget.booking.petInsuranceProvider),
@@ -1054,19 +1054,10 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
             const Spacer(),
 
             // --- Rebooked Tag (Only for On going) ---
-            if (booking.status == 'On going' && booking.isRebooked) ...[
+            if (booking.status == 'On going' ) ...[
               Container(
                 margin: const EdgeInsets.only(right: 8),
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                    color: AppColors.mainAppColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8)),
-                child: Text(
-                    'Rebooked',
-                    style: GoogleFonts.montserrat(
-                        color: AppColors.mainAppColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600)),
               ),
             ],
             // --- END Rebooked Tag ---

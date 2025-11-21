@@ -121,8 +121,8 @@ class _CustomCalendarWidgetState extends State<CustomCalendarWidget> {
               return Container(
                 margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
                 decoration: BoxDecoration(
-                  color: AppColors.redColor, // লাল রং
-                  borderRadius: BorderRadius.circular(4), // চতুর্ভুজ শেপ
+                  color: AppColors.redColor,
+                  borderRadius: BorderRadius.circular(4),
                 ),
                 child: Center(
                   child: Text(
@@ -137,7 +137,7 @@ class _CustomCalendarWidgetState extends State<CustomCalendarWidget> {
                 ),
               );
             }
-            return null; // সাধারণ দিনের জন্য ডিফল্ট স্টাইল
+            return null;
           },
         ),
       ),

@@ -175,7 +175,7 @@ class SitterOnboardingScreen extends StatelessWidget {
 
             // Example 3: Using the NEW svgIconPath
             _buildServiceCard(
-              svgIconPath: 'assets/icons/doggyfoot.svg',
+              svgIconPath: 'assets/icons/d_foot.svg',
               title: 'Dog Walking',
               subtitle: 'Take dogs out for a walk in your schedule.',
             ),
