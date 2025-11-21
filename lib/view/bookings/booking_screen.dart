@@ -182,7 +182,7 @@ final List<BookingData> initialBookings = [
     petWeight: '8Kg',
     petAge: '3 Yer 4Month',
     petGender: 'Male',
-    dateOfBirth: '10/01/2022',
+    dateOfBirth: '5kg',
     adoptionDate: '10/12/2025',
     aboutPet: 'Good for eating my share 😊',
     pottyBreak: 'Needs a potty break every hour',
@@ -222,7 +222,7 @@ final List<BookingData> initialBookings = [
     petWeight: '25Kg',
     petAge: '5 Yer',
     petGender: 'Female',
-    dateOfBirth: '10/01/2020',
+    dateOfBirth: '5kg',
     adoptionDate: '10/12/2020',
     aboutPet: 'Very friendly and loves cuddles.',
     pottyBreak: 'Needs a potty break every 3 hours',
@@ -262,7 +262,7 @@ final List<BookingData> initialBookings = [
     petWeight: '8Kg',
     petAge: '3 Yer 4Month',
     petGender: 'Male',
-    dateOfBirth: '10/01/2022',
+    dateOfBirth: '5kg',
     adoptionDate: '10/12/2025',
     aboutPet: 'Good for eating my share 😊',
     pottyBreak: 'Needs a potty break every hour',
@@ -302,7 +302,7 @@ final List<BookingData> initialBookings = [
     petWeight: '5Kg',
     petAge: '1 Yer 6Month',
     petGender: 'Female',
-    dateOfBirth: '01/01/2024',
+    dateOfBirth: '5kg',
     adoptionDate: '01/01/2024',
     aboutPet: 'Shy but sweet.',
     pottyBreak: 'Uses litter box',
@@ -769,10 +769,10 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
   bool _isExpanded = false;
 
   // True if it's 'On going' or 'Upcoming' (standard card with pricing/buttons/dropdown)
-  bool get _hasActiveButtons => widget.booking.status == 'On going' || widget.booking.status == 'Upcoming';
+  bool get _hasActiveButtons => widget.booking.status == 'On going';
 
   // True if it's 'Completed' or 'Cancelled' (image-like card, full tap expandable, no pricing, no buttons)
-  bool get _isFullCardToggleLogic => widget.booking.status == 'Completed' || widget.booking.status == 'Cancelled';
+  bool get _isFullCardToggleLogic => widget.booking.status == 'Completed' || widget.booking.status == 'Cancelled' || widget.booking.status == 'Upcoming';
 
 
   void _toggleExpansion() {
@@ -804,7 +804,7 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
             svgPath,
             width: 20,
             height: 20,
-            colorFilter: const ColorFilter.mode(AppColors.mainAppColor, BlendMode.srcIn),
+            colorFilter: const ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
           ),
           const SizedBox(width: 8),
         ],
@@ -870,6 +870,28 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
       ),
     );
   }
+  Widget _buildInfo(String label, String value, {bool lastItem = false, bool isValueGrey = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+              label,
+              style: GoogleFonts.montserrat(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textDark)
+          ),
+          const SizedBox(width: 10),
+          Text(
+              value,
+              style: GoogleFonts.montserrat(fontSize: 14, fontWeight: FontWeight.w500, color: isValueGrey ? AppColors.grey : AppColors.subHeadingColor)
+          ),
+          if (!lastItem) ...[
+            const SizedBox(height: 10),
+          ]
+        ],
+      ),
+    );
+  }
 
   // --- Widget for Status Display (Collapsed Tag for C/C) ---
   Widget _buildStatusDisplay(String status, Color color) {
@@ -919,15 +941,15 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSectionTitle('Pet Information'),
+          _buildSectionTitle('Pet Information:'),
           const SizedBox(height: 12),
-          _buildInfoColumn('Pet Name', widget.booking.petName),
-          _buildInfoColumn('Type', widget.booking.petType),
-          _buildInfoColumn('Weight (lbs)', widget.booking.petWeight),
-          _buildInfoColumn('Age', widget.booking.petAge),
-          _buildInfoColumn('Breed', widget.booking.petBreed),
-          _buildInfoColumn('Gender', widget.booking.petGender),
-          _buildInfoColumn('Dates of birth', widget.booking.dateOfBirth, lastItem: true),
+          _buildInfo('Pet Name:', widget.booking.petName),
+          _buildInfo('Type:', widget.booking.petType),
+          _buildInfo('Weight (lbs):', widget.booking.petWeight),
+          _buildInfo('Age:', widget.booking.petAge),
+          _buildInfo('Breed:', widget.booking.petBreed),
+          _buildInfo('Gender:', widget.booking.petGender),
+          _buildInfo('Dates of birth:', widget.booking.dateOfBirth, lastItem: true),
         ],
       ),
     );
@@ -957,7 +979,7 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSectionTitle('Care info', useIcon: true, svgPath: AppIcons.paw),
+          _buildSectionTitle('Care info', useIcon: true, svgPath: AppIcons.vet),
           const SizedBox(height: 12),
           _buildInfoColumn('Potty break', widget.booking.pottyBreak),
           _buildInfoColumn('Energy level', widget.booking.energyLevel),
