@@ -518,9 +518,6 @@ class _CompletionRatingDialogState extends State<CompletionRatingDialog> {
   }
 }
 
-// --------------------------------------------------------------------------
-// --- BOOKINGSSCREEN IMPLEMENTATION ---
-// --------------------------------------------------------------------------
 
 class BookingsScreen extends StatefulWidget{
   const BookingsScreen({super.key});
@@ -749,9 +746,6 @@ class _BookingsScreenState extends State<BookingsScreen> {
   }
 }
 
-// --------------------------------------------------------------------------
-// --- CORRECTED EXPANDABLE BOOKING CARD WIDGET ---
-// --------------------------------------------------------------------------
 class ExpandableBookingCard extends StatefulWidget {
   final BookingData booking;
 
@@ -772,7 +766,7 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
   bool get _hasActiveButtons => widget.booking.status == 'On going';
 
   // True if it's 'Completed' or 'Cancelled' (image-like card, full tap expandable, no pricing, no buttons)
-  bool get _isFullCardToggleLogic => widget.booking.status == 'Completed' || widget.booking.status == 'Cancelled' || widget.booking.status == 'Upcoming';
+  bool get _isFullCardToggleLogic => widget.booking.status == 'Completed' || widget.booking.status == 'Cancelled';
 
 
   void _toggleExpansion() {
@@ -1075,7 +1069,6 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
             ),
             const Spacer(),
 
-            // --- Rebooked Tag (Only for On going) ---
             if (booking.status == 'On going' ) ...[
               Container(
                 margin: const EdgeInsets.only(right: 8),
@@ -1107,9 +1100,10 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
                 ),
                 const SizedBox(height: 4),
                 // --- Price Display (Hidden for Completed/Cancelled/Upcoming) ---
-                if (!_isFullCardToggleLogic && booking.status != 'Upcoming') ...[
+                if (_isFullCardToggleLogic && booking.status =='Upcoming') ...[
                   Text(booking.price, style: GoogleFonts.montserrat(fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.textDark)),
                   Text("Per walk", style: GoogleFonts.montserrat(fontSize: 12, color: AppColors.subHeadingColor)),
+
                 ]
               ],
             )
@@ -1212,11 +1206,6 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
         ),
 
 
-        // --------------------------------------------------------------------------
-        // --- FOOTER SECTION: BUTTONS OR STATUS BAR (CONDITIONAL) ---
-        // --------------------------------------------------------------------------
-
-        // Footer Buttons for 'On going' or 'Upcoming' (Only show when collapsed)
         if (_hasActiveButtons && !_isExpanded)
           Padding(
             padding: const EdgeInsets.only(top: 16),
@@ -1232,8 +1221,6 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
         // --------------------------------------------------------------------------
       ],
     );
-
-
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),

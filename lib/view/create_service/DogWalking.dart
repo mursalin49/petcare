@@ -3,10 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:petcare/view/create_service/Boarding.dart';
 import 'package:petcare/view/create_service/dog_day_care.dart';
 
 import '../../utils/app_colors.dart';
-import 'Boarding.dart';
+
 
 class DogWalkingController extends GetxController {
   // --- Rates ---
@@ -432,19 +433,20 @@ Widget _buildStickyFooter(BuildContext context, String text) {
 Widget _buildServiceSelection(DogWalkingController controller) {
   final List<Map<String, dynamic>> services = [
     {
-      'name': 'Boarding',
-      'icon': 'assets/icons/boarding.svg',
-      'screen': const BoardingSetupScreen()
-    },
-    {
       'name': 'Dog Walking',
-      'icon': 'assets/icons/dog_walking.svg',
-      'screen': const DogWalkingSetupScreen()
+      'icon': 'assets/icons/doggy.svg',
+      'screen': DogWalkingSetupScreen()
     },
     {
-      'name': 'Dog Day Care',
-      'icon': 'assets/icons/dog_day_care.svg',
-      'screen': const DogDayCareSetupScreen()
+      'name': 'Boarding',
+      'icon': 'assets/icons/calendar-add-01.svg',
+      'screen':  BoardingSetupScreen()
+    },
+
+    {
+      'name': 'Doggy Day Care',
+      'icon': 'assets/icons/d_foot.svg',
+      'screen':  DoggyDayCareSetupScreen()
     },
   ];
 
@@ -488,7 +490,7 @@ Widget _buildServiceSelection(DogWalkingController controller) {
                   final selected = services.firstWhere((s) => s['name'] == newValue);
                   if (selected['screen'] is Widget) {
                     if (newValue == 'Dog Walking') {
-                      Get.off(() => const DogWalkingSetupScreen());
+                      Get.to(() => const DogWalkingSetupScreen());
                     } else {
                       Get.to(() => selected['screen'] as Widget);
                     }

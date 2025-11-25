@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -9,7 +10,6 @@ import '../components/custom_date_picker_sheet.dart';
 import '../components/custom_time_picker_sheet.dart';
 import '../home/widgets/custom_calendar.dart';
 
-
 class RescheduleScreen extends StatefulWidget {
   const RescheduleScreen({super.key});
 
@@ -18,9 +18,7 @@ class RescheduleScreen extends StatefulWidget {
 }
 
 class _RescheduleScreenState extends State<RescheduleScreen> {
-
   bool _isCalendarVisible = false;
-
 
   DateTime? _selectedStartDate;
   DateTime? _selectedEndDate;
@@ -38,7 +36,6 @@ class _RescheduleScreenState extends State<RescheduleScreen> {
     _selectedEndTime = const TimeOfDay(hour: 12, minute: 0);
     _selectedTime = const TimeOfDay(hour: 11, minute: 0);
   }
-
 
   Future<void> _selectDate(BuildContext context, String type) async {
     DateTime initialDate = DateTime.now();
@@ -58,7 +55,6 @@ class _RescheduleScreenState extends State<RescheduleScreen> {
         initialDate = _selectedEndDate!;
       }
     }
-
 
     final DateTime? picked = await showCustomDatePickerSheet(
       context,
@@ -114,27 +110,37 @@ class _RescheduleScreenState extends State<RescheduleScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.mainAppColor,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: AppColors.textDark, size: 20.sp),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () => Get.back(),
         ),
         title: Text(
-          "Reschedule Booking",
+          'Reschedule Booking',
           style: GoogleFonts.montserrat(
-            fontSize: 18.sp,
+            fontSize: 18,
             fontWeight: FontWeight.w600,
-            color: AppColors.textDark,
+            color: Colors.white,
           ),
         ),
         centerTitle: true,
+
+
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+
+            bottomLeft: Radius.circular(30.r),
+
+            bottomRight: Radius.circular(30.r),
+          ),
+        ),
+
       ),
       body: Stack(
         children: [
@@ -144,13 +150,8 @@ class _RescheduleScreenState extends State<RescheduleScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 _buildUserInfoCard(),
                 SizedBox(height: 24.h),
-
-
-                // _buildLabelText("Pet sitter available time"),
-                SizedBox(height: 8.h),
                 GestureDetector(
                   onTap: () {
                     setState(() {
@@ -162,15 +163,19 @@ class _RescheduleScreenState extends State<RescheduleScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          _selectedTime == null
-                              ? "Select time"
-                              : _selectedTime!.format(context),
+                          "Pet sitter available time",
                           style: GoogleFonts.montserrat(
-                            fontSize: 14.sp,
-                            color: _selectedTime == null ? AppColors.subHeadingColor : AppColors.textDark,
+                            fontSize: 18.sp,
+                            color: Color(0xFF7C7C7C),
+                            fontWeight: FontWeight.w500
                           ),
                         ),
-                        Icon(Icons.calendar_today_outlined, color: AppColors.subHeadingColor, size: 20.sp),
+                        SvgPicture.asset(
+                          "assets/icons/calenderr.svg",
+                          width: 20.sp,
+                          height: 20.sp,
+                          color: AppColors.subHeadingColor,
+                        ),
                       ],
                     ),
                   ),
@@ -178,21 +183,20 @@ class _RescheduleScreenState extends State<RescheduleScreen> {
 
                 SizedBox(height: 20.h),
 
-
                 _buildLabelText("Note"),
                 SizedBox(height: 8.h),
                 _buildInputContainer(
                   child: Text(
                     "Please ensure all windows are securely locked after cleaning. Kindly use eco-friendly cleaning products as we prefer them.",
                     style: GoogleFonts.montserrat(
-                      fontSize: 14.sp,
-                      color: AppColors.subHeadingColor,
+                      fontSize: 14,
+                      color: Color(0xFF7C7C7C),
+                      fontWeight: FontWeight.w400,
                       height: 1.5,
                     ),
                   ),
                 ),
                 SizedBox(height: 20.h),
-
 
                 _buildLabelText("Select reschedule date & time"),
                 SizedBox(height: 12.h),
@@ -268,11 +272,9 @@ class _RescheduleScreenState extends State<RescheduleScreen> {
                 ),
                 SizedBox(height: 40.h),
 
-
                 _buildActionButtons(context),
 
                 SizedBox(height: 16.h),
-
 
                 Center(
                   child: Text(
@@ -289,6 +291,7 @@ class _RescheduleScreenState extends State<RescheduleScreen> {
             ),
           ),
 
+          // Calendar overlay for Pet sitter available time
           if (_isCalendarVisible)
             Positioned(
               top: 150.h,
@@ -313,30 +316,8 @@ class _RescheduleScreenState extends State<RescheduleScreen> {
                     Padding(
                       padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 0),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          IconButton(
-                            icon: Icon(Icons.arrow_back_ios_new, size: 18.sp, color: AppColors.subHeadingColor),
-                            onPressed: () {},
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.date_range, size: 18.sp, color: AppColors.redColor),
-                              SizedBox(width: 8.w),
-                              Text(
-                                "${_selectedStartDate != null ? DateFormat('MMMM yyyy').format(_selectedStartDate!) : 'Select Date'}",
-                                style: GoogleFonts.montserrat(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.textDark,
-                                ),
-                              ),
-                            ],
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.arrow_forward_ios, size: 18.sp, color: AppColors.subHeadingColor),
-                            onPressed: () {},
-                          ),
                           IconButton(
                             icon: Icon(Icons.close, size: 24.sp, color: AppColors.textDark),
                             onPressed: () {
@@ -357,8 +338,7 @@ class _RescheduleScreenState extends State<RescheduleScreen> {
                       ],
                       onDaySelected: (day) {
                         setState(() {
-                          _selectedStartDate = day;
-                          _isCalendarVisible = false; // Close calendar after selection
+                          _isCalendarVisible = false;
                         });
                       },
                     ),
@@ -372,7 +352,6 @@ class _RescheduleScreenState extends State<RescheduleScreen> {
     );
   }
 
-
   // --- Helper Widgets ---
 
   Widget _buildUserInfoCard() {
@@ -382,12 +361,12 @@ class _RescheduleScreenState extends State<RescheduleScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: AppColors.white),
+        border: Border.all(color: AppColors.borderColor.withOpacity(0.3)),
         boxShadow: [
           BoxShadow(
-            color: Colors.white,
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: Colors.grey.withOpacity(0.08),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -488,7 +467,6 @@ class _RescheduleScreenState extends State<RescheduleScreen> {
       ],
     );
   }
-
 
   Widget _buildActionButtons(BuildContext context) {
     return Row(

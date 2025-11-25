@@ -55,7 +55,7 @@ class CreateService extends StatelessWidget {
           // --- 2. House Sitting Service ---
           _buildServiceItem(
             iconPath: 'assets/icons/home-hashtag.svg',
-            title: 'House Sitting',
+            title: 'Doggy Day Care',
             subtitle: 'In your home',
             onTap: () {
 

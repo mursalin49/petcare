@@ -58,7 +58,7 @@ class AppRoutes {
     GetPage(name: sitter, page: () => SitterOnboardingScreen()),
     GetPage(name: bording, page: () => BoardingSetupScreen()),
     GetPage(name: dogwalk, page: () => DogWalkingSetupScreen()),
-    GetPage(name: dogDay, page: () => DogDayCareSetupScreen())
+    GetPage(name: dogDay, page: () => DoggyDayCareSetupScreen())
 
 
 

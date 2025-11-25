@@ -3,14 +3,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
+import 'package:petcare/view/create_service/Boarding.dart';
+import 'package:petcare/view/create_service/DogWalking.dart';
 
 import '../../utils/app_colors.dart';
-import 'Boarding.dart';
-import 'DogWalking.dart';
 
-class DogController extends GetxController {
-  var selectedService = 'Dog Day Care'.obs;
+
+class DoggyDayCareController extends GetxController {
+  var selectedService = 'Doggy Day Care'.obs;
   var showAdditionalRates = false.obs;
   var updateRatesBasedOnBase = true.obs;
   var offerGroomingForFree = false.obs;
@@ -77,12 +77,13 @@ class DogController extends GetxController {
   }
 }
 
-class DogDayCareSetupScreen extends StatelessWidget {
-  const DogDayCareSetupScreen({super.key});
+
+class DoggyDayCareSetupScreen extends StatelessWidget {
+  const DoggyDayCareSetupScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(DogController());
+    final controller = Get.put(DoggyDayCareController());
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -111,11 +112,13 @@ class DogDayCareSetupScreen extends StatelessWidget {
             ),
 
             // Checkbox (Update my additional rates)
-            Obx(() => _buildSquareCheckbox(
-              text: 'Update my additional rates based on my base rate',
-              value: controller.updateRatesBasedOnBase.value,
-              onChanged: (val) => controller.updateRatesBasedOnBase.value = val!,
-            )),
+            Obx(() =>
+                _buildSquareCheckbox(
+                  text: 'Update my additional rates based on my base rate',
+                  value: controller.updateRatesBasedOnBase.value,
+                  onChanged: (val) =>
+                  controller.updateRatesBasedOnBase.value = val!,
+                )),
             Text(
               'Turn off to adjust your rate manually',
               style: GoogleFonts.montserrat(
@@ -142,11 +145,13 @@ class DogDayCareSetupScreen extends StatelessWidget {
                       title: 'Bathing / Grooming',
                       initialValue: '28.00',
                     ),
-                    Obx(() => _buildSquareCheckbox(
-                      text: 'Offer for free',
-                      value: controller.offerGroomingForFree.value,
-                      onChanged: (val) => controller.offerGroomingForFree.value = val!,
-                    )),
+                    Obx(() =>
+                        _buildSquareCheckbox(
+                          text: 'Offer for free',
+                          value: controller.offerGroomingForFree.value,
+                          onChanged: (val) =>
+                          controller.offerGroomingForFree.value = val!,
+                        )),
                     SizedBox(height: 10.h),
                     _buildRateInput(
                       title: 'Daily Sitter Pick-Up/Drop-Off',
@@ -164,15 +169,17 @@ class DogDayCareSetupScreen extends StatelessWidget {
             SizedBox(height: 10.h),
 
             // Show/Hide Button
-            Obx(() => _buildShowHideButton(
-              controller.showAdditionalRates.value
-                  ? 'Hide additional rates'
-                  : 'Show additional rates',
-              controller.toggleAdditionalRates,
-              controller.showAdditionalRates.value,
-            )),
+            Obx(() =>
+                _buildShowHideButton(
+                  controller.showAdditionalRates.value
+                      ? 'Hide additional rates'
+                      : 'Show additional rates',
+                  controller.toggleAdditionalRates,
+                  controller.showAdditionalRates.value,
+                )),
             SizedBox(height: 30.h),
 
+            // Availability
             _buildSectionTitle('Availability'),
             Text(
               'Are you home full-time during the week?',
@@ -183,23 +190,26 @@ class DogDayCareSetupScreen extends StatelessWidget {
             ),
             SizedBox(height: 10.h),
 
-            Obx(() => Row(
-              children: [
-                _buildRadioOption(
-                  text: 'Yes',
-                  value: true,
-                  groupValue: controller.isFullTimeAvailable.value,
-                  onChanged: (val) => controller.isFullTimeAvailable.value = val!,
-                ),
-                SizedBox(width: 20.w),
-                _buildRadioOption(
-                  text: 'No',
-                  value: false,
-                  groupValue: controller.isFullTimeAvailable.value,
-                  onChanged: (val) => controller.isFullTimeAvailable.value = val!,
-                ),
-              ],
-            )),
+            Obx(() =>
+                Row(
+                  children: [
+                    _buildRadioOption(
+                      text: 'Yes',
+                      value: true,
+                      groupValue: controller.isFullTimeAvailable.value,
+                      onChanged: (val) =>
+                      controller.isFullTimeAvailable.value = val!,
+                    ),
+                    SizedBox(width: 20.w),
+                    _buildRadioOption(
+                      text: 'No',
+                      value: false,
+                      groupValue: controller.isFullTimeAvailable.value,
+                      onChanged: (val) =>
+                      controller.isFullTimeAvailable.value = val!,
+                    ),
+                  ],
+                )),
             SizedBox(height: 15.h),
 
             Text(
@@ -242,11 +252,14 @@ class DogDayCareSetupScreen extends StatelessWidget {
 
             _buildSectionTitle('What type of pets can you host in your home?'),
             SizedBox(height: 10.h),
-            ...controller.petSizes.keys.map((key) => Obx(() => _buildSquareCheckbox(
-              text: key,
-              value: controller.petSizes[key]!.value,
-              onChanged: (val) => controller.petSizes[key]!.value = val!,
-            ))).toList(),
+            ...controller.petSizes.keys.map((key) =>
+                Obx(() =>
+                    _buildSquareCheckbox(
+                      text: key,
+                      value: controller.petSizes[key]!.value,
+                      onChanged: (val) =>
+                      controller.petSizes[key]!.value = val!,
+                    ))).toList(),
             SizedBox(height: 30.h),
 
             // About your home
@@ -259,11 +272,14 @@ class DogDayCareSetupScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 10.h),
-            ...controller.homeTypes.keys.map((key) => Obx(() => _buildSquareCheckbox(
-              text: key,
-              value: controller.homeTypes[key]!.value,
-              onChanged: (val) => controller.homeTypes[key]!.value = val!,
-            ))).toList(),
+            ...controller.homeTypes.keys.map((key) =>
+                Obx(() =>
+                    _buildSquareCheckbox(
+                      text: key,
+                      value: controller.homeTypes[key]!.value,
+                      onChanged: (val) =>
+                      controller.homeTypes[key]!.value = val!,
+                    ))).toList(),
             SizedBox(height: 20.h),
 
             Text(
@@ -274,75 +290,64 @@ class DogDayCareSetupScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 10.h),
-            ...controller.yardTypes.keys.map((key) => Obx(() => _buildSquareCheckbox(
-              text: key,
-              value: controller.yardTypes[key]!.value,
-              onChanged: (val) => controller.yardTypes[key]!.value = val!,
-            ))).toList(),
+            ...controller.yardTypes.keys.map((key) =>
+                Obx(() =>
+                    _buildSquareCheckbox(
+                      text: key,
+                      value: controller.yardTypes[key]!.value,
+                      onChanged: (val) =>
+                      controller.yardTypes[key]!.value = val!,
+                    ))).toList(),
             SizedBox(height: 30.h),
 
             // Boarding Expectations
-            _buildSectionTitle('What can pet owners expect when boarding at your home?'),
+            _buildSectionTitle(
+                'What can pet owners expect when boarding at your home?'),
             SizedBox(height: 10.h),
-            ...controller.boardingExpectations.keys.map((key) => Obx(() => _buildSquareCheckbox(
-              text: key,
-              value: controller.boardingExpectations[key]!.value,
-              onChanged: (val) => controller.boardingExpectations[key]!.value = val!,
-            ))).toList(),
+            ...controller.boardingExpectations.keys.map((key) =>
+                Obx(() =>
+                    _buildSquareCheckbox(
+                      text: key,
+                      value: controller.boardingExpectations[key]!.value,
+                      onChanged: (val) =>
+                      controller.boardingExpectations[key]!.value = val!,
+                    ))).toList(),
             SizedBox(height: 30.h),
 
             // Hosting Abilities
             _buildSectionTitle('Are you able to host any of the following?'),
             SizedBox(height: 10.h),
-            ...controller.hostingAbilities.keys.map((key) => Obx(() => _buildSquareCheckbox(
-              text: key,
-              value: controller.hostingAbilities[key]!.value,
-              onChanged: (val) => controller.hostingAbilities[key]!.value = val!,
-            ))).toList(),
+            ...controller.hostingAbilities.keys.map((key) =>
+                Obx(() =>
+                    _buildSquareCheckbox(
+                      text: key,
+                      value: controller.hostingAbilities[key]!.value,
+                      onChanged: (val) =>
+                      controller.hostingAbilities[key]!.value = val!,
+                    ))).toList(),
             SizedBox(height: 30.h),
 
             // Cancellation Policy
-            _buildSectionTitle('What is your cancellation policy for Doggy Day Care?'),
+            _buildSectionTitle(
+                'What is your cancellation policy for Doggy Day Care?'),
             SizedBox(height: 10.h),
-            ...controller.cancellationPolicy.keys.map((key) => Obx(() => _buildSquareCheckbox(
-              text: key,
-              value: controller.cancellationPolicy[key]!.value,
-              onChanged: (val) => controller.cancellationPolicy[key]!.value = val!,
-            ))).toList(),
-            SizedBox(height: 30.h),
-
-            // Bottom CTA Button
-            Container(
-              width: double.infinity,
-              height: 50.h,
-              decoration: BoxDecoration(
-                color: AppColors.mainAppColor,
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-              child: TextButton(
-                onPressed: () {
-                  Get.snackbar(
-                    'Service Created',
-                    'The boarding service settings have been saved.',
-                    snackPosition: SnackPosition.BOTTOM,
-                  );
-                },
-                child: Text(
-                  'Create Service',
-                  style: GoogleFonts.montserrat(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 40.h),
+            ...controller.cancellationPolicy.keys.map((key) =>
+                Obx(() =>
+                    _buildSquareCheckbox(
+                      text: key,
+                      value: controller.cancellationPolicy[key]!.value,
+                      onChanged: (val) =>
+                      controller.cancellationPolicy[key]!.value = val!,
+                    ))).toList(),
+            SizedBox(height: 20.h),
           ],
         ),
       ),
+
+      bottomNavigationBar: _buildStickyFooter(context, 'Create Service'),
     );
   }
+
 
   AppBar _buildCustomAppBar(BuildContext context) {
     return AppBar(
@@ -353,7 +358,7 @@ class DogDayCareSetupScreen extends StatelessWidget {
         onPressed: () => Get.back(),
       ),
       title: Text(
-        'Dog Day Care',
+        'Doggy Day Care',
         style: GoogleFonts.montserrat(
           fontSize: 18.sp,
           fontWeight: FontWeight.w600,
@@ -387,22 +392,19 @@ class DogDayCareSetupScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildServiceSelection(DogController controller) {
+  Widget _buildServiceSelection(DoggyDayCareController controller) {
     final List<Map<String, dynamic>> services = [
       {
+        'name': 'Doggy Day Care',
+        'icon': 'assets/icons/doggy.svg',
+      },
+      {
         'name': 'Boarding',
-        'icon': 'assets/icons/boarding.svg',
-        'screen': const BoardingSetupScreen()
+        'icon': 'assets/icons/bording.svg',
       },
       {
         'name': 'Dog Walking',
-        'icon': 'assets/icons/dog_walking.svg',
-        'screen': const DogWalkingSetupScreen()
-      },
-      {
-        'name': 'Dog Day Care',
-        'icon': 'assets/icons/dog_day_care.svg',
-        'screen': const DogDayCareSetupScreen()
+        'icon': 'assets/icons/d_foot.svg',
       },
     ];
 
@@ -426,54 +428,54 @@ class DogDayCareSetupScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(10.r),
             ),
             child: DropdownButtonHideUnderline(
-              child: Obx(() => DropdownButton<String>(
-                value: controller.selectedService.value,
-                isExpanded: true,
-                icon: Icon(
-                  Icons.keyboard_arrow_down,
-                  color: AppColors.grey,
-                  size: 24.r,
-                ),
-                style: GoogleFonts.montserrat(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.textDark,
-                ),
-                onChanged: (String? newValue) {
-                  if (newValue != null && newValue != controller.selectedService.value) {
-                    controller.selectedService.value = newValue;
-
-                    final selected = services.firstWhere((s) => s['name'] == newValue);
-                    if (selected['screen'] is Widget) {
-                      if (newValue == 'Dog Day Care') {
-                        Get.off(() => const DogDayCareSetupScreen());
-                      } else {
-                        Get.to(() => selected['screen'] as Widget);
-                      }
-                    }
-                  }
-                },
-                items: services.map<DropdownMenuItem<String>>((service) {
-                  return DropdownMenuItem<String>(
-                    value: service['name'],
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(
-                          service['icon'] as String,
-                          width: 24.r,
-                          height: 24.r,
-                          colorFilter: const ColorFilter.mode(
-                            AppColors.mainAppColor,
-                            BlendMode.srcIn,
-                          ),
-                        ),
-                        SizedBox(width: 10.w),
-                        Text(service['name'] as String),
-                      ],
+              child: Obx(() =>
+                  DropdownButton<String>(
+                    value: controller.selectedService.value,
+                    isExpanded: true,
+                    icon: Icon(
+                      Icons.keyboard_arrow_down,
+                      color: AppColors.grey,
+                      size: 24.r,
                     ),
-                  );
-                }).toList(),
-              )),
+                    style: GoogleFonts.montserrat(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.textDark,
+                    ),
+                    onChanged: (String? newValue) {
+                      if (newValue != null &&
+                          newValue != controller.selectedService.value) {
+                        controller.selectedService.value = newValue;
+
+
+                        if (newValue == 'Boarding') {
+                          Get.off(() => const BoardingSetupScreen());
+                        } else if (newValue == 'Dog Walking') {
+                          Get.off(() => const DogWalkingSetupScreen());
+                        }
+                      }
+                    },
+                    items: services.map<DropdownMenuItem<String>>((service) {
+                      return DropdownMenuItem<String>(
+                        value: service['name'],
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(
+                              service['icon'] as String,
+                              width: 24.r,
+                              height: 24.r,
+                              colorFilter: const ColorFilter.mode(
+                                AppColors.mainAppColor,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                            SizedBox(width: 10.w),
+                            Text(service['name'] as String),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  )),
             ),
           ),
         ],
@@ -524,28 +526,37 @@ class DogDayCareSetupScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildShowHideButton(
-      String text,
+  Widget _buildShowHideButton(String text,
       VoidCallback onPressed,
-      bool isHideButton,
-      ) {
+      bool isHideButton,) {
     return Container(
       width: double.infinity,
       height: 50.h,
       decoration: BoxDecoration(
-        color: isHideButton ? AppColors.mainAppColor : AppColors.mainAppColor,
+        color: AppColors.mainAppColor,
         borderRadius: BorderRadius.circular(10.r),
-        border: isHideButton ? null : Border.all(color: AppColors.border, width: 2),
       ),
       child: TextButton(
         onPressed: onPressed,
-        child: Text(
-          text,
-          style: GoogleFonts.montserrat(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w600,
-            color: isHideButton ? Colors.white : AppColors.white,
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              text,
+              style: GoogleFonts.montserrat(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(width: 8.w),
+            Icon(
+              isHideButton ? Icons.keyboard_arrow_up : Icons
+                  .keyboard_arrow_down,
+              color: Colors.white,
+              size: 20.r,
+            ),
+          ],
         ),
       ),
     );
@@ -681,7 +692,10 @@ class DogDayCareSetupScreen extends StatelessWidget {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: days.asMap().entries.map((entry) {
+        children: days
+            .asMap()
+            .entries
+            .map((entry) {
           final index = entry.key;
           final day = entry.value;
           final isActive = activeDays.contains(day);
@@ -714,21 +728,26 @@ class DogDayCareSetupScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPottyBreakOption(String text, DogController controller) {
+  Widget _buildPottyBreakOption(String text, DoggyDayCareController controller) {
     return SizedBox(
-      width: (MediaQuery.of(Get.context!).size.width - 32.w - 20.w) / 2,
+      width: (MediaQuery
+          .of(Get.context!)
+          .size
+          .width - 32.w - 20.w) / 2,
       child: InkWell(
         onTap: () => controller.selectedPottyBreak.value = text,
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Obx(() => Radio<String>(
-              value: text,
-              groupValue: controller.selectedPottyBreak.value,
-              onChanged: (val) => controller.selectedPottyBreak.value = val!,
-              activeColor: AppColors.mainAppColor,
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            )),
+            Obx(() =>
+                Radio<String>(
+                  value: text,
+                  groupValue: controller.selectedPottyBreak.value,
+                  onChanged: (val) =>
+                  controller.selectedPottyBreak.value = val!,
+                  activeColor: AppColors.mainAppColor,
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                )),
             Expanded(
               child: Text(
                 text,
@@ -744,7 +763,7 @@ class DogDayCareSetupScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPetCountSelector(DogController controller) {
+  Widget _buildPetCountSelector(DoggyDayCareController controller) {
     return Row(
       children: [
         _buildCounterButton(
@@ -752,23 +771,24 @@ class DogDayCareSetupScreen extends StatelessWidget {
           onPressed: controller.decrementPetCount,
         ),
         SizedBox(width: 15.w),
-        Obx(() => Container(
-          width: 35.r,
-          height: 35.r,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            border: Border.all(color: AppColors.inputBorder),
-            borderRadius: BorderRadius.circular(8.r),
-          ),
-          child: Text(
-            controller.petCount.value.toString(),
-            style: GoogleFonts.montserrat(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
-              color: AppColors.primaryText,
-            ),
-          ),
-        )),
+        Obx(() =>
+            Container(
+              width: 35.r,
+              height: 35.r,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColors.inputBorder),
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: Text(
+                controller.petCount.value.toString(),
+                style: GoogleFonts.montserrat(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.primaryText,
+                ),
+              ),
+            )),
         SizedBox(width: 15.w),
         _buildCounterButton(
           icon: Icons.add,
@@ -830,6 +850,48 @@ class DogDayCareSetupScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildStickyFooter(BuildContext context, String text) {
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: const Offset(0, -3),
+          ),
+        ],
+      ),
+      child: Container(
+        width: double.infinity,
+        height: 50.h,
+        decoration: BoxDecoration(
+          color: AppColors.mainAppColor,
+          borderRadius: BorderRadius.circular(10.r),
+        ),
+        child: TextButton(
+          onPressed: () {
+            Get.snackbar(
+              'Service Created',
+              'The Dog Day Care service settings have been saved.',
+              snackPosition: SnackPosition.BOTTOM,
+            );
+          },
+          child: Text(
+            text,
+            style: GoogleFonts.montserrat(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
+          ),
+        ),
       ),
     );
   }

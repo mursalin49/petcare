@@ -3,9 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:petcare/view/create_service/DogWalking.dart';
 import 'package:petcare/view/create_service/dog_day_care.dart';
 import '../../utils/app_colors.dart';
-import 'DogWalking.dart';
+
 
 class BoardingController extends GetxController {
   var selectedService = 'Boarding'.obs;
@@ -402,17 +403,14 @@ class BoardingSetupScreen extends StatelessWidget {
       {
         'name': 'Boarding',
         'icon': 'assets/icons/calendar-add-01.svg',
-        'screen': const BoardingSetupScreen()
       },
       {
         'name': 'Dog Walking',
         'icon': 'assets/icons/doggy.svg',
-        'screen': DogWalkingSetupScreen()
       },
       {
-        'name': 'Dog Day Care',
+        'name': 'Doggy Day Care',
         'icon': 'assets/icons/d_foot.svg',
-        'screen': const DogDayCareSetupScreen()
       },
     ];
 
@@ -453,14 +451,13 @@ class BoardingSetupScreen extends StatelessWidget {
                   if (newValue != null && newValue != controller.selectedService.value) {
                     controller.selectedService.value = newValue;
 
-                    final selected = services.firstWhere((s) => s['name'] == newValue);
-                    if (selected['screen'] is Widget) {
-                      if (newValue == 'Boarding') {
-                        Get.off(() => const BoardingSetupScreen());
-                      } else {
-                        Get.to(() => selected['screen'] as Widget);
-                      }
+                    // Navigate based on selection
+                    if (newValue == 'Dog Walking') {
+                      Get.off(() => const DogWalkingSetupScreen());
+                    } else if (newValue == 'Doggy Day Care') {
+                      Get.off(() => const DoggyDayCareSetupScreen());
                     }
+                    // Current screen er jonno kono navigation dorkar nai
                   }
                 },
                 items: services.map<DropdownMenuItem<String>>((service) {
