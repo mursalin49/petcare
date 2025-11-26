@@ -85,14 +85,14 @@ class _CustomCalendarWidgetState extends State<CustomCalendarWidget> {
         calendarStyle: CalendarStyle(
           cellMargin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
 
-          // আজকের দিনের স্টাইল (চতুর্ভুজ)
+
           todayDecoration: BoxDecoration(
             color: AppColors.mainAppColor,
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.circular(4),
           ),
 
-          // সিলেক্ট করা দিনের স্টাইল (চতুর্ভুজ)
+
           selectedDecoration: BoxDecoration(
             color: AppColors.mainAppColor,
             shape: BoxShape.rectangle,
@@ -104,7 +104,7 @@ class _CustomCalendarWidgetState extends State<CustomCalendarWidget> {
         selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
 
         onDaySelected: (selectedDay, focusedDay) {
-          // Unavailable দিন সিলেক্ট করা যাবে না
+
           if (!_isUnavailable(selectedDay)) {
             setState(() {
               _selectedDay = selectedDay;

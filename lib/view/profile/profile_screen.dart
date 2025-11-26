@@ -13,6 +13,7 @@ import 'package:petcare/view/profile/terms_condition_screen.dart';
 
 import '../../Controller/profile_controller.dart';
 import '../../utils/app_colors.dart';
+import 'account_setting.dart';
 import 'change_password_screen.dart';
 import 'delate_account.dart';
 import 'edit_profile_screen.dart';
@@ -274,16 +275,8 @@ class ProfileScreen extends StatelessWidget {
                         child: Container(
                           width: 36.w,
                           height: 36.w,
-                          decoration: BoxDecoration(
-                            color: AppColors.mainAppColor,
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white, width: 2),
-                          ),
-                          child: Icon(
-                            Icons.camera_alt,
-                            size: 18.sp,
-                            color: Colors.white,
-                          ),
+
+
                         ),
                       ),
                     ],
@@ -344,71 +337,30 @@ class ProfileScreen extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 24.h),
-                  // Pet Owner / Pet Sitter Buttons (Card Style)
                   Container(
-                    margin: EdgeInsets.only(top: 12.h),
-                    padding: EdgeInsets.all(6.w),
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(vertical: 12.h),
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(14.r),
-                      border: Border.all(color: Colors.grey.shade300),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.1),
-                          blurRadius: 8,
-                          offset: const Offset(0, 3),
+                      color: AppColors.white, // Light pink background
+                      borderRadius: BorderRadius.circular(12.r),
+                      border: Border.all(color: AppColors.mainAppColor, width: 1),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.favorite, color: Color(0xFFFF6B8A), size: 20.sp),
+                        SizedBox(width: 8.w),
+                        Text(
+                          'Sitter on Wuffoos',
+                          style: GoogleFonts.montserrat(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.mainAppColor,
+                          ),
                         ),
                       ],
                     ),
-                    child: Obx(() {
-                      String selectedRole = controller.selectedRole.value;
-
-                      Widget buildRoleCard(String title, bool isSelected) {
-                        return Expanded(
-                          child: GestureDetector(
-                            onTap: () => controller.setRole(title),
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 250),
-                              padding: EdgeInsets.symmetric(vertical: 12.h),
-                              decoration: BoxDecoration(
-                                color: isSelected ? AppColors.mainAppColor : Colors.white,
-                                borderRadius: BorderRadius.circular(10.r),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/icons/foot.svg',
-                                    width: 18.w,
-                                    height: 18.h,
-                                    color: isSelected ? Colors.white : AppColors.mainAppColor,
-                                  ),
-                                  SizedBox(width: 6.w),
-                                  Text(
-                                    title,
-                                    style: GoogleFonts.montserrat(
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w600,
-                                      color: isSelected ? Colors.white : AppColors.mainAppColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      }
-
-                      return Row(
-                        children: [
-                          buildRoleCard('Pet Owner', selectedRole == 'Pet Owner'),
-                          SizedBox(width: 8.w),
-                          buildRoleCard('Pet Sitter', selectedRole == 'Pet Sitter'),
-                        ],
-                      );
-                    }),
                   ),
-
 
                 ],
               ),
@@ -530,7 +482,7 @@ class ProfileScreen extends StatelessWidget {
                   _buildMenuItem(
                     svgIcon: "assets/icons/serviceIcon.svg",
                     title: 'Services',
-                    onTap: () => Get.to(() => const ServicesScreen()),
+                    onTap: () => Get.to(() => const YourServicesScreen()),
                   ),
 
                   _buildMenuItem(
@@ -597,10 +549,16 @@ class ProfileScreen extends StatelessWidget {
             SizedBox(height: 8),
 
             // **Settings Section (Card Style)**
+
             _buildCardSection(
               title: 'Settings',
               child: Column(
                 children: [
+                  _buildMenuItem(
+                    svgIcon: "assets/icons/account-setting-03.svg",
+                    title: 'Account Settings',
+                    onTap: () => Get.to(() => account()),
+                  ),
                   _buildMenuItem(
                     svgIcon: "assets/icons/help-circle.svg",
                     title: 'Help & Support',

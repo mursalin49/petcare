@@ -5,8 +5,16 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../utils/app_colors.dart';
 import '../components/custom_text_field.dart';
 
-class EditProfileScreen extends StatelessWidget {
+class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
+
+  @override
+  State<EditProfileScreen> createState() => _EditProfileScreenState();
+}
+
+class _EditProfileScreenState extends State<EditProfileScreen> {
+  String selectedHomeType = 'Apartment';
+  String selectedOutdoorSpace = 'No Yard';
 
   @override
   Widget build(BuildContext context) {
@@ -28,17 +36,12 @@ class EditProfileScreen extends StatelessWidget {
           ),
         ),
         centerTitle: true,
-
-
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
-
             bottomLeft: Radius.circular(30.r),
-
             bottomRight: Radius.circular(30.r),
           ),
         ),
-
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(24.w),
@@ -57,21 +60,21 @@ class EditProfileScreen extends StatelessWidget {
                       border: Border.all(color: AppColors.white, width: 3),
                     ),
                     child: ClipOval(
-              child:   Image.asset(
-              'assets/images/profileImg.png',
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    color: AppColors.foundationColor,
-                    child: Icon(
-                      Icons.person,
-                      size: 60.sp,
-                      color: AppColors.grey,
+                      child: Image.asset(
+                        'assets/images/profileImg.png',
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: AppColors.foundationColor,
+                            child: Icon(
+                              Icons.person,
+                              size: 60.sp,
+                              color: AppColors.grey,
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                  );
-                },
-              ),
-            ),
                   ),
                   Positioned(
                     bottom: 0,
@@ -115,11 +118,19 @@ class EditProfileScreen extends StatelessWidget {
               ],
             ),
             SizedBox(height: 20.h),
-            _buildDropdown('Home Type', 'Apartment'),
+            _buildDropdown('Home Type', selectedHomeType, ['Apartment', 'Townhouse', 'House', 'Condo'], (value) {
+              setState(() {
+                selectedHomeType = value!;
+              });
+            }),
             SizedBox(height: 20.h),
             _buildInputField('Home Size (sq ft)', 'e.g. 800', keyboardType: TextInputType.number),
             SizedBox(height: 20.h),
-            _buildDropdown('Outdoor Space', 'No outdoor space'),
+            _buildDropdown('Outdoor Space', selectedOutdoorSpace, ['Fenced Yard', 'Unfenced Yard', 'No Yard'], (value) {
+              setState(() {
+                selectedOutdoorSpace = value!;
+              });
+            }),
             SizedBox(height: 40.h),
             // Save Changes Button
             SizedBox(
@@ -167,7 +178,6 @@ class EditProfileScreen extends StatelessWidget {
         ),
         SizedBox(height: 8.h),
         CustomTextField(
-
           hintText: hint,
           keyboardType: keyboardType ?? TextInputType.text,
           fieldBorderRadius: 14,
@@ -201,7 +211,7 @@ class EditProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDropdown(String label, String value) {
+  Widget _buildDropdown(String label, String value, List<String> options, Function(String?) onChanged) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -219,13 +229,13 @@ class EditProfileScreen extends StatelessWidget {
           decoration: BoxDecoration(
             color: Color(0xFFFFFFFF),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color:Color(0xFFE3E6F0)),
+            border: Border.all(color: Color(0xFFE3E6F0)),
           ),
           child: DropdownButton<String>(
             value: value,
             isExpanded: true,
             underline: const SizedBox(),
-            items: [value].map((String val) {
+            items: options.map((String val) {
               return DropdownMenuItem<String>(
                 value: val,
                 child: Text(
@@ -238,11 +248,10 @@ class EditProfileScreen extends StatelessWidget {
                 ),
               );
             }).toList(),
-            onChanged: (String? newValue) {},
+            onChanged: onChanged,
           ),
         ),
       ],
     );
   }
 }
-

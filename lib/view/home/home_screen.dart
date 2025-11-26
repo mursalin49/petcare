@@ -163,9 +163,16 @@ class _HomeScreenState extends State<HomeScreen> {
       leading: Padding(
         padding: EdgeInsets.only(left: 20.w, top: 10.h, bottom: 10.h),
         child: const CircleAvatar(
-          radius: 30,
-          backgroundImage: AssetImage(AppImages.seamProfileImg),
-        ),
+
+          radius: 40.0,
+          backgroundColor: Color(0xFFFFFFFF),
+          child: CircleAvatar(
+
+            radius: 36.0,
+            backgroundImage: AssetImage('images/n.png'),
+
+          ),
+        )
       ),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -301,8 +308,8 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Row(
           children: [
             tabItem(AppColors.redColor, 'Booked', 0),
-            SizedBox(width: 20.w),
-            tabItem(AppColors.greenColor, 'Upcoming', 1),
+            // SizedBox(width: 20.w),
+            // tabItem(AppColors.greenColor, 'Upcoming', 1),
           ],
         ),
       ),

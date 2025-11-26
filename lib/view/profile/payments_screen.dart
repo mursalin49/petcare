@@ -110,18 +110,18 @@ class PaymentsScreen extends StatelessWidget {
         ),
         SizedBox(height: 15.h),
         // Withdraw Button
-        Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            border: Border.all(color: AppColors.mainAppColor, width: 1),
-            borderRadius: BorderRadius.circular(10.r),
-          ),
-          child: TextButton(
-            onPressed: () {},
-            child: Text('Withdraw', style: GoogleFonts.montserrat(fontSize: 14.sp, fontWeight: FontWeight.w600, color: AppColors.mainAppColor)),
-          ),
-        ),
-        SizedBox(height: 10.h),
+        // Container(
+        //   width: double.infinity,
+        //   decoration: BoxDecoration(
+        //     border: Border.all(color: AppColors.mainAppColor, width: 1),
+        //     borderRadius: BorderRadius.circular(10.r),
+        //   ),
+        //   child: TextButton(
+        //     onPressed: () {},
+        //     child: Text('Withdraw', style: GoogleFonts.montserrat(fontSize: 14.sp, fontWeight: FontWeight.w600, color: AppColors.mainAppColor)),
+        //   ),
+        // ),
+        // SizedBox(height: 10.h),
         // Add or Modify Payment Method Button (Navigates to SavedCardsScreen)
         Container(
           width: double.infinity,

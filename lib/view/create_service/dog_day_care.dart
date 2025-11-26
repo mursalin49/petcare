@@ -1,93 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:petcare/view/create_service/Boarding.dart';
-import 'package:petcare/view/create_service/DogWalking.dart';
 
 import '../../utils/app_colors.dart';
+import '../../utils/app_icons.dart';
+import 'DoggyDayCareController.dart';
 
-
-class DoggyDayCareController extends GetxController {
-  var selectedService = 'Doggy Day Care'.obs;
-  var showAdditionalRates = false.obs;
-  var updateRatesBasedOnBase = true.obs;
-  var offerGroomingForFree = false.obs;
-  var isFullTimeAvailable = true.obs;
-  var selectedPottyBreak = '0-2 hours'.obs;
-  var petCount = 1.obs;
-
-  var petSizes = {
-    'Small dog (0-15 lbs)': true.obs,
-    'Medium dog (16-40 lbs)': true.obs,
-    'Large dog (41-100 lbs)': false.obs,
-    'Giant dog (100+ lbs)': false.obs,
-  };
-
-  var homeTypes = {
-    'House': true.obs,
-    'Apartment': false.obs,
-    'Farm': false.obs,
-  };
-
-  var yardTypes = {
-    'Fenced yard': true.obs,
-    'Unfenced yard': false.obs,
-    'No yard': false.obs,
-  };
-
-  var boardingExpectations = {
-    'Smoking inside home': false.obs,
-    'Children age 0-5': true.obs,
-    'Children age 6-12': true.obs,
-    'Dogs are allowed on bed': true.obs,
-    'Cats in home': true.obs,
-    'Caged pets in home': false.obs,
-    'None of the above': false.obs,
-  };
-
-  var hostingAbilities = {
-    'Pets from different families at the same time': true.obs,
-    'Puppies under 1 year old': true.obs,
-    'Dogs that are not crate trained': true.obs,
-    'Uneudtered male dog': false.obs,
-    'Unsprayed female dogs': false.obs,
-    'Female dogs in heat': false.obs,
-    'None of the above': false.obs,
-  };
-
-  var cancellationPolicy = {
-    'Same day': true.obs,
-    'One day': false.obs,
-    'Two day': false.obs,
-    'Three day': true.obs,
-  };
-
-  void incrementPetCount() => petCount.value++;
-
-  void decrementPetCount() {
-    if (petCount.value > 1) {
-      petCount.value--;
-    }
-  }
-
-  void toggleAdditionalRates() {
-    showAdditionalRates.value = !showAdditionalRates.value;
-  }
-}
 
 
 class DoggyDayCareSetupScreen extends StatelessWidget {
-  const DoggyDayCareSetupScreen({super.key});
+  final bool isEditing;
+  const DoggyDayCareSetupScreen({super.key, this.isEditing = false});
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(DoggyDayCareController());
+    final buttonText = isEditing ? 'Save Service' : 'Create Service';
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: _buildCustomAppBar(context),
+      appBar: _buildCustomAppBar(context, isEditing),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 16.w),
         child: Column(
@@ -95,18 +29,15 @@ class DoggyDayCareSetupScreen extends StatelessWidget {
           children: [
             SizedBox(height: 10.h),
 
-            // Service Name Dropdown
-            _buildServiceSelection(controller),
-
             // Info Banner
             _buildInfoBanner(),
             SizedBox(height: 20.h),
 
             // Set your base rate
-            _buildSectionTitle('Set your base rate', isMainTitle: true),
+            _buildSectionTitle('Set your base rate'), // Removed isMainTitle for simplicity
             _buildRateInput(
               title: 'Set your base rate',
-              initialValue: '28.00',
+              controller: controller.baseRateController, // Use controller
               keepPercentage: 'What you will earn per service: \$24.00',
               isStandalone: true,
             ),
@@ -128,22 +59,33 @@ class DoggyDayCareSetupScreen extends StatelessWidget {
             ),
 
             SizedBox(height: 20.h),
+
+            // --- Additional Rates Section (Fixed logic) ---
             Obx(() {
               if (controller.showAdditionalRates.value) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Holiday Rate
+                    _buildSectionTitle('Holiday Rate', topPadding: 0),
                     _buildRateInput(
                       title: 'Holiday Rate',
-                      initialValue: '28.00',
+                      controller: controller.holidayRateController,
                     ),
+
+                    // Puppy Rate
+                    _buildSectionTitle('Puppy Rate', topPadding: 0),
                     _buildRateInput(
                       title: 'Puppy Rate',
-                      initialValue: '28.00',
+                      controller: controller.puppyRateController,
                     ),
+
+                    // Bathing / Grooming
+                    _buildSectionTitle('Bathing / Grooming', topPadding: 0),
                     _buildRateInput(
                       title: 'Bathing / Grooming',
-                      initialValue: '28.00',
+                      controller: controller.groomingRateController,
+                      addBottomSpacing: false, // Checkbox below provides spacing
                     ),
                     Obx(() =>
                         _buildSquareCheckbox(
@@ -153,34 +95,47 @@ class DoggyDayCareSetupScreen extends StatelessWidget {
                           controller.offerGroomingForFree.value = val!,
                         )),
                     SizedBox(height: 10.h),
+
+                    // Daily Sitter Pick-Up/Drop-Off
+                    _buildSectionTitle('Daily Sitter Pick-Up/Drop-Off', topPadding: 0),
                     _buildRateInput(
                       title: 'Daily Sitter Pick-Up/Drop-Off',
-                      initialValue: '28.00',
+                      controller: controller.pickupDropOffRateController,
                       keepPercentage: 'You keep: 80%',
-                      isStandalone: false,
                       addBottomSpacing: true,
                     ),
+
+                    // Hide Button (Visible when rates are SHOWN)
+                    _buildShowHideButton(
+                      'Hide additional rates',
+                      controller.toggleAdditionalRates,
+                      controller.showAdditionalRates.value,
+                    ),
+
+                    SizedBox(height: 30.h),
                   ],
                 );
               }
-              return const SizedBox.shrink();
+
+              // Show Button (Visible when rates are HIDDEN)
+              return Column(
+                children: [
+                  SizedBox(height: 10.h),
+                  _buildShowHideButton(
+                    'Show additional rates',
+                    controller.toggleAdditionalRates,
+                    controller.showAdditionalRates.value,
+                  ),
+
+                  SizedBox(height: 30.h),
+                ],
+              );
             }),
+            // --- End Additional Rates Section ---
 
-            SizedBox(height: 10.h),
 
-            // Show/Hide Button
-            Obx(() =>
-                _buildShowHideButton(
-                  controller.showAdditionalRates.value
-                      ? 'Hide additional rates'
-                      : 'Show additional rates',
-                  controller.toggleAdditionalRates,
-                  controller.showAdditionalRates.value,
-                )),
-            SizedBox(height: 30.h),
-
-            // Availability
-            _buildSectionTitle('Availability'),
+            // Availability (Starts here, topPadding: 0 ensures continuity after divider)
+            _buildSectionTitle('Availability', topPadding: 0),
             Text(
               'Are you home full-time during the week?',
               style: GoogleFonts.montserrat(
@@ -220,7 +175,7 @@ class DoggyDayCareSetupScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 10.h),
-            _buildDaySelectors(),
+            _buildDaySelectors(controller),
             SizedBox(height: 30.h),
 
             // Potty Breaks
@@ -340,21 +295,25 @@ class DoggyDayCareSetupScreen extends StatelessWidget {
                       controller.cancellationPolicy[key]!.value = val!,
                     ))).toList(),
             SizedBox(height: 20.h),
+            // Padding to ensure content above the sticky footer is visible
+            SizedBox(height: 80.h),
           ],
         ),
       ),
 
-      bottomNavigationBar: _buildStickyFooter(context, 'Create Service'),
+      // Sticky Footer
+      bottomNavigationBar: _buildStickyFooter(context, buttonText, isEditing),
     );
   }
 
+  // --- Helper Widgets (Updated or Reused from Boarding) ---
 
-  AppBar _buildCustomAppBar(BuildContext context) {
+  AppBar _buildCustomAppBar(BuildContext context, bool isEditing) {
     return AppBar(
       backgroundColor: AppColors.mainAppColor,
       elevation: 0,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+        icon: const Icon(Icons.arrow_back_ios, color: Colors.white,size: 24),
         onPressed: () => Get.back(),
       ),
       title: Text(
@@ -366,120 +325,25 @@ class DoggyDayCareSetupScreen extends StatelessWidget {
         ),
       ),
       centerTitle: true,
-      actions: [
-        IconButton(
-          onPressed: () {
-            // Handle edit action
-          },
-          icon: SvgPicture.asset(
-            'assets/icons/edit.svg',
-            width: 24.w,
-            height: 24.h,
-            colorFilter: const ColorFilter.mode(
-              Colors.white,
-              BlendMode.srcIn,
-            ),
-          ),
-        ),
-        SizedBox(width: 8.w),
-      ],
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(30.r),
           bottomRight: Radius.circular(30.r),
         ),
       ),
-    );
-  }
-
-  Widget _buildServiceSelection(DoggyDayCareController controller) {
-    final List<Map<String, dynamic>> services = [
-      {
-        'name': 'Doggy Day Care',
-        'icon': 'assets/icons/doggy.svg',
-      },
-      {
-        'name': 'Boarding',
-        'icon': 'assets/icons/bording.svg',
-      },
-      {
-        'name': 'Dog Walking',
-        'icon': 'assets/icons/d_foot.svg',
-      },
-    ];
-
-    return Padding(
-      padding: EdgeInsets.only(bottom: 20.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Service name',
-            style: GoogleFonts.montserrat(
-              fontSize: 14.sp,
-              color: AppColors.primaryText,
+      actions: [
+        Padding(
+          padding: EdgeInsets.only(right: 20.w),
+          child: Center(
+            child: SvgPicture.asset(
+              AppIcons.edit,
+              colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+              height: 24.w,
+              width: 24.w,
             ),
           ),
-          SizedBox(height: 5.h),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 0.h),
-            decoration: BoxDecoration(
-              border: Border.all(color: AppColors.Secondaryborder),
-              borderRadius: BorderRadius.circular(10.r),
-            ),
-            child: DropdownButtonHideUnderline(
-              child: Obx(() =>
-                  DropdownButton<String>(
-                    value: controller.selectedService.value,
-                    isExpanded: true,
-                    icon: Icon(
-                      Icons.keyboard_arrow_down,
-                      color: AppColors.grey,
-                      size: 24.r,
-                    ),
-                    style: GoogleFonts.montserrat(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.textDark,
-                    ),
-                    onChanged: (String? newValue) {
-                      if (newValue != null &&
-                          newValue != controller.selectedService.value) {
-                        controller.selectedService.value = newValue;
-
-
-                        if (newValue == 'Boarding') {
-                          Get.off(() => const BoardingSetupScreen());
-                        } else if (newValue == 'Dog Walking') {
-                          Get.off(() => const DogWalkingSetupScreen());
-                        }
-                      }
-                    },
-                    items: services.map<DropdownMenuItem<String>>((service) {
-                      return DropdownMenuItem<String>(
-                        value: service['name'],
-                        child: Row(
-                          children: [
-                            SvgPicture.asset(
-                              service['icon'] as String,
-                              width: 24.r,
-                              height: 24.r,
-                              colorFilter: const ColorFilter.mode(
-                                AppColors.mainAppColor,
-                                BlendMode.srcIn,
-                              ),
-                            ),
-                            SizedBox(width: 10.w),
-                            Text(service['name'] as String),
-                          ],
-                        ),
-                      );
-                    }).toList(),
-                  )),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -512,15 +376,15 @@ class DoggyDayCareSetupScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionTitle(String title, {bool isMainTitle = false}) {
+  Widget _buildSectionTitle(String title, {double topPadding = 20}) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 10.h),
+      padding: EdgeInsets.only(bottom: 10.h, top: topPadding.h),
       child: Text(
         title,
         style: GoogleFonts.montserrat(
           fontSize: 16.sp,
           fontWeight: FontWeight.w600,
-          color: isMainTitle ? AppColors.textDark : AppColors.textDark,
+          color: AppColors.textDark,
         ),
       ),
     );
@@ -551,8 +415,7 @@ class DoggyDayCareSetupScreen extends StatelessWidget {
             ),
             SizedBox(width: 8.w),
             Icon(
-              isHideButton ? Icons.keyboard_arrow_up : Icons
-                  .keyboard_arrow_down,
+              isHideButton ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
               color: Colors.white,
               size: 20.r,
             ),
@@ -562,39 +425,26 @@ class DoggyDayCareSetupScreen extends StatelessWidget {
     );
   }
 
+  // 2. _buildRateInput - Changed to use TextEditingController
   Widget _buildRateInput({
     required String title,
-    required String initialValue,
-    String keepPercentage = 'What you will earn per service: \$24.00',
-    String? subtitle,
-    bool isStandalone = false,
-    bool addBottomSpacing = false,
+    required TextEditingController controller, // Changed from initialValue: String to TextEditingController
+    String keepPercentage = 'You keep: \$24.00',
+    String rateUnit = 'Per day', // Added rateUnit for clarity
+    bool isStandalone = false, // Base Rate-এর জন্য ব্যবহৃত
+    bool addBottomSpacing = true, // Default to true for spacing between rates
   }) {
-    final showTitle = isStandalone || title != 'Set your base rate';
+    // Only used for the base rate's secondary text, otherwise titles come from _buildSectionTitle
+    final showKeepText = title != 'Daily Sitter Pick-Up/Drop-Off';
+    final keepText = showKeepText ? 'You keep: \$24.00' : keepPercentage;
+
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (showTitle && title != 'Set your base rate')
-          Text(
-            title,
-            style: GoogleFonts.montserrat(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w500,
-              color: AppColors.textDark,
-            ),
-          ),
+        // Title logic removed here to avoid double headers.
 
-        if (title == 'Set your base rate' && subtitle != null)
-          Text(
-            subtitle,
-            style: GoogleFonts.montserrat(
-              fontSize: 12.sp,
-              color: AppColors.grey,
-            ),
-          ),
-
-        SizedBox(height: 5.h),
+        SizedBox(height: isStandalone ? 5.h : 0.h),
 
         Container(
           height: 45.h,
@@ -604,29 +454,44 @@ class DoggyDayCareSetupScreen extends StatelessWidget {
           ),
           child: Row(
             children: [
+              // Left side text (e.g., 'Per day')
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10.w),
                 child: Text(
-                  'Per day',
+                  rateUnit,
                   style: GoogleFonts.montserrat(
                     fontSize: 14.sp,
                     color: AppColors.grey,
                   ),
                 ),
               ),
-              const VerticalDivider(width: 1, color: AppColors.inputBorder),
+              // Vertical Divider
+              const VerticalDivider(width: 1, color: AppColors.Secondaryborder),
+
+              // Right side Input Field (TextFormField for manual input)
               Expanded(
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10.w),
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      '\$$initialValue',
-                      style: GoogleFonts.montserrat(
+                  child: TextFormField(
+                    controller: controller, // Use the provided controller
+                    keyboardType: TextInputType.number,
+                    textAlign: TextAlign.right,
+                    style: GoogleFonts.montserrat(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.textDark,
+                    ),
+                    decoration: InputDecoration(
+                      prefixText: '\$',
+                      prefixStyle: GoogleFonts.montserrat(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w400,
                         color: AppColors.textDark,
                       ),
+                      contentPadding: EdgeInsets.zero,
+                      border: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      enabledBorder: InputBorder.none,
                     ),
                   ),
                 ),
@@ -635,21 +500,22 @@ class DoggyDayCareSetupScreen extends StatelessWidget {
           ),
         ),
 
+        // Keep text
         Padding(
           padding: EdgeInsets.only(
             top: 4.h,
             bottom: addBottomSpacing ? 10.h : 5.h,
           ),
           child: Text(
-            keepPercentage,
+            keepText,
             style: GoogleFonts.montserrat(
               fontSize: 12.sp,
-              color: AppColors.textDark,
+              color: AppColors.secondaryText,
             ),
           ),
         ),
 
-        if (!isStandalone && title != 'Daily Sitter Pick-Up/Drop-Off')
+        if (!isStandalone && addBottomSpacing)
           SizedBox(height: 15.h),
       ],
     );
@@ -661,6 +527,7 @@ class DoggyDayCareSetupScreen extends StatelessWidget {
     required bool groupValue,
     required ValueChanged<bool?> onChanged,
   }) {
+    // Reused helper widget
     return Row(
       children: [
         Radio<bool>(
@@ -681,47 +548,49 @@ class DoggyDayCareSetupScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDaySelectors() {
+  Widget _buildDaySelectors(DoggyDayCareController controller) {
+    // Reused helper widget
     final days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    final activeDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: AppColors.border, width: 1.r),
+        border: Border.all(color: const Color(0xFF9ABFC8), width: 1.r),
         borderRadius: BorderRadius.circular(10.r),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: days
-            .asMap()
-            .entries
-            .map((entry) {
+        children: days.asMap().entries.map((entry) {
           final index = entry.key;
           final day = entry.value;
-          final isActive = activeDays.contains(day);
           final bool showRightDivider = index < days.length - 1;
 
           return Expanded(
-            child: Container(
-              height: 35.r,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: isActive ? AppColors.white : AppColors.Secondaryborder,
-                border: Border(
-                  right: showRightDivider
-                      ? BorderSide(color: AppColors.inputBorder, width: 1.r)
-                      : BorderSide.none,
+            child: Obx(() {
+              final isActive = controller.selectedDays.contains(day);
+              return InkWell(
+                onTap: () => controller.toggleDay(day),
+                child: Container(
+                  height: 35.r,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: isActive ? AppColors.mainAppColor : AppColors.white,
+                    border: Border(
+                      right: showRightDivider
+                          ? BorderSide(color: const Color(0xFF9ABFC8), width: 1.r)
+                          : BorderSide.none,
+                    ),
+                  ),
+                  child: Text(
+                    day,
+                    style: GoogleFonts.montserrat(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: isActive ? Colors.white : Colors.black,
+                    ),
+                  ),
                 ),
-              ),
-              child: Text(
-                day,
-                style: GoogleFonts.montserrat(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black,
-                ),
-              ),
-            ),
+              );
+            }),
           );
         }).toList(),
       ),
@@ -729,6 +598,7 @@ class DoggyDayCareSetupScreen extends StatelessWidget {
   }
 
   Widget _buildPottyBreakOption(String text, DoggyDayCareController controller) {
+    // Reused helper widget
     return SizedBox(
       width: (MediaQuery
           .of(Get.context!)
@@ -764,6 +634,7 @@ class DoggyDayCareSetupScreen extends StatelessWidget {
   }
 
   Widget _buildPetCountSelector(DoggyDayCareController controller) {
+    // Reused helper widget
     return Row(
       children: [
         _buildCounterButton(
@@ -802,6 +673,7 @@ class DoggyDayCareSetupScreen extends StatelessWidget {
     required IconData icon,
     required VoidCallback onPressed,
   }) {
+    // Reused helper widget
     return InkWell(
       onTap: onPressed,
       borderRadius: BorderRadius.circular(8.r),
@@ -822,6 +694,7 @@ class DoggyDayCareSetupScreen extends StatelessWidget {
     required bool value,
     required ValueChanged<bool?> onChanged,
   }) {
+    // Reused helper widget
     return Padding(
       padding: EdgeInsets.only(bottom: 5.h),
       child: Row(
@@ -854,7 +727,11 @@ class DoggyDayCareSetupScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStickyFooter(BuildContext context, String text) {
+  Widget _buildStickyFooter(BuildContext context, String text, bool isEditing) {
+    // Reused helper widget
+    final snackbarTitle = isEditing ? 'Service Saved' : 'Service Created';
+    final snackbarMessage = 'The Dog Day Care service settings have been ${isEditing ? 'saved' : 'created'}.';
+
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -877,14 +754,15 @@ class DoggyDayCareSetupScreen extends StatelessWidget {
         ),
         child: TextButton(
           onPressed: () {
+            // Action based on mode
             Get.snackbar(
-              'Service Created',
-              'The Dog Day Care service settings have been saved.',
+              snackbarTitle,
+              snackbarMessage,
               snackPosition: SnackPosition.BOTTOM,
             );
           },
           child: Text(
-            text,
+            text, // Dynamic Text (Save Service or Create Service)
             style: GoogleFonts.montserrat(
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,

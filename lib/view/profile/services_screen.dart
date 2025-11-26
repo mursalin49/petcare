@@ -1,26 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import '../../utils/app_colors.dart';
 
-class ServicesScreen extends StatelessWidget {
-  const ServicesScreen({super.key});
+import '../../utils/app_colors.dart';
+import '../create_service/Boarding.dart';
+import '../create_service/create_service.dart';
+import '../create_service/dog_day_care.dart';
+import '../create_service/DogWalking.dart'; // Import DogWalkingSetupScreen
+
+class YourServicesScreen extends StatelessWidget {
+  const YourServicesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: AppColors.mainAppColor,
+        // ইমেজের মতো করে AppBar ডিজাইন
+        backgroundColor: AppColors.mainAppColor, // সম্পূর্ণ নীল ব্যাকগ্রাউন্ড
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'Services',
+          'Services', // ইমেজের মতো করে টাইটেল 'Services'
           style: GoogleFonts.montserrat(
             fontSize: 18.sp,
             fontWeight: FontWeight.w600,
@@ -28,6 +33,13 @@ class ServicesScreen extends StatelessWidget {
           ),
         ),
         centerTitle: true,
+        // এখানে কোনো Add বাটন নেই ইমেজে, তাই এটি সরানো হলো।
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.add, color: Colors.white), // সাদা আইকন
+        //     onPressed: () => Get.to(() => const CreateService()),
+        //   ),
+        // ],
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(30.r),
@@ -36,65 +48,121 @@ class ServicesScreen extends StatelessWidget {
         ),
       ),
       body: ListView(
-        padding: EdgeInsets.all(24.w),
+        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
         children: [
-          SizedBox(height: 20.h),
-
-          _buildServiceItem(
-            iconPath:'assets/icons/calendar-add-01 (1).svg',
+          // --- Service 1: Boarding (EDIT MODE) ---
+          _buildServiceCard(
+            iconPath: 'assets/icons/calendar-add-01 (1).svg', // আপনার আইকন পাথ
             title: 'Boarding',
             subtitle: 'In the sitter\'s home',
+            price: '\$99',
+            priceUnit: 'Per day',
+            onTap: () {
+              // Navigate to BoardingSetupScreen in EDITING MODE
+              Get.to(() => const BoardingSetupScreen(isEditing: true));
+            },
           ),
           SizedBox(height: 16.h),
 
-          _buildServiceItem(
-            iconPath: 'assets/icons/home-hashtag.svg',
-            title: 'House Sitting',
-            subtitle: 'In your home',
+          // --- Service 2: Doggy Day Care (EDIT MODE) ---
+          _buildServiceCard(
+            iconPath: 'assets/icons/home-hashtag.svg', // আপনার আইকন পাথ
+            title: 'Doggy Day Care',
+            subtitle: 'In the sitter\'s home',
+            price: '\$99',
+            priceUnit: 'Per visit',
+            onTap: () {
+              // Navigate to DoggyDayCareSetupScreen in EDITING MODE
+              Get.to(() => DoggyDayCareSetupScreen(isEditing: true));
+            },
           ),
           SizedBox(height: 16.h),
 
-          _buildServiceItem(
-            iconPath: 'assets/icons/lochome.svg',
-            title: 'Drop-In Visits',
-            subtitle: 'Visits in your home',
+          // --- Service 3: Dog Walking (EDIT MODE) ---
+          _buildServiceCard(
+            iconPath: 'assets/icons/doggy.svg', // Dog Walking এর জন্য সঠিক আইকন পাথ
+            title: 'Dog Walking',
+            subtitle: 'In your neighbourhood',
+            price: '\$99',
+            priceUnit: 'Per walk',
+            onTap: () {
+              // Navigate to DogWalkingSetupScreen in EDITING MODE
+              Get.to(() => const DogWalkingSetupScreen(isEditing: true));
+            },
           ),
         ],
       ),
     );
   }
 
-  Widget _buildServiceItem({
+  // ইমেজের মতো করে সার্ভিস কার্ড ডিজাইন করা হয়েছে
+  Widget _buildServiceCard({
     required String iconPath,
     required String title,
     required String subtitle,
+    required String price,
+    required String priceUnit,
+    required VoidCallback onTap,
   }) {
-    const Color cardBorderColor = Color(0xFFE3E6F0);
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            // আইকন
+            SvgPicture.asset(
+              iconPath,
+              height: 24.sp, // ইমেজের সাথে সামঞ্জস্যপূর্ণ সাইজ
+              width: 24.sp,
+              colorFilter: ColorFilter.mode(AppColors.mainAppColor, BlendMode.srcIn), // ইমেজে নীল কালার
+            ),
+            SizedBox(width: 16.w),
 
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: cardBorderColor),
-      ),
-      child: Row(
-        children: [
-          SvgPicture.asset(
-            iconPath,
-            height: 32.sp,
-            width: 32.sp,
-            colorFilter: ColorFilter.mode(AppColors.mainAppColor, BlendMode.srcIn),
-            placeholderBuilder: (_) => const CircularProgressIndicator(),
-          ),
-          SizedBox(width: 16.w),
+            // টাইটেল এবং সাবটাইটেল
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: GoogleFonts.montserrat(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.textDark,
+                    ),
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    subtitle,
+                    style: GoogleFonts.montserrat(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.secondaryText,
+                    ),
+                  ),
+                ],
+              ),
+            ),
 
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            // প্রাইস এবং প্রাইস ইউনিট
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  title,
+                  price,
                   style: GoogleFonts.montserrat(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
@@ -103,19 +171,17 @@ class ServicesScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  subtitle,
+                  priceUnit,
                   style: GoogleFonts.montserrat(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.subHeadingColor,
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.secondaryText,
                   ),
                 ),
               ],
             ),
-          ),
-
-          Icon(Icons.arrow_forward_ios, size: 16.sp, color: cardBorderColor),
-        ],
+          ],
+        ),
       ),
     );
   }
