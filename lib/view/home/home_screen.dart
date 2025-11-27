@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:petcare/view/home/widgets/booking_card.dart';
+import 'package:petcare/view/bookings/booking_screen.dart';
 import 'package:petcare/view/home/widgets/custom_calendar.dart';
 import 'package:petcare/view/home/widgets/stat_card.dart';
 
 import '../../utils/app_colors.dart';
 import '../../utils/app_images.dart';
-import '../bookings/booking_screen.dart';
-import 'models/booking_model.dart';
+import '../bookings/models/model.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,49 +19,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedTabIndex = 0;
+  late BookingStatusController controller;
+  late BookingService bookingService;
 
-  final List<BookingModel> bookedList = [
-    BookingModel(
-      userName: 'Tamim',
-      location: 'New York, NY',
-      time: '12:20 PM',
-      service: 'Dog walking',
-      date: 'Mon, Oct 02, 2025 at 10:00 AM',
-      price: '\$20/hr',
-      petName: 'Max',
-      petBreed: 'Labrador',
-      petImage: AppImages.max,
-      userProfileImage: AppImages.tamim,
-    ),
-    BookingModel(
-      userName: 'Tamim',
-      location: 'Dhaka',
-      time: '02:00 PM',
-      service: 'House sitting',
-      date: 'Tue, Oct 03, 2025 at 10:00 AM ',
-      price: '\$35/hr',
-      petName: 'Max',
-      petBreed: 'Labrador',
-      petImage: AppImages.max,
-      userProfileImage: AppImages.tamim,
-    ),
-  ];
-
-  final List<BookingModel> upcomingList = [
-    BookingModel(
-      userName: 'Seam',
-      location: 'Sylhet',
-      time: '10:00 AM',
-      service: 'Vet Checkup',
-      date: 'Fri, Oct 10, 2025 ',
-      price: '\$50/visit',
-      petName: 'Rocky',
-      petBreed: 'Husky',
-      petImage: AppImages.max,
-      userProfileImage: AppImages.tamim,
-    ),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.put(BookingStatusController());
+    bookingService = Get.put(BookingService());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,10 +39,13 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(height: 20.h),
+
+            // Stat Cards
             _buildStatCards(),
             SizedBox(height: 24.h),
-            _buildBookingTabs(),
-            SizedBox(height: 20.h),
+
+            // Calendar
             CustomCalendarWidget(
               unavailableDays: [
                 DateTime.now().add(const Duration(days: 3)),
@@ -86,26 +55,40 @@ class _HomeScreenState extends State<HomeScreen> {
               onDaySelected: (day) {},
             ),
             SizedBox(height: 24.h),
+
+            // Recent Bookings
             _buildRecentBookings(),
             SizedBox(height: 30.h),
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Get.snackbar(
+            'Chat',
+            'Opening general chat window...',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: AppColors.mainAppColor,
+            colorText: Colors.white,
+          );
+        },
+        backgroundColor: AppColors.mainAppColor,
+        child: const Icon(Icons.chat_bubble_outline_rounded, color: Colors.white),
+      ),
     );
   }
 
   Widget _buildRecentBookings() {
-    final displayList = _selectedTabIndex == 0 ? bookedList : upcomingList;
-
-    return Container(
+    return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                _selectedTabIndex == 0 ? 'Recent Bookings' : 'Upcoming List',
+                'Recent Bookings',
                 style: GoogleFonts.montserrat(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
@@ -113,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () => Get.to(() => const BookingsScreen()),
                 child: Text(
                   'See all',
                   style: GoogleFonts.montserrat(
@@ -126,29 +109,37 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
           SizedBox(height: 10.h),
-          displayList.isEmpty
-              ? const Center(child: Text("No Bookings Found"))
-              : ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: displayList.length,
-            separatorBuilder: (context, index) => SizedBox(height: 16.h),
-            itemBuilder: (context, index) {
-              final item = displayList[index];
-              return BookingCard(
-                userName: item.userName,
-                location: item.location,
-                time: item.time,
-                service: item.service,
-                date: item.date,
-                price: item.price,
-                petName: item.petName,
-                petBreed: item.petBreed,
-                petImage: item.petImage,
-                userProfileImage: item.userProfileImage,
+
+          // Display all bookings - No filter on HomeScreen
+          Obx(() {
+            List<BookingData> displayList = bookingService.bookings.toList();
+
+            if (displayList.isEmpty) {
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 50),
+                  child: Text(
+                    "No bookings found.",
+                    style: GoogleFonts.montserrat(
+                      color: AppColors.grey,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
               );
-            },
-          ),
+            }
+
+            return ListView.builder(
+              padding: EdgeInsets.zero,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: displayList.length,
+              itemBuilder: (context, index) {
+                final booking = displayList[index];
+                return ExpandableBookingCard(booking: booking);
+              },
+            );
+          }),
         ],
       ),
     );
@@ -163,16 +154,13 @@ class _HomeScreenState extends State<HomeScreen> {
       leading: Padding(
         padding: EdgeInsets.only(left: 20.w, top: 10.h, bottom: 10.h),
         child: const CircleAvatar(
-
           radius: 40.0,
           backgroundColor: Color(0xFFFFFFFF),
           child: CircleAvatar(
-
             radius: 36.0,
             backgroundImage: AssetImage('images/n.png'),
-
           ),
-        )
+        ),
       ),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -208,9 +196,8 @@ class _HomeScreenState extends State<HomeScreen> {
               color: AppColors.white.withOpacity(0.15),
             ),
             child: SvgPicture.asset(
-              'assets/icons/notifica.svg', // Replace with your actual SVG asset path
-
-              width: 24.sp, // Use width/height instead of size
+              'assets/icons/notifica.svg',
+              width: 24.sp,
               height: 24.sp,
             ),
           ),
@@ -227,20 +214,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildStatCards() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: GridView.count(
         crossAxisCount: 2,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        crossAxisSpacing: 10.w,
-        mainAxisSpacing: 10.h,
+        crossAxisSpacing: 8.w,
+        mainAxisSpacing: 8.h,
         childAspectRatio: 1.4,
         children: [
           StatCard(
             title: 'Total Bookings',
             count: '800',
-            borderColor: AppColors.mainC,
-            countColor: AppColors.mainC,
+            borderColor: AppColors.mainAppColor,
+            countColor: AppColors.mainAppColor,
             bgColor: const Color(0xFFE7F4F6),
           ),
           StatCard(
@@ -265,53 +252,6 @@ class _HomeScreenState extends State<HomeScreen> {
             bgColor: AppColors.redColor.withOpacity(0.04),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildBookingTabs() {
-    Widget tabItem(Color color, String text, int index) {
-      final isSelected = _selectedTabIndex == index;
-      return GestureDetector(
-        onTap: () => setState(() => _selectedTabIndex = index),
-        child: Container(
-          color: Colors.transparent,
-          child: Row(
-            children: [
-              Container(
-                width: 18.w,
-                height: 18.w,
-                decoration: BoxDecoration(
-                  color: color,
-                  borderRadius: BorderRadius.circular(5.r),
-                ),
-              ),
-              SizedBox(width: 10.w),
-              Text(
-                text,
-                style: GoogleFonts.montserrat(
-                  fontSize: 18,
-                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                  color: AppColors.textDark,
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            tabItem(AppColors.redColor, 'Booked', 0),
-            // SizedBox(width: 20.w),
-            // tabItem(AppColors.greenColor, 'Upcoming', 1),
-          ],
-        ),
       ),
     );
   }

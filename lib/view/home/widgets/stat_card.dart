@@ -41,8 +41,8 @@ class StatCard extends StatelessWidget {
           Text(
             title,
             style: GoogleFonts.montserrat(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w600,
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
               color: const Color(0xFF585858),
             ),
           ),

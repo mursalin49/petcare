@@ -26,6 +26,9 @@ class AppIcons{
   static String care_info = "assets/icons/care.svg";
   static String paw = "assets/icons/paw.svg";
   static String edit = "assets/icons/ed.svg";
+  static const String clock = 'assets/icons/clock.svg';
+  static const String vet = 'assets/icons/vet.svg';
+  static const String billing = 'assets/icons/billing.svg';
 
 
 
