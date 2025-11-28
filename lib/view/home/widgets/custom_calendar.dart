@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-// আপনার প্রোজেক্টের কালার ফাইল ইম্পোর্ট করুন
+
 import '../../../utils/app_colors.dart';
 
 
@@ -24,7 +24,7 @@ class _CustomCalendarWidgetState extends State<CustomCalendarWidget> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
-  // দিনটি Unavailable কি না চেক করার ফাংশন
+
   bool _isUnavailable(DateTime day) {
     return widget.unavailableDays.any(
           (d) => d.year == day.year && d.month == day.month && d.day == day.day,
@@ -55,7 +55,7 @@ class _CustomCalendarWidgetState extends State<CustomCalendarWidget> {
         focusedDay: _focusedDay,
         startingDayOfWeek: StartingDayOfWeek.sunday,
         calendarFormat: CalendarFormat.month,
-        // rowHeight একটু কমিয়ে দিলে ক্যালেন্ডার কম্প্যাক্ট দেখাবে
+
         rowHeight: 45.h,
 
         onPageChanged: (focusedDay) {
@@ -81,7 +81,7 @@ class _CustomCalendarWidgetState extends State<CustomCalendarWidget> {
           ),
         ),
 
-        // --- Calendar Body Style (Rectangular) ---
+
         calendarStyle: CalendarStyle(
           cellMargin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
 

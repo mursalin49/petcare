@@ -717,7 +717,8 @@ class DoggyDayCareSetupScreen extends StatelessWidget {
             child: Text(
               text,
               style: GoogleFonts.montserrat(
-                fontSize: 14.sp,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
                 color: AppColors.primaryText,
               ),
             ),

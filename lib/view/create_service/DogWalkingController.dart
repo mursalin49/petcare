@@ -1,4 +1,3 @@
-// --- CONTROLLER ---
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
@@ -21,10 +20,16 @@ class DogWalkingController extends GetxController {
   var showAdditionalRates = false.obs;
   var updateAdditionalRates = true.obs;
 
+  // --- NEW: Offer Puppy for free ---
+  var offerPuppyForFree = false.obs;
+
   // --- Availability ---
   var maxWalksPerDay = 4.obs; // Kept the RxInt for other logic if needed
   var availableTimes = '6am - 11am'.obs;
   var selectedDays = <String>['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].obs;
+
+  // --- NEW: Potty Break Frequency ---
+  var selectedPottyBreak = '0-2 hours'.obs;
 
   void toggleDay(String day) {
     if (selectedDays.contains(day)) {

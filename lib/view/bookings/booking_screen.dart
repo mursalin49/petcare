@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:petcare/view/bookings/chat.dart';
 // Note: Assuming 'petcare' is your project root and RescheduleScreen exists
 import 'package:petcare/view/bookings/reschedule_screen.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -232,9 +233,9 @@ class _BookingsScreenState extends State<BookingsScreen> {
 
             CustomCalendarWidget(
               unavailableDays: [
+                DateTime.now().add(const Duration(days: 1)),
+                DateTime.now().add(const Duration(days: 2)),
                 DateTime.now().add(const Duration(days: 3)),
-                DateTime.now().add(const Duration(days: 4)),
-                DateTime.now().add(const Duration(days: 5)),
               ],
               onDaySelected: (day) {},
             ),
@@ -286,14 +287,10 @@ class _BookingsScreenState extends State<BookingsScreen> {
       // --- Floating Messenger Button ---
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Action for the floating messenger button
-          Get.snackbar(
-              'Chat',
-              'Opening general chat window...',
-              snackPosition: SnackPosition.BOTTOM,
-              backgroundColor: AppColors.mainAppColor,
-              colorText: Colors.white
-          );
+          Get.to(() => ChatScreen(
+            contactName: 'Tamim Sarkar',
+            contactImage: 'assets/images/profileImg.png',
+          ));
         },
         backgroundColor: AppColors.mainAppColor,
         child: const Icon(Icons.chat_bubble_outline_rounded, color: Colors.white),
@@ -571,7 +568,7 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
           _buildInfoColumn('Feeding schedule', widget.booking.feedingSchedule),
           _buildInfoColumn('Can be left alone', widget.booking.canBeLeftAlone),
           _buildInfoColumn('Medications', widget.booking.medications),
-          _buildInfoColumn('Pill', widget.booking.medications),
+          _buildInfoColumn('Pill', widget.booking.fill),
           _buildInfoColumn('Anything else a sitter should know?',
               'Add instructions for walking, feeding or other care',
               lastItem: true,
@@ -586,7 +583,7 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSectionTitle('Veterinary info', useIcon: true, svgPath: AppIcons.paw),
+          _buildSectionTitle('Care info', useIcon: true, svgPath: AppIcons.paw),
           const SizedBox(height: 12),
           _buildInfoColumn('Veterinary info',
               'Vet\'s Name: ${widget.booking.vetName}\nClinic: ${widget.booking.clinicName}\nAddress: ${widget.booking.vetAddress}\nNumber: ${widget.booking.vetNumber}',
@@ -870,8 +867,8 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
                 : const SizedBox.shrink(),
           ),
 
-        // Buttons - Only for On going and Upcoming when NOT expanded
-        if (_hasActiveButtons && !_isExpanded)
+        // Buttons - Only for On going and Upcoming
+        if (_hasActiveButtons)
           Padding(
             padding: const EdgeInsets.only(top: 16),
             child: _buildCardFooter(context, booking.status),

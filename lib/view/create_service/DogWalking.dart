@@ -48,7 +48,7 @@ class DogWalkingServiceSetupScreen extends StatelessWidget {
             _buildSectionTitle('Set your base rate'),
             // BASE RATE (Using new controller)
             _buildRateInputField(
-              title: 'Per walk',
+
               controller: controller.baseRateController,
               keepText: 'What you will earn per service: \$24.00',
               rateType: 'Per walk',
@@ -79,7 +79,7 @@ class DogWalkingServiceSetupScreen extends StatelessWidget {
                   children: [
                     _buildSectionTitle('60 minute rate', topPadding: 0),
                     _buildRateInputField(
-                      title: '60 minute rate',
+
                       controller: controller.rate60MinController,
                       keepText: 'You keep: \$24.00',
                       rateType: 'Per day',
@@ -87,7 +87,7 @@ class DogWalkingServiceSetupScreen extends StatelessWidget {
                     ),
                     _buildSectionTitle('Holiday Rate', topPadding: 0),
                     _buildRateInputField(
-                      title: 'Holiday Rate',
+
                       controller: controller.holidayRateController,
                       keepText: 'You keep: \$24.00',
                       rateType: 'Per day',
@@ -95,7 +95,7 @@ class DogWalkingServiceSetupScreen extends StatelessWidget {
                     ),
                     _buildSectionTitle('Additional Rate', topPadding: 0),
                     _buildRateInputField(
-                      title: 'Additional Rate',
+
                       controller: controller.additionalRateController,
                       keepText: 'You keep: \$24.00',
                       rateType: 'Per day',
@@ -103,21 +103,24 @@ class DogWalkingServiceSetupScreen extends StatelessWidget {
                     ),
                     _buildSectionTitle('Puppy Rate', topPadding: 0),
                     _buildRateInputField(
-                      title: 'Puppy Rate',
+
                       controller: controller.puppyRateController,
                       keepText: 'You keep: \$24.00',
                       rateType: 'Per day',
                       showKeepText: false, // Checkbox below provides spacing
                     ),
-                    _buildSquareCheckbox(
-                      text: 'Offer for free',
-                      value: false, // This value needs to be tracked in the controller
-                      onChanged: (val) => {},
-                    ),
+                    SizedBox(height: 15.h),
+                    Obx(() =>
+                        _buildSquareCheckbox(
+                          text: 'Offer for free',
+                          value: controller.offerPuppyForFree.value,
+                          onChanged: (val) =>
+                          controller.offerPuppyForFree.value = val!,
+                        )),
                     SizedBox(height: 15.h),
                     _buildSectionTitle('Daily Sitter Pick-Up/Drop-Off', topPadding: 0),
                     _buildRateInputField(
-                      title: 'Daily Sitter Pick-Up/Drop-Off',
+
                       controller: controller.pickupDropOffController,
                       keepText: 'You keep: 80%',
                       rateType: 'Per day',
@@ -128,7 +131,6 @@ class DogWalkingServiceSetupScreen extends StatelessWidget {
               }
               return const SizedBox.shrink();
             }),
-
             // --- Show/Hide Button and Divider Logic (Fixed) ---
             Obx(() => Column(
               children: [
@@ -166,36 +168,18 @@ class DogWalkingServiceSetupScreen extends StatelessWidget {
             _buildDaySelectors(controller),
             SizedBox(height: 20.h),
 
-            _buildSectionTitle('What times are you available for Dog walking on weekdays?'),
-            Obx(() => Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            _buildSectionTitle('How frequently can you provide potty breaks?'),
+            Wrap(
+              spacing: 20.w,
+              runSpacing: 10.h,
               children: [
-                _buildRadioOption<String>(
-                  text: '6am - 11am',
-                  value: '6am - 11am',
-                  groupValue: controller.availableTimes.value,
-                  onChanged: (val) => controller.availableTimes.value = val!,
-                ),
-                _buildRadioOption<String>(
-                  text: '11am - 3am',
-                  value: '11am - 3am',
-                  groupValue: controller.availableTimes.value,
-                  onChanged: (val) => controller.availableTimes.value = val!,
-                ),
-                _buildRadioOption<String>(
-                  text: '3am - 10am',
-                  value: '3am - 10am',
-                  groupValue: controller.availableTimes.value,
-                  onChanged: (val) => controller.availableTimes.value = val!,
-                ),
-                _buildRadioOption<String>(
-                  text: 'None',
-                  value: 'None',
-                  groupValue: controller.availableTimes.value,
-                  onChanged: (val) => controller.availableTimes.value = val!,
-                ),
+                _buildPottyBreakOption('0-2 hours', controller),
+                _buildPottyBreakOption('2-4 hours', controller),
+                _buildPottyBreakOption('4-8 hours', controller),
+                _buildPottyBreakOption('8+ hours', controller),
               ],
-            )),
+            ),
+
             SizedBox(height: 20.h),
 
             Obx(() => _buildSwitchToggle(
@@ -208,8 +192,6 @@ class DogWalkingServiceSetupScreen extends StatelessWidget {
                 label: 'Location',
                 controller: controller.locationController
             ),
-            SizedBox(height: 20.h),
-            Divider(color: AppColors.border, height: 1.h),
             SizedBox(height: 20.h),
 
             // --- Service Area ---
@@ -256,8 +238,7 @@ class DogWalkingServiceSetupScreen extends StatelessWidget {
                 val!,
               ),
             ))).toList(),
-            SizedBox(height: 20.h),
-            Divider(color: AppColors.border, height: 1.h),
+
             SizedBox(height: 20.h),
 
             // --- Pet Preferences ---
@@ -291,8 +272,6 @@ class DogWalkingServiceSetupScreen extends StatelessWidget {
                 ),
               ],
             )),
-            SizedBox(height: 20.h),
-            Divider(color: AppColors.border, height: 1.h),
             SizedBox(height: 20.h),
 
             _buildSectionTitle('What is your cancellation policy for Doggy Day Care?'),
@@ -499,7 +478,7 @@ Widget _buildDaySelectors(DogWalkingController controller) {
 
 // FIX 5: _buildRateInputField updated to use TextEditingController
 Widget _buildRateInputField({
-  required String title,
+
   required TextEditingController controller, // Changed from placeholderValue
   required String keepText,
   required String rateType,
@@ -507,7 +486,7 @@ Widget _buildRateInputField({
   bool isStandalone = false, // Added for correct top spacing
 }) {
   // Don't show title if it's the base rate (Per walk)
-  final showTitleAboveInput = !isStandalone && title != 'Per walk';
+  final showTitleAboveInput = !isStandalone  != 'Per walk';
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -515,14 +494,7 @@ Widget _buildRateInputField({
       if (showTitleAboveInput)
         Padding(
           padding: EdgeInsets.only(bottom: 5.h),
-          child: Text(
-            title,
-            style: GoogleFonts.montserrat(
-              fontSize: 14.sp, // Reduced font size for sub-titles
-              fontWeight: FontWeight.w500,
-              color: AppColors.textDark,
-            ),
-          ),
+
         ),
       SizedBox(height: isStandalone ? 5.h : 0.h),
       Container(
@@ -703,7 +675,8 @@ Widget _buildSquareCheckbox({
           child: Text(
             text,
             style: GoogleFonts.montserrat(
-              fontSize: 14.sp,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
               color: AppColors.primaryText,
             ),
           ),
@@ -932,5 +905,39 @@ Widget _buildServiceAreaInputField(DogWalkingController controller) {
         ],
       ),
     ],
+  );
+}
+Widget _buildPottyBreakOption(String text, DogWalkingController controller) {
+  return SizedBox(
+    width: (MediaQuery
+        .of(Get.context!)
+        .size
+        .width - 32.w - 20.w) / 2,
+    child: InkWell(
+      onTap: () => controller.selectedPottyBreak.value = text,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Obx(() =>
+              Radio<String>(
+                value: text,
+                groupValue: controller.selectedPottyBreak.value,
+                onChanged: (val) =>
+                controller.selectedPottyBreak.value = val!,
+                activeColor: AppColors.mainAppColor,
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              )),
+          Expanded(
+            child: Text(
+              text,
+              style: GoogleFonts.montserrat(
+                fontSize: 14.sp,
+                color: AppColors.primaryText,
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
   );
 }

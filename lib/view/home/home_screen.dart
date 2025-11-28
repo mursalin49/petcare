@@ -45,12 +45,41 @@ class _HomeScreenState extends State<HomeScreen> {
             _buildStatCards(),
             SizedBox(height: 24.h),
 
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: Row(
+                children: [
+
+                  Container(
+                    width: 21.w,
+                    height: 21.h,
+                    decoration: BoxDecoration(
+                      color: AppColors.redColor,
+                      borderRadius: BorderRadius.circular(4.r),
+                    ),
+                  ),
+                  SizedBox(width: 8.w),
+
+                  Text(
+                    'Booked',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                    ),
+                  ),
+
+                ],
+              ),
+            ),
+
+            SizedBox(height: 16.h),
             // Calendar
             CustomCalendarWidget(
               unavailableDays: [
-                DateTime.now().add(const Duration(days: 3)),
+                DateTime.now().add(const Duration(days: 1)),
+                DateTime.now().add(const Duration(days: 2)),
                 DateTime.now().add(const Duration(days: 4)),
-                DateTime.now().add(const Duration(days: 5)),
               ],
               onDaySelected: (day) {},
             ),
@@ -62,19 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Get.snackbar(
-            'Chat',
-            'Opening general chat window...',
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: AppColors.mainAppColor,
-            colorText: Colors.white,
-          );
-        },
-        backgroundColor: AppColors.mainAppColor,
-        child: const Icon(Icons.chat_bubble_outline_rounded, color: Colors.white),
-      ),
+
     );
   }
 
@@ -158,7 +175,8 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: Color(0xFFFFFFFF),
           child: CircleAvatar(
             radius: 36.0,
-            backgroundImage: AssetImage('images/n.png'),
+            // This is correct for loading a local image asset
+            backgroundImage: AssetImage('assets/images/n.png'),
           ),
         ),
       ),
