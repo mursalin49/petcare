@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../utils/app_colors.dart';
 
-// Assuming AppColors.mainAppColor is defined elsewhere.
-// For this example, I'll define a placeholder color that resembles the image's teal.
-
+// --- Model Class ---
 class ChatMessage {
   final String id;
   final String senderName;
@@ -26,12 +25,13 @@ class ChatMessage {
   });
 }
 
+// --- Controller Class ---
 class ChatScreenController extends GetxController {
   final RxList<ChatMessage> messages = <ChatMessage>[
     ChatMessage(
       id: '1',
       senderName: 'Tamim Sarkar',
-      senderImage: 'assets/images/profileImg.png',
+      senderImage: 'assets/images/mursalin.jpg',
       message: 'Hey! How was the new design project coming along?',
       time: '10:30 AM',
       isUserMessage: false,
@@ -46,7 +46,7 @@ class ChatScreenController extends GetxController {
     ChatMessage(
       id: '3',
       senderName: 'Tamim Sarkar',
-      senderImage: 'assets/images/profileImg.png',
+      senderImage: 'assets/images/mursalin.jpg',
       message: 'Hey! How was the new design project coming along?',
       time: '10:30 AM',
       isUserMessage: false,
@@ -61,7 +61,7 @@ class ChatScreenController extends GetxController {
     ChatMessage(
       id: '5',
       senderName: 'Tamim Sarkar',
-      senderImage: 'assets/images/profileImg.png',
+      senderImage: 'assets/images/mursalin.jpg',
       message: 'Hey! How was the new design project coming along?',
       time: '10:30 AM',
       isUserMessage: false,
@@ -78,7 +78,6 @@ class ChatScreenController extends GetxController {
         id: DateTime.now().toString(),
         senderName: 'You',
         message: text,
-        // Using a simpler format for time, matching the image's 'HH:MM AM/PM' style
         time: TimeOfDay.now().format(Get.context!),
         isUserMessage: true,
       ),
@@ -89,6 +88,7 @@ class ChatScreenController extends GetxController {
   }
 }
 
+// --- View Class ---
 class ChatScreen extends StatefulWidget {
   final String contactName;
   final String contactImage;
@@ -107,6 +107,8 @@ class _ChatScreenState extends State<ChatScreen> {
   late ChatScreenController controller;
   late ScrollController _scrollController;
 
+  bool _showAttachmentPanel = false;
+
   @override
   void initState() {
     super.initState();
@@ -116,8 +118,6 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _scrollToTopAnimated() {
     if (_scrollController.hasClients) {
-      // Use the maxScrollExtent for reverse: true list to scroll to the end of the data (bottom of the screen)
-      // Since ListView.builder is reversed, scrolling to 0 actually scrolls to the bottom of the chat.
       _scrollController.animateTo(
         0,
         duration: const Duration(milliseconds: 300),
@@ -128,10 +128,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // ScreenUtil must be initialized somewhere in the app's root (e.g., main.dart)
-    // to use .w, .h, .r, .sp correctly.
     return Scaffold(
-      backgroundColor: Colors.white, // Keeping scaffold white for the main chat background
+      backgroundColor: Colors.white,
       appBar: _buildAppBar(),
       body: Column(
         children: [
@@ -160,7 +158,6 @@ class _ChatScreenState extends State<ChatScreen> {
     return AppBar(
       backgroundColor: AppColors.mainAppColor,
       elevation: 0,
-      // Rounded corners are on the bottom, matching the look
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(20.r),
@@ -173,7 +170,6 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       title: Row(
         children: [
-          // Use Stack to correctly overlay the online status dot
           Stack(
             children: [
               ClipRRect(
@@ -185,7 +181,6 @@ class _ChatScreenState extends State<ChatScreen> {
                   fit: BoxFit.cover,
                 ),
               ),
-              // Online Status Indicator
               Positioned(
                 right: 0,
                 bottom: 0,
@@ -194,7 +189,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   height: 13.h,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: const Color(0xFF20C853), // Green for online
+                    color: const Color(0xFF20C853),
                     border: Border.all(color: Colors.white, width: 2.w),
                   ),
                 ),
@@ -225,11 +220,9 @@ class _ChatScreenState extends State<ChatScreen> {
         ],
       ),
       actions: [
-        // Using PopupMenuButton to replicate the 'Delete conversation / Block' menu
         PopupMenuButton<String>(
           icon: const Icon(Icons.more_vert, color: Colors.white),
           onSelected: (String result) {
-            // Handle menu selection
           },
           itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
             const PopupMenuItem<String>(
@@ -261,7 +254,6 @@ class _ChatScreenState extends State<ChatScreen> {
                 : const Icon(Icons.person, color: Colors.grey),
           ),
         ),
-        // Online Status Indicator
         Positioned(
           right: 0,
           bottom: 0,
@@ -280,14 +272,12 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget _buildMessageBubble(ChatMessage message) {
-    // Calculate padding based on whether it's the user's message
     final double horizontalPadding = 16.w;
     final EdgeInsets rowPadding = message.isUserMessage
-        ? EdgeInsets.only(left: 50.w, right: 0, top: 8.h, bottom: 8.h) // Pushes the bubble closer to the right edge
-        : EdgeInsets.only(right: 50.w, left: 0, top: 8.h, bottom: 8.h); // Ensures space for the non-user bubble to wrap
+        ? EdgeInsets.only(left: 50.w, right: 0, top: 8.h, bottom: 8.h)
+        : EdgeInsets.only(right: 50.w, left: 0, top: 8.h, bottom: 8.h);
 
     return Padding(
-      // Apply conditional padding here to control alignment
       padding: rowPadding,
       child: Row(
         mainAxisAlignment: message.isUserMessage
@@ -299,8 +289,6 @@ class _ChatScreenState extends State<ChatScreen> {
             _buildAvatar(message.senderImage),
             SizedBox(width: 8.w),
           ],
-          // Use Expanded/Flexible only if you need text wrapping,
-          // but let's wrap the column in Flexible to allow text wrapping for long messages
           Flexible(
             child: Column(
               crossAxisAlignment: message.isUserMessage
@@ -347,67 +335,130 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget _buildMessageInputArea() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        // The image shows no distinct top border, but a slight shadow might be implied
-        // border: Border(top: BorderSide(color: Colors.grey.shade200)),
-      ),
+      color: Colors.white,
       child: SafeArea(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+        child: Column(
           children: [
-            // Left '+' Button (Modified to match the image's light/white circle with dark icon)
-            InkWell(
-              onTap: () { /* Handle attachment logic */ },
-              child: Container(
-                width: 48.w,
-                height: 48.h,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.mainAppColor,
-                  border: Border.all(color: Colors.grey.shade300, width: 1.w),
-                ),
-                child: Icon(Icons.add, color: AppColors.white, size: 28.sp),
-              ),
-            ),
-            SizedBox(width: 12.w),
-            Expanded(
-              child: TextField(
-                controller: controller.messageController,
-                style: GoogleFonts.montserrat(fontSize: 14.sp),
-                decoration: InputDecoration(
-                  hintText: "Type a message...",
-                  hintStyle: GoogleFonts.montserrat(color: Colors.grey.shade500),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 10.h),
-                  // Flatter appearance matching the image
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25.r), // Highly rounded
-                    borderSide: BorderSide.none, // No distinct line border
+            if (_showAttachmentPanel)
+              _buildAttachmentPanel(),
+
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        _showAttachmentPanel = !_showAttachmentPanel;
+                      });
+                    },
+                    child: Container(
+                      width: 48.w,
+                      height: 48.h,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: _showAttachmentPanel ? Colors.white : AppColors.mainAppColor,
+                        border: _showAttachmentPanel
+                            ? Border.all(color: AppColors.mainAppColor, width: 1.w)
+                            : null,
+                      ),
+                      child: Icon(
+                          _showAttachmentPanel ? Icons.close : Icons.add,
+                          color: _showAttachmentPanel ? AppColors.mainAppColor : AppColors.white,
+                          size: 28.sp
+                      ),
+                    ),
                   ),
-                  filled: true,
-                  fillColor: const Color(0xFFF0F0F0), // Light gray background
-                ),
-                onSubmitted: (v) {
-                  controller.sendMessage(v);
-                  _scrollToTopAnimated();
-                },
-              ),
-            ),
-            SizedBox(width: 10.w),
-            // Right 'Send' Button (Main app color)
-            GestureDetector(
-              onTap: () {
-                controller.sendMessage(controller.messageController.text);
-                _scrollToTopAnimated();
-              },
-              child: CircleAvatar(
-                radius: 24.r,
-                backgroundColor: AppColors.mainAppColor,
-                child: Icon(Icons.send, color: Colors.white, size: 22.sp),
+                  SizedBox(width: 12.w),
+
+                  Expanded(
+                    child: TextField(
+                      controller: controller.messageController,
+                      style: GoogleFonts.montserrat(fontSize: 14.sp),
+                      decoration: InputDecoration(
+                        hintText: "Message",
+                        hintStyle: GoogleFonts.montserrat(color: Colors.grey.shade500),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 10.h),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25.r),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: const Color(0xFFF0F0F0),
+                      ),
+                      onSubmitted: (v) {
+                        controller.sendMessage(v);
+                        _scrollToTopAnimated();
+                      },
+                    ),
+                  ),
+                  SizedBox(width: 10.w),
+
+                  GestureDetector(
+                    onTap: () {
+                      controller.sendMessage(controller.messageController.text);
+                      _scrollToTopAnimated();
+                    },
+                    child: CircleAvatar(
+                      radius: 24.r,
+                      backgroundColor: AppColors.mainAppColor,
+                      child: Icon(Icons.send, color: Colors.white, size: 22.sp),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAttachmentPanel() {
+    return Column(
+      children: [
+        Container(
+          width: 40.w,
+          height: 4.h,
+          margin: EdgeInsets.symmetric(vertical: 8.h),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade300,
+            borderRadius: BorderRadius.circular(2.r),
+          ),
+        ),
+
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
+          child: Row(
+            children: [
+              _buildAttachmentIcon(
+                iconData: Icons.image_outlined,
+                onTap: () { /* Handle image selection */ },
+              ),
+              SizedBox(width: 20.w),
+
+              _buildAttachmentIcon(
+                iconData: Icons.location_on_outlined,
+                onTap: () { /* Handle location sharing */ },
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAttachmentIcon({required IconData iconData, required VoidCallback onTap}) {
+    return InkWell(
+      onTap: onTap,
+      child: CircleAvatar(
+        radius: 30.w,
+        backgroundColor: AppColors.mainAppColor.withOpacity(0.1),
+        child: Icon(
+          iconData,
+          color: AppColors.mainAppColor,
+          size: 30.sp,
         ),
       ),
     );
@@ -417,8 +468,6 @@ class _ChatScreenState extends State<ChatScreen> {
   void dispose() {
     controller.messageController.dispose();
     _scrollController.dispose();
-    // Use Get.delete to clean up the controller if it's not needed elsewhere
-    // Get.delete<ChatScreenController>();
     super.dispose();
   }
 }

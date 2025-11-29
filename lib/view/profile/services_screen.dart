@@ -17,15 +17,15 @@ class YourServicesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // ইমেজের মতো করে AppBar ডিজাইন
-        backgroundColor: AppColors.mainAppColor, // সম্পূর্ণ নীল ব্যাকগ্রাউন্ড
+
+        backgroundColor: AppColors.mainAppColor,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'Services', // ইমেজের মতো করে টাইটেল 'Services'
+          'Services',
           style: GoogleFonts.montserrat(
             fontSize: 18.sp,
             fontWeight: FontWeight.w600,
@@ -33,10 +33,10 @@ class YourServicesScreen extends StatelessWidget {
           ),
         ),
         centerTitle: true,
-        // এখানে কোনো Add বাটন নেই ইমেজে, তাই এটি সরানো হলো।
+
         // actions: [
         //   IconButton(
-        //     icon: const Icon(Icons.add, color: Colors.white), // সাদা আইকন
+        //     icon: const Icon(Icons.add, color: Colors.white),
         //     onPressed: () => Get.to(() => const CreateService()),
         //   ),
         // ],
@@ -52,7 +52,7 @@ class YourServicesScreen extends StatelessWidget {
         children: [
           // --- Service 1: Boarding (EDIT MODE) ---
           _buildServiceCard(
-            iconPath: 'assets/icons/calendar-add-01 (1).svg', // আপনার আইকন পাথ
+            iconPath: 'assets/icons/calendar-add-01 (1).svg',
             title: 'Boarding',
             subtitle: 'In the sitter\'s home',
             price: '\$99',
@@ -66,7 +66,7 @@ class YourServicesScreen extends StatelessWidget {
 
           // --- Service 2: Doggy Day Care (EDIT MODE) ---
           _buildServiceCard(
-            iconPath: 'assets/icons/home-hashtag.svg', // আপনার আইকন পাথ
+            iconPath: 'assets/icons/home-hashtag.svg',
             title: 'Doggy Day Care',
             subtitle: 'In the sitter\'s home',
             price: '\$99',
@@ -80,7 +80,7 @@ class YourServicesScreen extends StatelessWidget {
 
           // --- Service 3: Dog Walking (EDIT MODE) ---
           _buildServiceCard(
-            iconPath: 'assets/icons/doggy.svg', // Dog Walking এর জন্য সঠিক আইকন পাথ
+            iconPath: 'assets/icons/doggy.svg',
             title: 'Dog Walking',
             subtitle: 'In your neighbourhood',
             price: '\$99',
@@ -95,7 +95,7 @@ class YourServicesScreen extends StatelessWidget {
     );
   }
 
-  // ইমেজের মতো করে সার্ভিস কার্ড ডিজাইন করা হয়েছে
+
   Widget _buildServiceCard({
     required String iconPath,
     required String title,
@@ -122,16 +122,16 @@ class YourServicesScreen extends StatelessWidget {
         ),
         child: Row(
           children: [
-            // আইকন
+
             SvgPicture.asset(
               iconPath,
-              height: 24.sp, // ইমেজের সাথে সামঞ্জস্যপূর্ণ সাইজ
+              height: 24.sp,
               width: 24.sp,
-              colorFilter: ColorFilter.mode(AppColors.mainAppColor, BlendMode.srcIn), // ইমেজে নীল কালার
+              colorFilter: ColorFilter.mode(AppColors.mainAppColor, BlendMode.srcIn),
             ),
             SizedBox(width: 16.w),
 
-            // টাইটেল এবং সাবটাইটেল
+
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,7 +157,7 @@ class YourServicesScreen extends StatelessWidget {
               ),
             ),
 
-            // প্রাইস এবং প্রাইস ইউনিট
+
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [

@@ -10,6 +10,7 @@ import '../auth/Signup_screen.dart';
 
 class SitterOnboardingScreen extends StatelessWidget {
   const SitterOnboardingScreen({super.key});
+
   static const String dog1Asset = 'assets/images/dog1.png';
   static const String dog2Asset = 'assets/images/dog2 (2).png';
 
@@ -26,11 +27,18 @@ class SitterOnboardingScreen extends StatelessWidget {
         ),
         title: Text(
           'Become a Sitter',
-          style: GoogleFonts.montserrat(fontSize: 18.sp, fontWeight: FontWeight.w600, color: Colors.white),
+          style: GoogleFonts.montserrat(
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
         ),
         centerTitle: true,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30.r), bottomRight: Radius.circular(30.r)),
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(30.r),
+            bottomRight: Radius.circular(30.r),
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -39,26 +47,49 @@ class SitterOnboardingScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // --- Section: Get paid to play with pets ---
-            Text('Get paid to play with pets', style: GoogleFonts.montserrat(fontSize: 20.sp, fontWeight: FontWeight.bold, color: Colors.black87)),
+            Text(
+              'Get paid to play with pets',
+              style: GoogleFonts.montserrat(
+                fontSize: 20.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
             SizedBox(height: 10.h),
             const Text(
               'Wuffoos makes it easy and promotes you to the nation\'s largest network of pet owners, delivering dog-walking, connecting you love.',
-              style: TextStyle(fontSize: 14, height: 1.5, color: Colors.black54),
+              style: TextStyle(
+                fontSize: 14,
+                height: 1.5,
+                color: Colors.black54,
+              ),
             ),
             SizedBox(height: 20.h),
-            _buildPrimaryButton(text: 'Get started', onPressed: () {
-              Get.toNamed(AppRoutes.signUpScreen);
-            }),
+            _buildPrimaryButton(
+              text: 'Get started',
+              onPressed: () {
+                Get.toNamed(AppRoutes.signUpScreen);
+              },
+            ),
 
             SizedBox(height: 30.h),
 
             // --- Section: Flexibility puts you in control ---
-            Text('Flexibility puts you in control', style: GoogleFonts.montserrat(fontSize: 18.sp, fontWeight: FontWeight.w600, color: Colors.black87)),
+            Text(
+              'Flexibility puts you in control',
+              style: GoogleFonts.montserrat(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
             SizedBox(height: 10.h),
 
             _buildCheckListItem('Set your own schedule and prices'),
             _buildCheckListItem('Offer any combination of pet care home'),
-            _buildCheckListItem('Set the, age and other pet preferences that work for you.'),
+            _buildCheckListItem(
+              'Set the, age and other pet preferences that work for you.',
+            ),
 
             SizedBox(height: 20.h),
 
@@ -76,7 +107,10 @@ class SitterOnboardingScreen extends StatelessWidget {
                       height: 200.h,
                       color: Colors.grey.shade200,
                       alignment: Alignment.center,
-                      child: Text('Image not found: dog1.png', style: GoogleFonts.montserrat(color: Colors.red)),
+                      child: Text(
+                        'Image not found: dog1.png',
+                        style: GoogleFonts.montserrat(color: Colors.red),
+                      ),
                     );
                   },
                 ),
@@ -90,31 +124,73 @@ class SitterOnboardingScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10.r),
-                  boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.3), blurRadius: 8, offset: const Offset(0, 4))],
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
                 child: Text(
                   "It's easy. I go to the calendar and mark myself as available when I want to be.",
-                  style: GoogleFonts.montserrat(fontSize: 13.sp, color: Colors.black87),
+                  style: GoogleFonts.montserrat(
+                    fontSize: 13.sp,
+                    color: Colors.black87,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
             ),
             SizedBox(height: 10.h),
-            Text('The tools to succeed', style: GoogleFonts.montserrat(fontSize: 18.sp, fontWeight: FontWeight.w600, color: Colors.black87)),
+            Text(
+              'The tools to succeed',
+              style: GoogleFonts.montserrat(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
             SizedBox(height: 10.h),
-            _buildCheckListItem('The Wuffoos Guarantee which includes up to \$25,000 in vet cost reimbursement'),
-            _buildCheckListItem('Manage your pet sitting schedule and more with the Wuffoos app'),
+            _buildCheckListItem(
+              'The Wuffoos Guarantee which includes up to \$25,000 in vet cost reimbursement',
+            ),
+            _buildCheckListItem(
+              'Manage your pet sitting schedule and more with the Wuffoos app',
+            ),
             _buildCheckListItem('24/7 support, including vet assistance'),
             SizedBox(height: 30.h),
-            Text('How it works', style: GoogleFonts.montserrat(fontSize: 24.sp, fontWeight: FontWeight.bold, color: Colors.black87)),
+            Text(
+              'How it works',
+              style: GoogleFonts.montserrat(
+                fontSize: 24.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
             SizedBox(height: 20.h),
-            _buildHowItWorksItem(title: 'Create your profile', description: 'Tell us a little about yourself and what pet home you want to offer.'),
-            _buildHowItWorksItem(title: 'Accept requests', description: 'Tell us the types of pets you want to care for and the dates that work for you. You make your own schedule.'),
-            _buildHowItWorksItem(title: 'Get paid', description: 'Payments are sent directly to your bank once you have completed a service.'),
+            _buildHowItWorksItem(
+              title: 'Create your profile',
+              description:
+                  'Tell us a little about yourself and what pet home you want to offer.',
+            ),
+            _buildHowItWorksItem(
+              title: 'Accept requests',
+              description:
+                  'Tell us the types of pets you want to care for and the dates that work for you. You make your own schedule.',
+            ),
+            _buildHowItWorksItem(
+              title: 'Get paid',
+              description:
+                  'Payments are sent directly to your bank once you have completed a service.',
+            ),
             SizedBox(height: 10.h),
-            _buildPrimaryButton(text: 'Get started', onPressed: () {
-              Get.toNamed(AppRoutes.signUpScreen);
-            }),
+            _buildPrimaryButton(
+              text: 'Get started',
+              onPressed: () {
+                Get.toNamed(AppRoutes.signUpScreen);
+              },
+            ),
             SizedBox(height: 20.h),
             Center(
               child: ClipRRect(
@@ -129,7 +205,10 @@ class SitterOnboardingScreen extends StatelessWidget {
                       height: 200.h,
                       color: Colors.grey.shade200,
                       alignment: Alignment.center,
-                      child: Text('Image of Sitting Dog here', style: GoogleFonts.montserrat(color: Colors.grey)),
+                      child: Text(
+                        'Image of Sitting Dog here',
+                        style: GoogleFonts.montserrat(color: Colors.grey),
+                      ),
                     );
                   },
                 ),
@@ -143,11 +222,21 @@ class SitterOnboardingScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10.r),
-                  boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.3), blurRadius: 8, offset: const Offset(0, 4))],
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
                 child: Text(
                   "Thanks to the Wuffoos App, I know about my clients schedule immediately and I'm quick to respond!",
-                  style: GoogleFonts.montserrat(fontSize: 13.sp, color: Colors.black87, fontStyle: FontStyle.italic),
+                  style: GoogleFonts.montserrat(
+                    fontSize: 13.sp,
+                    color: Colors.black87,
+                    fontStyle: FontStyle.italic,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -155,22 +244,30 @@ class SitterOnboardingScreen extends StatelessWidget {
             SizedBox(height: 10.h),
 
             // --- Section: Services ---
-            Text('Services', style: GoogleFonts.montserrat(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black87)),
+            Text(
+              'Services',
+              style: GoogleFonts.montserrat(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
             SizedBox(height: 15.h),
 
             _buildServiceCard(
-
-                svgIconPath: 'assets/icons/bording.svg',
-                title: 'Boarding',
-                subtitle: 'Care for a dog or cat overnight in your home. Sitters who offer boarding can make up to 3x more than sitters don\'t.',
-                highlight: 'HIGHEST EARNING'
+              svgIconPath: 'assets/icons/bording.svg',
+              title: 'Boarding',
+              subtitle:
+                  'Care for a dog or cat overnight in your home. Sitters who offer boarding can make up to 3x more than sitters don\'t.',
+              highlight: 'HIGHEST EARNING',
             ),
 
             // Example 2: Using the standard IconData (if svgIconPath is null)
             _buildServiceCard(
               svgIconPath: 'assets/icons/doggy.svg',
               title: 'Doggy Day Care',
-              subtitle: 'Watch dogs during the day. Drop off and pick up in their own homes.',
+              subtitle:
+                  'Watch dogs during the day. Drop off and pick up in their own homes.',
             ),
 
             // Example 3: Using the NEW svgIconPath
@@ -183,20 +280,50 @@ class SitterOnboardingScreen extends StatelessWidget {
             SizedBox(height: 30.h),
 
             // --- Safety section... (omitted for brevity) ---
-            Text('Safety first. Always.', style: GoogleFonts.montserrat(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black87)),
+            Text(
+              'Safety first. Always.',
+              style: GoogleFonts.montserrat(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
             SizedBox(height: 10.h),
-            const Text('We work tirelessly to ensure tails keep wagging and purrs keep coming.', style: TextStyle(fontSize: 14, height: 1.5, color: Colors.black54)),
+            const Text(
+              'We work tirelessly to ensure tails keep wagging and purrs keep coming.',
+              style: TextStyle(
+                fontSize: 14,
+                height: 1.5,
+                color: Colors.black54,
+              ),
+            ),
             SizedBox(height: 15.h),
-            _buildSafetyCheckListItem('Every service you offer on Wuffoos is backed by The Wuffoos Guarantee'),
-            _buildSafetyCheckListItem('Safe, secured, and convenient online payments'),
+            _buildSafetyCheckListItem(
+              'Every service you offer on Wuffoos is backed by The Wuffoos Guarantee',
+            ),
+            _buildSafetyCheckListItem(
+              'Safe, secured, and convenient online payments',
+            ),
             _buildSafetyCheckListItem('A top tier support team available 24/7'),
-            _buildSafetyCheckListItem('Ongoing pet parent and sitter education'),
+            _buildSafetyCheckListItem(
+              'Ongoing pet parent and sitter education',
+            ),
             SizedBox(height: 30.h),
-            Text('Connect with pet owners ones your profile is approve', style: GoogleFonts.montserrat(fontSize: 16.sp, fontWeight: FontWeight.w600, color: Colors.black87)),
+            Text(
+              'Connect with pet owners ones your profile is approve',
+              style: GoogleFonts.montserrat(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
             SizedBox(height: 10.h),
-            _buildPrimaryButton(text: 'Start creating your profile', onPressed: () {
-              Get.toNamed(AppRoutes.signUpScreen);
-            }),
+            _buildPrimaryButton(
+              text: 'Start creating your profile',
+              onPressed: () {
+                Get.toNamed(AppRoutes.signUpScreen);
+              },
+            ),
             SizedBox(height: 40.h),
           ],
         ),
@@ -206,7 +333,10 @@ class SitterOnboardingScreen extends StatelessWidget {
 
   // --- Utility Widgets ---
 
-  Widget _buildPrimaryButton({required String text, required VoidCallback onPressed}) {
+  Widget _buildPrimaryButton({
+    required String text,
+    required VoidCallback onPressed,
+  }) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -217,7 +347,11 @@ class SitterOnboardingScreen extends StatelessWidget {
         onPressed: onPressed,
         child: Text(
           text,
-          style: GoogleFonts.montserrat(fontSize: 16.sp, fontWeight: FontWeight.w600, color: Colors.white),
+          style: GoogleFonts.montserrat(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
         ),
       ),
     );
@@ -233,7 +367,14 @@ class SitterOnboardingScreen extends StatelessWidget {
           Icon(Icons.check, color: AppColors.mainAppColor, size: 20.r),
           SizedBox(width: 8.w),
           Expanded(
-            child: Text(text, style: GoogleFonts.montserrat(fontSize: 14.sp, height: 1.5, color: Colors.black87)),
+            child: Text(
+              text,
+              style: GoogleFonts.montserrat(
+                fontSize: 14.sp,
+                height: 1.5,
+                color: Colors.black87,
+              ),
+            ),
           ),
         ],
       ),
@@ -246,25 +387,53 @@ class SitterOnboardingScreen extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.check_circle_outline, color: AppColors.mainAppColor, size: 20.r),
+          Icon(
+            Icons.check_circle_outline,
+            color: AppColors.mainAppColor,
+            size: 20.r,
+          ),
           SizedBox(width: 8.w),
           Expanded(
-            child: Text(text, style: GoogleFonts.montserrat(fontSize: 14.sp, height: 1.5, color: Colors.black87)),
+            child: Text(
+              text,
+              style: GoogleFonts.montserrat(
+                fontSize: 14.sp,
+                height: 1.5,
+                color: Colors.black87,
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildHowItWorksItem({required String title, required String description}) {
+  Widget _buildHowItWorksItem({
+    required String title,
+    required String description,
+  }) {
     return Padding(
       padding: EdgeInsets.only(bottom: 25.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: GoogleFonts.montserrat(fontSize: 18.sp, fontWeight: FontWeight.w600, color: AppColors.textDark)),
+          Text(
+            title,
+            style: GoogleFonts.montserrat(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textDark,
+            ),
+          ),
           SizedBox(height: 5.h),
-          Text(description, style: GoogleFonts.montserrat(fontSize: 14.sp, height: 1.4, color: Colors.black54)),
+          Text(
+            description,
+            style: GoogleFonts.montserrat(
+              fontSize: 14.sp,
+              height: 1.4,
+              color: Colors.black54,
+            ),
+          ),
         ],
       ),
     );
@@ -301,10 +470,16 @@ class SitterOnboardingScreen extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 15.h),
       padding: EdgeInsets.all(15.w),
       decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10.r),
-          boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 5)],
-          border: Border.all(color: Colors.grey.shade200, width: 1.r)
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 5,
+          ),
+        ],
+        border: Border.all(color: Colors.grey.shade200, width: 1.r),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -318,23 +493,44 @@ class SitterOnboardingScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(title, style: GoogleFonts.montserrat(fontSize: 16.sp, fontWeight: FontWeight.w600, color: Colors.black87)),
+                    Text(
+                      title,
+                      style: GoogleFonts.montserrat(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                    ),
                     if (highlight != null)
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 4.h,
+                        ),
                         decoration: BoxDecoration(
                           color: AppColors.yello,
                           borderRadius: BorderRadius.circular(5.r),
                         ),
                         child: Text(
                           highlight,
-                          style: GoogleFonts.montserrat(fontSize: 10.sp, fontWeight: FontWeight.w700, color: Colors.black),
+                          style: GoogleFonts.montserrat(
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
                   ],
                 ),
                 SizedBox(height: 4.h),
-                Text(subtitle, style: GoogleFonts.montserrat(fontSize: 13.sp, height: 1.4, color: Colors.black54)),
+                Text(
+                  subtitle,
+                  style: GoogleFonts.montserrat(
+                    fontSize: 13.sp,
+                    height: 1.4,
+                    color: Colors.black54,
+                  ),
+                ),
               ],
             ),
           ),

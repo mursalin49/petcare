@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:petcare/view/bookings/chat.dart';
 // Note: Assuming 'petcare' is your project root and RescheduleScreen exists
 import 'package:petcare/view/bookings/reschedule_screen.dart';
+import 'package:petcare/view/bookings/widgets/chat_list.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../utils/app_colors.dart';
@@ -287,9 +288,9 @@ class _BookingsScreenState extends State<BookingsScreen> {
       // --- Floating Messenger Button ---
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Get.to(() => ChatScreen(
-            contactName: 'Tamim Sarkar',
-            contactImage: 'assets/images/profileImg.png',
+          Get.to(() => ChatListScreen(
+            userImage: 'assets/images/nirob.jpg',
+            userName: 'Your Name',
           ));
         },
         backgroundColor: AppColors.mainAppColor,

@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:petcare/view/bookings/booking_screen.dart';
+import 'package:petcare/view/home/notification.dart';
 import 'package:petcare/view/home/widgets/custom_calendar.dart';
 import 'package:petcare/view/home/widgets/stat_card.dart';
 
@@ -206,17 +207,27 @@ class _HomeScreenState extends State<HomeScreen> {
       actions: [
         Padding(
           padding: EdgeInsets.only(right: 20.w),
-          child: Container(
-            width: 44.w,
-            height: 44.w,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppColors.white.withOpacity(0.15),
-            ),
-            child: SvgPicture.asset(
-              'assets/icons/notifica.svg',
-              width: 24.sp,
-              height: 24.sp,
+
+          child: InkWell(
+            onTap: () {
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const NotificationScreen(),
+                ),
+              );
+            },
+
+            child: Container(
+
+              child: Center(
+                child: SvgPicture.asset(
+                  'assets/icons/notifica.svg',
+                  width: 38,
+                  height: 38,
+                ),
+              ),
             ),
           ),
         ),
