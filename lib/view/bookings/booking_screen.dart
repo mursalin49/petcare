@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:petcare/view/bookings/chat.dart';
+
 // Note: Assuming 'petcare' is your project root and RescheduleScreen exists
 import 'package:petcare/view/bookings/reschedule_screen.dart';
 import 'package:petcare/view/bookings/widgets/chat_list.dart';
@@ -15,7 +16,6 @@ import '../../utils/app_icons.dart';
 import '../home/widgets/custom_calendar.dart';
 import 'dialog.dart';
 import 'models/model.dart';
-
 
 class BookingStatusController extends GetxController {
   var selectedStatus = 'On going'.obs;
@@ -37,13 +37,15 @@ class BookingService extends GetxController {
   }
 }
 
-
-
 class CompletionRatingDialog extends StatefulWidget {
   final String userName;
   final VoidCallback onDone;
 
-  const CompletionRatingDialog({super.key, required this.userName, required this.onDone});
+  const CompletionRatingDialog({
+    super.key,
+    required this.userName,
+    required this.onDone,
+  });
 
   @override
   State<CompletionRatingDialog> createState() => _CompletionRatingDialogState();
@@ -51,7 +53,13 @@ class CompletionRatingDialog extends StatefulWidget {
 
 class _CompletionRatingDialogState extends State<CompletionRatingDialog> {
   int _rating = 5;
-  final List<String> ratingLabels = ['Bad', 'Average', 'Good', 'Great', 'Amazing'];
+  final List<String> ratingLabels = [
+    'Bad',
+    'Average',
+    'Good',
+    'Great',
+    'Amazing',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -74,17 +82,30 @@ class _CompletionRatingDialogState extends State<CompletionRatingDialog> {
               Text(
                 'Your task has been completed',
                 textAlign: TextAlign.center,
-                style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w500, color: AppColors.textDark),
+                style: GoogleFonts.montserrat(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.textDark,
+                ),
               ),
               const SizedBox(height: 4),
               Text(
                 'Average Rating and Feedback\n${widget.userName}',
                 textAlign: TextAlign.center,
-                style: GoogleFonts.montserrat(fontSize: 14, color: AppColors.subHeadingColor),
+                style: GoogleFonts.montserrat(
+                  fontSize: 14,
+                  color: AppColors.subHeadingColor,
+                ),
               ),
               const SizedBox(height: 24),
 
-              Text('Avg. Rating', style: GoogleFonts.montserrat(fontSize: 14, fontWeight: FontWeight.w600)),
+              Text(
+                'Avg. Rating',
+                style: GoogleFonts.montserrat(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               const SizedBox(height: 16),
 
               // --- Rating Stars ---
@@ -99,12 +120,19 @@ class _CompletionRatingDialogState extends State<CompletionRatingDialog> {
                         Icon(
                           Icons.star,
                           size: 30,
-                          color: starValue <= _rating ? Colors.amber : AppColors.subHeadingColor.withOpacity(0.5),
+                          color: starValue <= _rating
+                              ? Colors.amber
+                              : AppColors.subHeadingColor.withOpacity(0.5),
                         ),
                         Text(
                           ratingLabels[index],
-                          style: GoogleFonts.montserrat(fontSize: 10, color: starValue <= _rating ? AppColors.textDark : AppColors.subHeadingColor),
-                        )
+                          style: GoogleFonts.montserrat(
+                            fontSize: 10,
+                            color: starValue <= _rating
+                                ? AppColors.textDark
+                                : AppColors.subHeadingColor,
+                          ),
+                        ),
                       ],
                     ),
                   );
@@ -113,13 +141,22 @@ class _CompletionRatingDialogState extends State<CompletionRatingDialog> {
               const SizedBox(height: 24),
 
               // --- Feedback Note ---
-              Text('Feedback Note', style: GoogleFonts.montserrat(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textDark)),
+              Text(
+                'Feedback Note',
+                style: GoogleFonts.montserrat(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textDark,
+                ),
+              ),
               const SizedBox(height: 8),
               TextFormField(
                 maxLines: 4,
                 decoration: InputDecoration(
                   hintText: 'Type here...',
-                  hintStyle: GoogleFonts.montserrat(color: AppColors.subHeadingColor),
+                  hintStyle: GoogleFonts.montserrat(
+                    color: AppColors.subHeadingColor,
+                  ),
                   fillColor: AppColors.white,
                   filled: true,
                   border: OutlineInputBorder(
@@ -148,9 +185,18 @@ class _CompletionRatingDialogState extends State<CompletionRatingDialog> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.mainAppColor,
                     padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
-                  child: Text('Done', style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white)),
+                  child: Text(
+                    'Done',
+                    style: GoogleFonts.montserrat(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -161,8 +207,7 @@ class _CompletionRatingDialogState extends State<CompletionRatingDialog> {
   }
 }
 
-
-class BookingsScreen extends StatefulWidget{
+class BookingsScreen extends StatefulWidget {
   const BookingsScreen({super.key});
 
   @override
@@ -170,7 +215,6 @@ class BookingsScreen extends StatefulWidget{
 }
 
 class _BookingsScreenState extends State<BookingsScreen> {
-
   final BookingStatusController controller = Get.put(BookingStatusController());
   final BookingService bookingService = Get.put(BookingService());
 
@@ -192,41 +236,44 @@ class _BookingsScreenState extends State<BookingsScreen> {
           children: [
             const SizedBox(height: 20),
             // Status Filter Row
-            Obx(() => SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.only(left: 20),
-              child: Row(
-                children: List.generate(statuses.length, (index) {
-                  final status = statuses[index]['name'];
-                  final color = statuses[index]['color'] as Color;
-                  final bool isSelected = controller.selectedStatus.value == status;
+            Obx(
+              () => SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.only(left: 20),
+                child: Row(
+                  children: List.generate(statuses.length, (index) {
+                    final status = statuses[index]['name'];
+                    final color = statuses[index]['color'] as Color;
+                    final bool isSelected =
+                        controller.selectedStatus.value == status;
 
-                  return GestureDetector(
-                    onTap: () => controller.selectStatus(status),
-                    child: Container(
-                      margin: const EdgeInsets.only(right: 8),
-                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: isSelected ? color : AppColors.white,
-                        border: Border.all(
-                          color: color,
-                          width: 1.2,
+                    return GestureDetector(
+                      onTap: () => controller.selectStatus(status),
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 15,
+                          vertical: 8,
                         ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        status,
-                        style: GoogleFonts.montserrat(
-                          color: isSelected ? Colors.white : color,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
+                        decoration: BoxDecoration(
+                          color: isSelected ? color : AppColors.white,
+                          border: Border.all(color: color, width: 1.2),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          status,
+                          style: GoogleFonts.montserrat(
+                            color: isSelected ? Colors.white : color,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                }),
+                    );
+                  }),
+                ),
               ),
-            )),
+            ),
             const SizedBox(height: 16),
 
             _buildColorLegends(),
@@ -261,7 +308,10 @@ class _BookingsScreenState extends State<BookingsScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 50),
                       child: Text(
                         "No '$selectedStatus' bookings found.",
-                        style: GoogleFonts.montserrat(color: AppColors.grey, fontSize: 16),
+                        style: GoogleFonts.montserrat(
+                          color: AppColors.grey,
+                          fontSize: 16,
+                        ),
                       ),
                     ),
                   );
@@ -274,9 +324,7 @@ class _BookingsScreenState extends State<BookingsScreen> {
                   itemCount: filteredList.length,
                   itemBuilder: (context, index) {
                     final booking = filteredList[index];
-                    return ExpandableBookingCard(
-                      booking: booking,
-                    );
+                    return ExpandableBookingCard(booking: booking);
                   },
                 );
               }),
@@ -288,13 +336,18 @@ class _BookingsScreenState extends State<BookingsScreen> {
       // --- Floating Messenger Button ---
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Get.to(() => ChatListScreen(
-            userImage: 'assets/images/nirob.jpg',
-            userName: 'Your Name',
-          ));
+          Get.to(
+            () => ChatListScreen(
+              userImage: 'assets/images/nirob.jpg',
+              userName: 'Your Name',
+            ),
+          );
         },
         backgroundColor: AppColors.mainAppColor,
-        child: const Icon(Icons.chat_bubble_outline_rounded, color: Colors.white),
+        child: const Icon(
+          Icons.chat_bubble_outline_rounded,
+          color: Colors.white,
+        ),
       ),
       // --- END Floating Messenger Button ---
     );
@@ -305,7 +358,7 @@ class _BookingsScreenState extends State<BookingsScreen> {
       backgroundColor: AppColors.mainAppColor,
       elevation: 0,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios, color: Colors.white,size: 24),
+        icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 24),
         onPressed: () => Get.back(),
       ),
       title: Text(
@@ -329,7 +382,10 @@ class _BookingsScreenState extends State<BookingsScreen> {
           child: Center(
             child: SvgPicture.asset(
               AppIcons.order,
-              colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+              colorFilter: const ColorFilter.mode(
+                Colors.white,
+                BlendMode.srcIn,
+              ),
               height: 24.w,
               width: 24.w,
             ),
@@ -347,10 +403,7 @@ class _BookingsScreenState extends State<BookingsScreen> {
           Container(
             width: 12,
             height: 12,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.rectangle,
-            ),
+            decoration: BoxDecoration(color: color, shape: BoxShape.rectangle),
           ),
           const SizedBox(width: 8),
           Text(
@@ -388,10 +441,7 @@ class _BookingsScreenState extends State<BookingsScreen> {
 class ExpandableBookingCard extends StatefulWidget {
   final BookingData booking;
 
-  const ExpandableBookingCard({
-    super.key,
-    required this.booking,
-  });
+  const ExpandableBookingCard({super.key, required this.booking});
 
   @override
   State<ExpandableBookingCard> createState() => _ExpandableBookingCardState();
@@ -401,10 +451,14 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
   bool _isExpanded = false;
 
   // True if it's 'On going' or 'Upcoming' (standard card with buttons)
-  bool get _hasActiveButtons => widget.booking.status == 'On going' || widget.booking.status == 'Upcoming';
+  bool get _hasActiveButtons =>
+      widget.booking.status == 'On going' ||
+      widget.booking.status == 'Upcoming';
 
   // True if it's 'Completed' or 'Cancelled' (simple card, full tap expandable)
-  bool get _isFullCardToggleLogic => widget.booking.status == 'Completed' || widget.booking.status == 'Cancelled';
+  bool get _isFullCardToggleLogic =>
+      widget.booking.status == 'Completed' ||
+      widget.booking.status == 'Cancelled';
 
   void _toggleExpansion() {
     setState(() {
@@ -418,14 +472,19 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
       margin: const EdgeInsets.only(top: 16),
       padding: padding ?? const EdgeInsets.all(16),
       decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.borderColor, width: 1)),
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.borderColor, width: 1),
+      ),
       child: child,
     );
   }
 
-  Widget _buildSectionTitle(String title, {bool useIcon = false, String? svgPath}) {
+  Widget _buildSectionTitle(
+    String title, {
+    bool useIcon = false,
+    String? svgPath,
+  }) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -434,7 +493,10 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
             svgPath,
             width: 20,
             height: 20,
-            colorFilter: const ColorFilter.mode(AppColors.mainAppColor, BlendMode.srcIn),
+            colorFilter: const ColorFilter.mode(
+              AppColors.mainAppColor,
+              BlendMode.srcIn,
+            ),
           ),
           const SizedBox(width: 8),
         ],
@@ -457,61 +519,94 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("$label:",
-              style: GoogleFonts.montserrat(fontSize: 14, color: AppColors.textDark, fontWeight: FontWeight.w500)),
+          Text(
+            "$label:",
+            style: GoogleFonts.montserrat(
+              fontSize: 14,
+              color: AppColors.textDark,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
           const SizedBox(width: 10),
           Flexible(
-            child: Text(value,
-                textAlign: TextAlign.right,
-                style: GoogleFonts.montserrat(
-                    fontSize: 14,
-                    color: isBold ? AppColors.textDark : AppColors.subHeadingColor,
-                    fontWeight: isBold ? FontWeight.w700 : FontWeight.w500)),
+            child: Text(
+              value,
+              textAlign: TextAlign.right,
+              style: GoogleFonts.montserrat(
+                fontSize: 14,
+                color: isBold ? AppColors.textDark : AppColors.subHeadingColor,
+                fontWeight: isBold ? FontWeight.w700 : FontWeight.w500,
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildInfoColumn(String label, String value, {bool lastItem = false, bool isValueGrey = false}) {
+  Widget _buildInfoColumn(
+    String label,
+    String value, {
+    bool lastItem = false,
+    bool isValueGrey = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label,
-              style: GoogleFonts.montserrat(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textDark)),
+          Text(
+            label,
+            style: GoogleFonts.montserrat(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textDark,
+            ),
+          ),
           const SizedBox(height: 4),
-          Text(value,
-              style: GoogleFonts.montserrat(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: isValueGrey ? AppColors.grey : AppColors.subHeadingColor)),
-          if (!lastItem) ...[
-            const SizedBox(height: 10),
-          ]
+          Text(
+            value,
+            style: GoogleFonts.montserrat(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: isValueGrey ? AppColors.grey : AppColors.subHeadingColor,
+            ),
+          ),
+          if (!lastItem) ...[const SizedBox(height: 10)],
         ],
       ),
     );
   }
 
-  Widget _buildInfo(String label, String value, {bool lastItem = false, bool isValueGrey = false}) {
+  Widget _buildInfo(
+    String label,
+    String value, {
+    bool lastItem = false,
+    bool isValueGrey = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label,
-              style: GoogleFonts.montserrat(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textDark)),
+          Text(
+            label,
+            style: GoogleFonts.montserrat(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textDark,
+            ),
+          ),
           const SizedBox(width: 10),
-          Text(value,
-              style: GoogleFonts.montserrat(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: isValueGrey ? AppColors.grey : AppColors.subHeadingColor)),
-          if (!lastItem) ...[
-            const SizedBox(height: 10),
-          ]
+          Text(
+            value,
+            style: GoogleFonts.montserrat(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: isValueGrey ? AppColors.grey : AppColors.subHeadingColor,
+            ),
+          ),
+          if (!lastItem) ...[const SizedBox(height: 10)],
         ],
       ),
     );
@@ -532,7 +627,11 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
           _buildInfo('Age:', widget.booking.petAge),
           _buildInfo('Breed:', widget.booking.petBreed),
           _buildInfo('Gender:', widget.booking.petGender),
-          _buildInfo('Dates of birth:', widget.booking.dateOfBirth, lastItem: true),
+          _buildInfo(
+            'Dates of birth:',
+            widget.booking.dateOfBirth,
+            lastItem: true,
+          ),
         ],
       ),
     );
@@ -546,12 +645,32 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
           _buildSectionTitle('Additional details'),
           const SizedBox(height: 12),
           _buildInfoColumn('Microchipped?', 'Microchipped', isValueGrey: true),
-          _buildInfoColumn('Spayed/Neutered?', 'Spayed/Neutered', isValueGrey: true),
-          _buildInfoColumn('House Trained?', 'Not House Trained', isValueGrey: true),
-          _buildInfoColumn('Friendly with children?', 'Friendly with children', isValueGrey: true),
-          _buildInfoColumn('Friendly with dogs?', 'Friendly with dogs', isValueGrey: true),
+          _buildInfoColumn(
+            'Spayed/Neutered?',
+            'Spayed/Neutered',
+            isValueGrey: true,
+          ),
+          _buildInfoColumn(
+            'House Trained?',
+            'Not House Trained',
+            isValueGrey: true,
+          ),
+          _buildInfoColumn(
+            'Friendly with children?',
+            'Friendly with children',
+            isValueGrey: true,
+          ),
+          _buildInfoColumn(
+            'Friendly with dogs?',
+            'Friendly with dogs',
+            isValueGrey: true,
+          ),
           _buildInfoColumn('Adoption Date', widget.booking.adoptionDate),
-          _buildInfoColumn('About your pet', widget.booking.aboutPet, lastItem: true),
+          _buildInfoColumn(
+            'About your pet',
+            widget.booking.aboutPet,
+            lastItem: true,
+          ),
         ],
       ),
     );
@@ -570,10 +689,12 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
           _buildInfoColumn('Can be left alone', widget.booking.canBeLeftAlone),
           _buildInfoColumn('Medications', widget.booking.medications),
           _buildInfoColumn('Pill', widget.booking.fill),
-          _buildInfoColumn('Anything else a sitter should know?',
-              'Add instructions for walking, feeding or other care',
-              lastItem: true,
-              isValueGrey: true),
+          _buildInfoColumn(
+            'Anything else a sitter should know?',
+            'Add instructions for walking, feeding or other care',
+            lastItem: true,
+            isValueGrey: true,
+          ),
         ],
       ),
     );
@@ -586,10 +707,16 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
         children: [
           _buildSectionTitle('Care info', useIcon: true, svgPath: AppIcons.paw),
           const SizedBox(height: 12),
-          _buildInfoColumn('Veterinary info',
-              'Vet\'s Name: ${widget.booking.vetName}\nClinic: ${widget.booking.clinicName}\nAddress: ${widget.booking.vetAddress}\nNumber: ${widget.booking.vetNumber}',
-              isValueGrey: true),
-          _buildInfoColumn('Pet insurance provider', widget.booking.petInsuranceProvider, lastItem: true),
+          _buildInfoColumn(
+            'Veterinary info',
+            'Vet\'s Name: ${widget.booking.vetName}\nClinic: ${widget.booking.clinicName}\nAddress: ${widget.booking.vetAddress}\nNumber: ${widget.booking.vetNumber}',
+            isValueGrey: true,
+          ),
+          _buildInfoColumn(
+            'Pet insurance provider',
+            widget.booking.petInsuranceProvider,
+            lastItem: true,
+          ),
         ],
       ),
     );
@@ -620,21 +747,41 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSectionTitle('Pricing', useIcon: true, svgPath: AppIcons.billing),
+          _buildSectionTitle(
+            'Pricing',
+            useIcon: true,
+            svgPath: AppIcons.billing,
+          ),
           const SizedBox(height: 12),
-          _buildInfoRow('Bathing / Grooming', '\$${widget.booking.bathingPrice.toStringAsFixed(2)}'),
-          _buildInfoRow('Extended Care', '\$${widget.booking.extendedCarePrice.toStringAsFixed(2)}'),
-          _buildInfoRow('Additional Pet Rate', '\$${widget.booking.additionalRate.toStringAsFixed(2)}'),
+          _buildInfoRow(
+            'Bathing / Grooming',
+            '\$${widget.booking.bathingPrice.toStringAsFixed(2)}',
+          ),
+          _buildInfoRow(
+            'Extended Care',
+            '\$${widget.booking.extendedCarePrice.toStringAsFixed(2)}',
+          ),
+          _buildInfoRow(
+            'Additional Pet Rate',
+            '\$${widget.booking.additionalRate.toStringAsFixed(2)}',
+          ),
           const Divider(height: 20, color: AppColors.borderColor),
-          _buildInfoRow('Total', '\$${widget.booking.total.toStringAsFixed(2)}', isBold: true),
+          _buildInfoRow(
+            'Total',
+            '\$${widget.booking.total.toStringAsFixed(2)}',
+            isBold: true,
+          ),
         ],
       ),
     );
   }
+
   // --- END EXPANDED SECTIONS IMPLEMENTATION ---
   // --- Widget for Completed/Cancelled Status Bar (Full Width, Expanded) ---
   Widget _buildCompletedCancelledStatusBar(String status) {
-    final Color barColor = status == 'Completed' ? Color(0xFFBCBCBC) : Color(0xFFBCBCBC);
+    final Color barColor = status == 'Completed'
+        ? Color(0xFFBCBCBC)
+        : Color(0xFFBCBCBC);
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(top: 16),
@@ -654,6 +801,7 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
       ),
     );
   }
+
   // --- End Status Widget ---
 
   @override
@@ -678,10 +826,9 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
       );
     }
 
-    Widget buildContactInfoR( String text) {
+    Widget buildContactInfoR(String text) {
       return Row(
         children: [
-
           Text(
             text,
             style: GoogleFonts.montserrat(
@@ -693,6 +840,7 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
         ],
       );
     }
+
     // Main content of the booking card
     Widget cardContent = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -701,24 +849,41 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CircleAvatar(radius: 24, backgroundImage: AssetImage(booking.userProfileImage)),
+            CircleAvatar(
+              radius: 24,
+              backgroundImage: AssetImage(booking.userProfileImage),
+            ),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(booking.userName,
-                      style: GoogleFonts.montserrat(
-                          fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.textDark)),
+                  Text(
+                    booking.userName,
+                    style: GoogleFonts.montserrat(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textDark,
+                    ),
+                  ),
                   const SizedBox(height: 4),
                   // Location info - shown for all statuses
                   Row(
                     children: [
-                      const Icon(Icons.location_on_outlined, size: 14, color: AppColors.subHeadingColor),
+                      const Icon(
+                        Icons.location_on_outlined,
+                        size: 14,
+                        color: AppColors.subHeadingColor,
+                      ),
                       const SizedBox(width: 4),
-                      Text('New York, NY',
-                          style: GoogleFonts.montserrat(
-                              fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.subHeadingColor)),
+                      Text(
+                        'New York, NY',
+                        style: GoogleFonts.montserrat(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.subHeadingColor,
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -727,9 +892,14 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
                     children: [
                       const Icon(Icons.star, color: Colors.amber, size: 16),
                       const SizedBox(width: 4),
-                      Text('${booking.rating} (${booking.totalReviews})',
-                          style: GoogleFonts.montserrat(
-                              fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.subHeadingColor)),
+                      Text(
+                        '${booking.rating} (${booking.totalReviews})',
+                        style: GoogleFonts.montserrat(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.subHeadingColor,
+                        ),
+                      ),
                     ],
                   ),
                 ],
@@ -740,26 +910,33 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
               children: [
                 // Date badge
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
+                    color: booking.status == 'Completed'
+                        ? AppColors.greenColor.withOpacity(0.1)
+                        : booking.status == 'Cancelled'
+                        ? AppColors.redColor.withOpacity(0.1)
+                        : AppColors.mainAppColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    booking.date,
+                    style: GoogleFonts.montserrat(
                       color: booking.status == 'Completed'
-                          ? AppColors.greenColor.withOpacity(0.1)
+                          ? AppColors.greenColor
                           : booking.status == 'Cancelled'
-                          ? AppColors.redColor.withOpacity(0.1)
-                          : AppColors.mainAppColor.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8)),
-                  child: Text(booking.date,
-                      style: GoogleFonts.montserrat(
-                          color: booking.status == 'Completed'
-                              ? AppColors.greenColor
-                              : booking.status == 'Cancelled'
-                              ? AppColors.redColor
-                              : AppColors.mainAppColor,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600)),
+                          ? AppColors.redColor
+                          : AppColors.mainAppColor,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
               ],
-            )
+            ),
           ],
         ),
         const SizedBox(height: 16),
@@ -770,8 +947,14 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
-              child: Text(booking.service,
-                  style: GoogleFonts.montserrat(fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.textDark)),
+              child: Text(
+                booking.service,
+                style: GoogleFonts.montserrat(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textDark,
+                ),
+              ),
             ),
             const SizedBox(width: 12),
             RichText(
@@ -780,11 +963,17 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
                   TextSpan(
                     text: booking.price,
                     style: GoogleFonts.montserrat(
-                        fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.textDark),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textDark,
+                    ),
                   ),
                   TextSpan(
                     text: " Per walk",
-                    style: GoogleFonts.montserrat(fontSize: 12, color: AppColors.subHeadingColor),
+                    style: GoogleFonts.montserrat(
+                      fontSize: 12,
+                      color: AppColors.subHeadingColor,
+                    ),
                   ),
                 ],
               ),
@@ -794,8 +983,14 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
         const SizedBox(height: 12),
 
         // Contact label
-        Text('Contact',
-            style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textDark)),
+        Text(
+          'Contact',
+          style: GoogleFonts.montserrat(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textDark,
+          ),
+        ),
         const SizedBox(height: 8),
 
         // Contact Info
@@ -806,7 +1001,7 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
         // Pick-up/Drop-off times - Only for On going and Upcoming
         if (booking.status == 'On going' || booking.status == 'Upcoming') ...[
           const SizedBox(height: 8),
-          buildContactInfoR( "Pick-up time: ${booking.pickupTime}"),
+          buildContactInfoR("Pick-up time: ${booking.pickupTime}"),
           const SizedBox(height: 8),
           buildContactInfoR("Drop-off time: ${booking.dropoffTime}"),
         ],
@@ -820,9 +1015,10 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
             child: Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.borderColor)),
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.borderColor),
+              ),
               child: Row(
                 children: [
                   CircleAvatar(
@@ -833,16 +1029,31 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(booking.petName,
-                          style: GoogleFonts.montserrat(
-                              fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textDark)),
-                      Text(booking.petBreed,
-                          style: GoogleFonts.montserrat(fontSize: 12, color: AppColors.subHeadingColor)),
+                      Text(
+                        booking.petName,
+                        style: GoogleFonts.montserrat(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textDark,
+                        ),
+                      ),
+                      Text(
+                        booking.petBreed,
+                        style: GoogleFonts.montserrat(
+                          fontSize: 12,
+                          color: AppColors.subHeadingColor,
+                        ),
+                      ),
                     ],
                   ),
                   const Spacer(),
-                  Icon(_isExpanded ? Icons.expand_less_rounded : Icons.expand_more_rounded,
-                      size: 28, color: AppColors.subHeadingColor)
+                  Icon(
+                    _isExpanded
+                        ? Icons.expand_less_rounded
+                        : Icons.expand_more_rounded,
+                    size: 28,
+                    color: AppColors.subHeadingColor,
+                  ),
                 ],
               ),
             ),
@@ -855,16 +1066,16 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
             curve: Curves.easeInOut,
             child: _isExpanded
                 ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildPetDetailsSection(),
-                _buildAdditionalDetailsSection(),
-                _buildPetCareInfoSection(),
-                _buildVetInformationSection(),
-                _buildNoteSection(),
-                if (booking.status == 'On going') _buildPricingSection(),
-              ],
-            )
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildPetDetailsSection(),
+                      _buildAdditionalDetailsSection(),
+                      _buildPetCareInfoSection(),
+                      _buildVetInformationSection(),
+                      _buildNoteSection(),
+                      if (booking.status == 'On going') _buildPricingSection(),
+                    ],
+                  )
                 : const SizedBox.shrink(),
           ),
 
@@ -885,7 +1096,9 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
               style: GoogleFonts.montserrat(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: booking.status == 'Completed' ? AppColors.greenColor : AppColors.redColor,
+                color: booking.status == 'Completed'
+                    ? AppColors.greenColor
+                    : AppColors.redColor,
               ),
             ),
           ),
@@ -898,16 +1111,16 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
             curve: Curves.easeInOut,
             child: _isExpanded
                 ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildPetDetailsSection(),
-                _buildAdditionalDetailsSection(),
-                _buildPetCareInfoSection(),
-                _buildVetInformationSection(),
-                _buildNoteSection(),
-                _buildCompletedCancelledStatusBar(booking.status),
-              ],
-            )
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildPetDetailsSection(),
+                      _buildAdditionalDetailsSection(),
+                      _buildPetCareInfoSection(),
+                      _buildVetInformationSection(),
+                      _buildNoteSection(),
+                      _buildCompletedCancelledStatusBar(booking.status),
+                    ],
+                  )
                 : const SizedBox.shrink(),
           ),
       ],
@@ -924,12 +1137,14 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
             color: Colors.grey.withOpacity(0.1),
             blurRadius: 10,
             offset: const Offset(0, 5),
-          )
+          ),
         ],
       ),
       child: GestureDetector(
         onTap: _isFullCardToggleLogic ? _toggleExpansion : null,
-        behavior: _isFullCardToggleLogic ? HitTestBehavior.opaque : HitTestBehavior.deferToChild,
+        behavior: _isFullCardToggleLogic
+            ? HitTestBehavior.opaque
+            : HitTestBehavior.deferToChild,
         child: cardContent,
       ),
     );
@@ -938,26 +1153,52 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
   /// ----------------------------------------- FOOTER LOGIC ----------------------------
   Widget _buildCardFooter(BuildContext context, String status) {
     final BookingService bookingService = Get.find<BookingService>();
-    final BookingStatusController statusController = Get.find<BookingStatusController>();
+    final BookingStatusController statusController =
+        Get.find<BookingStatusController>();
     final BookingData booking = widget.booking;
 
-    void updateAndSelectStatus(String newStatus, String snackbarTitle, String snackbarMessage, Color color) {
+    void updateAndSelectStatus(
+      String newStatus,
+      String snackbarTitle,
+      String snackbarMessage,
+      Color color,
+    ) {
       bookingService.updateBookingStatus(booking, newStatus);
       statusController.selectStatus(newStatus);
-      Get.snackbar(snackbarTitle, snackbarMessage,
-          snackPosition: SnackPosition.BOTTOM, backgroundColor: color, colorText: Colors.white);
+      Get.snackbar(
+        snackbarTitle,
+        snackbarMessage,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: color,
+        colorText: Colors.white,
+      );
     }
 
     void handleCompletionConfirmation() {
-      updateAndSelectStatus('Completed', 'Success', 'Booking marked as Completed.', AppColors.greenColor);
+      updateAndSelectStatus(
+        'Completed',
+        'Success',
+        'Booking marked as Completed.',
+        AppColors.greenColor,
+      );
     }
 
     void handleCancellationConfirmation() {
-      updateAndSelectStatus('Cancelled', 'Cancelled', 'Booking has been cancelled.', AppColors.redColor);
+      updateAndSelectStatus(
+        'Cancelled',
+        'Cancelled',
+        'Booking has been cancelled.',
+        AppColors.redColor,
+      );
     }
 
     void acceptBooking() {
-      updateAndSelectStatus('On going', 'Accepted', 'Booking has been accepted and is now On going.', AppColors.mainAppColor);
+      updateAndSelectStatus(
+        'On going',
+        'Accepted',
+        'Booking has been accepted and is now On going.',
+        AppColors.mainAppColor,
+      );
     }
 
     void showCompletionDialog() {
@@ -988,10 +1229,18 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
                   backgroundColor: const Color(0xFFF7726A),
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-                child: Text('Reschedule',
-                    style: GoogleFonts.montserrat(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white)),
+                child: Text(
+                  'Reschedule',
+                  style: GoogleFonts.montserrat(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ),
             const SizedBox(width: 12),
@@ -1002,10 +1251,18 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
                   backgroundColor: AppColors.mainAppColor,
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-                child: Text('Ask for complete',
-                    style: GoogleFonts.montserrat(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white)),
+                child: Text(
+                  'Ask for complete',
+                  style: GoogleFonts.montserrat(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ),
           ],
@@ -1021,10 +1278,18 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
                   backgroundColor: const Color(0xFFF7726A),
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-                child: Text('Decline',
-                    style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white)),
+                child: Text(
+                  'Decline',
+                  style: GoogleFonts.montserrat(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ),
             const SizedBox(width: 12),
@@ -1035,10 +1300,18 @@ class _ExpandableBookingCardState extends State<ExpandableBookingCard> {
                   backgroundColor: AppColors.mainAppColor,
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-                child: Text('Accept',
-                    style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white)),
+                child: Text(
+                  'Accept',
+                  style: GoogleFonts.montserrat(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ),
           ],
