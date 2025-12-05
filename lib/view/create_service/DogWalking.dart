@@ -168,15 +168,15 @@ class DogWalkingServiceSetupScreen extends StatelessWidget {
             _buildDaySelectors(controller),
             SizedBox(height: 20.h),
 
-            _buildSectionTitle('How frequently can you provide potty breaks?'),
+            _buildSectionTitle('What times are you available for Dog walking on weekdays?'),
             Wrap(
               spacing: 20.w,
               runSpacing: 10.h,
               children: [
-                _buildPottyBreakOption('0-2 hours', controller),
-                _buildPottyBreakOption('2-4 hours', controller),
-                _buildPottyBreakOption('4-8 hours', controller),
-                _buildPottyBreakOption('8+ hours', controller),
+                _buildPottyBreakOption('6am - 11am', controller),
+                _buildPottyBreakOption('11am - 3am', controller),
+                _buildPottyBreakOption('3am - 10am', controller),
+                _buildPottyBreakOption('None', controller),
               ],
             ),
 

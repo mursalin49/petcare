@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:petcare/view/bookings/booking_screen.dart' hide AppIcons, AppColors;
+import 'package:petcare/view/bookings/booking_screen.dart';
 import 'package:petcare/view/profile/profile_screen.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_icons.dart';
+import '../bookings/widgets/chat_list.dart';
 import '../create_service/create_service.dart';
 import '../home/home_screen.dart';
 
@@ -32,7 +33,10 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
     HomeScreen(),
     CreateService(),
      BookingsScreen(),
-    ProfileScreen()
+    ChatListScreen(),
+    ProfileScreen(),
+
+
   ];
 
   // Create nav items in a getter
@@ -40,7 +44,8 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
     _navItem(AppIcons.home, AppIcons.homes, "Home", 0),
     _navItem(AppIcons.create, AppIcons.creates, "Create Service",  1),
     _navItem(AppIcons.bookingsICon, AppIcons.bookingsIConS, "Bookings",  2),
-    _navItem(AppIcons.profileIcon, AppIcons.profileIconS, "Profile",  3),
+    _navItem(AppIcons.message, AppIcons.messages, "Messages",  3),
+    _navItem(AppIcons.profileIcon, AppIcons.profileIconS, "Profile",  4),
   ];
 
   @override
